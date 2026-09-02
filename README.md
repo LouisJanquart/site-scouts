@@ -103,4 +103,22 @@ repères ARIA, `prefers-reduced-motion` respecté.
 
 ## Déploiement
 
-Netlify, build statique. `netlify.toml` porte les en-têtes.
+En ligne : <https://16e-fleurus.netlify.app> (non indexé).
+
+Le build tourne **en local**, pas sur Netlify : leur image de build échoue sur
+ce projet (installation pnpm). En attendant d'avoir tracé la cause, on dépose
+la sortie déjà générée.
+
+```bash
+pnpm generate
+rm -rf /tmp/deploy && mkdir /tmp/deploy
+cp -r .output/public/. /tmp/deploy/
+printf '[build]\n  publish = "."\n  command = ""\n' > /tmp/deploy/netlify.toml
+# puis déployer /tmp/deploy sur le site 16e-fleurus
+```
+
+Les en-têtes (noindex, type des flux iCal, cache des images) viennent de
+`public/_headers`, copié dans la sortie statique.
+
+**À faire** : brancher le dépôt Git sur Netlify et faire fonctionner leur build,
+pour que chaque commit se déploie tout seul.
