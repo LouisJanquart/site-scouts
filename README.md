@@ -9,10 +9,15 @@ Plateforme web de l'unité scoute et guide 16e Fleurus — Notre-Dame des Champs
 ## Démarrer
 
 ```bash
-pnpm install
-pnpm dev        # http://localhost:3000
-pnpm generate   # site statique dans .output/public
+npm install
+npm run dev        # http://localhost:3000
+npm run generate   # site statique dans .output/public
 ```
+
+> npm 12 bloque par défaut les scripts d'installation. Si `esbuild` manque
+> après un `npm install`, lancer `npm install-scripts approve esbuild` puis
+> `npm install-scripts approve @parcel/watcher`. Les versions antérieures de
+> npm, dont celle de Netlify, les exécutent d'office.
 
 Nuxt 4, Vue 3, Sass. Pas de framework CSS, pas de bibliothèque de composants.
 
@@ -105,20 +110,12 @@ repères ARIA, `prefers-reduced-motion` respecté.
 
 En ligne : <https://16e-fleurus.netlify.app> (non indexé).
 
-Le build tourne **en local**, pas sur Netlify : leur image de build échoue sur
-ce projet (installation pnpm). En attendant d'avoir tracé la cause, on dépose
-la sortie déjà générée.
-
-```bash
-pnpm generate
-rm -rf /tmp/deploy && mkdir /tmp/deploy
-cp -r .output/public/. /tmp/deploy/
-printf '[build]\n  publish = "."\n  command = ""\n' > /tmp/deploy/netlify.toml
-# puis déployer /tmp/deploy sur le site 16e-fleurus
-```
+Netlify construit le site lui-même : `npm run generate`, publication de
+`.output/public`. Le projet était sous pnpm au départ, ce que l'image de build
+de Netlify n'avalait pas ; il est repassé sous npm pour cette raison.
 
 Les en-têtes (noindex, type des flux iCal, cache des images) viennent de
 `public/_headers`, copié dans la sortie statique.
 
-**À faire** : brancher le dépôt Git sur Netlify et faire fonctionner leur build,
-pour que chaque commit se déploie tout seul.
+**À faire** : brancher le dépôt Git sur Netlify pour que chaque commit se
+déploie tout seul, au lieu d'un envoi manuel.

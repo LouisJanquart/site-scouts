@@ -1,5 +1,0 @@
-# esbuild a besoin de son script de post-installation pour récupérer son
-# binaire natif. pnpm 10+ exige que ce soit déclaré explicitement.
-onlyBuiltDependencies:
-  - esbuild
-  - '@parcel/watcher'
