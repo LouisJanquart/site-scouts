@@ -1,0 +1,4 @@
+# Déploiement de travail : rien ne doit être indexé tant que le staff d'unité
+# n'a pas relu le contenu et tranché les questions de droit à l'image.
+User-agent: *
+Disallow: /

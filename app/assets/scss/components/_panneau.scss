@@ -1,0 +1,73 @@
+@use '../abstracts' as *;
+
+// La brique de base : un panneau flottant, très arrondi, posé sur le fond.
+.panneau {
+  @include panneau;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+  padding: 1rem;
+
+  &--plein {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  &--transparent {
+    background: rgba($noir, 0.72);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba($blanc, 0.05);
+  }
+
+  &__entete {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem 0.75rem;
+  }
+
+  &__titre {
+    @include surtitre;
+  }
+
+  &__corps {
+    flex: 1;
+    min-block-size: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    @include defilement-discret;
+  }
+
+  &__pied {
+    padding-block-start: 0.6rem;
+  }
+}
+
+// Le lien « Tous les events » des maquettes : aligné à droite, avec un
+// double chevron qui avance au survol.
+.lien-fleche {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-inline: 0.5rem;
+  color: $cyan;
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  @include focus-visible;
+
+  svg {
+    transition: transform $normal $courbe;
+  }
+
+  &:hover svg {
+    transform: translateX(3px);
+  }
+
+  &--droite {
+    inline-size: 100%;
+    justify-content: flex-end;
+  }
+}

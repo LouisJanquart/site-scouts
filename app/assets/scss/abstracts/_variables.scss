@@ -1,0 +1,69 @@
+// ---------------------------------------------------------------------------
+// Jetons du système. Les cinq premières couleurs viennent des variables du
+// fichier Figma « Scouts - Website » (black 2, grey 2, white 2, red 2, blue 2).
+// Tout le reste en est dérivé.
+// ---------------------------------------------------------------------------
+
+// Fonds
+$noir-profond: #08090f; // le sol de la page, sous les panneaux
+$noir: #10111a; // black 2 — les panneaux
+$ardoise: #302e41; // grey 2 — les cartes posées sur les panneaux
+$ardoise-clair: #3d3b52; // survol
+$ardoise-sourd: #23222f; // séparateurs et champs
+
+// Traits
+$blanc: #ffffff;
+$rouge: #e72c1c; // red 2 — accent principal, statut, logotype
+// Le rouge de marque ne passe pas les 4.5:1 sur fond sombre en petit corps :
+// cette variante éclaircie sert au texte, l'original aux aplats et pastilles.
+$rouge-texte: #ff6f60;
+$cyan: #4dcbf3; // blue 2 — liens, actions, aujourd'hui
+$vert: #1dbf8e; // seconde palette du fichier Figma — validations
+
+// Couleurs de section. Une teinte par section, calées sur la saturation du
+// cyan et du rouge maison pour rester dans la même famille.
+// Contrainte : ces teintes servent aussi de couleur de texte sur les cartes
+// ($ardoise, #302E41). Chacune a donc été éclaircie jusqu'à passer 4.5:1 sur
+// ce fond — c'est ce qui explique qu'elles soient plus claires que dans le
+// fichier Figma.
+$sections: (
+  'nutons': #6fd8c4,
+  'lutins': #f58ab5,
+  'louveteaux': #f0a32e,
+  'guides': #9aa8f2,
+  'scouts': #4dcbf3,
+  'pios': #d492f2,
+  'route': #ff8377,
+  'staff': #a9b2c0,
+);
+
+// Rayons — repris des maquettes : panneaux très arrondis, cartes moins.
+$r-panneau: 2rem;
+$r-carte: 1rem;
+$r-champ: 0.75rem;
+$r-pilule: 100px;
+
+// Rythme
+$gouttiere: 1rem;
+$marge-page: 1rem;
+
+// Typographie
+$police-titre: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+$police-ui: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+$police-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+
+// Points de rupture
+$bp-poche: 40rem; // 640px
+$bp-tablette: 60rem; // 960px
+$bp-console: 75rem; // 1200px — au-delà, la mise en page devient un tableau de bord
+$bp-large: 100rem; // 1600px
+
+// Élévation
+$ombre-panneau: 0 1px 0 rgba($blanc, 0.04) inset, 0 24px 48px -24px rgba(#000, 0.6);
+$ombre-carte: 0 8px 24px -12px rgba(#000, 0.5);
+
+// Durées
+$vite: 140ms;
+$normal: 240ms;
+$lent: 420ms;
+$courbe: cubic-bezier(0.22, 0.61, 0.36, 1);

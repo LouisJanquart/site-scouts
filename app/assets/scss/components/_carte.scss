@@ -1,0 +1,146 @@
+@use '../abstracts' as *;
+
+// La carte d'événement des maquettes : fond ardoise, pastille de statut,
+// titre en gras, date et lieu en retrait.
+.carte {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.85rem;
+  background: $ardoise;
+  border-radius: $r-carte;
+  transition:
+    background $vite $courbe,
+    transform $vite $courbe;
+
+  @include focus-visible;
+
+  &--cliquable:hover {
+    background: $ardoise-clair;
+    transform: translateY(-1px);
+  }
+
+  &__haut {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  &__statut {
+    flex-shrink: 0;
+    inline-size: 0.3rem;
+    block-size: 0.3rem;
+    margin-block-start: 0.45rem;
+    background: $rouge;
+    border-radius: 50%;
+
+    &--passe {
+      background: rgba($blanc, 0.2);
+    }
+    &--section {
+      background: var(--section-teinte);
+    }
+  }
+
+  &__titre {
+    flex: 1;
+    min-inline-size: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  &__vignette {
+    flex-shrink: 0;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    background: rgba($blanc, 0.06);
+  }
+
+  &__bas {
+    display: flex;
+    flex-direction: column;
+    padding-inline-start: 0.8rem;
+  }
+
+  &__meta {
+    font-family: $police-mono;
+    font-size: 0.7rem;
+    line-height: 1.5;
+    color: rgba($blanc, 0.64);
+  }
+}
+
+// Étiquette de section, l'équivalent des petites pilules bleues des maquettes.
+.etiquette {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.05rem 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: $r-pilule;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--section-teinte);
+  white-space: nowrap;
+
+  &--pleine {
+    border-color: transparent;
+    background: color-mix(in srgb, var(--section-teinte) 16%, transparent);
+  }
+
+  &--sourde {
+    color: rgba($blanc, 0.6);
+  }
+}
+
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: $r-pilule;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition:
+    background $vite $courbe,
+    color $vite $courbe,
+    transform $vite $courbe;
+
+  @include focus-visible;
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &--principal {
+    background: $rouge;
+    color: $blanc;
+
+    &:hover {
+      background: color-mix(in srgb, $rouge 85%, $blanc);
+    }
+  }
+
+  &--section {
+    background: var(--section-teinte);
+    color: $noir;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+
+  &--fantome {
+    background: rgba($blanc, 0.07);
+    color: $blanc;
+
+    &:hover {
+      background: rgba($blanc, 0.13);
+    }
+  }
+}

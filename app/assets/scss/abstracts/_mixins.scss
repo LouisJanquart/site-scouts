@@ -1,0 +1,74 @@
+@use 'sass:map';
+@use 'variables' as *;
+
+// Points de rupture — approche mobile d'abord.
+@mixin depuis($taille) {
+  @media (min-width: $taille) {
+    @content;
+  }
+}
+
+@mixin jusqua($taille) {
+  @media (max-width: ($taille - 0.0625rem)) {
+    @content;
+  }
+}
+
+// La mise en page « console » : plein écran, panneaux flottants, aucun
+// défilement de page. En dessous, tout redevient une pile qui défile.
+@mixin console {
+  @media (min-width: $bp-console) and (min-height: 44rem) {
+    @content;
+  }
+}
+
+// Un panneau : la brique de base des maquettes.
+@mixin panneau($fond: $noir) {
+  background: $fond;
+  border-radius: $r-panneau;
+  box-shadow: $ombre-panneau;
+}
+
+// Barre de défilement discrète à l'intérieur des panneaux.
+@mixin defilement-discret {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba($blanc, 0.16) transparent;
+  overscroll-behavior: contain;
+
+  &::-webkit-scrollbar {
+    inline-size: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba($blanc, 0.16);
+    border-radius: 3px;
+  }
+}
+
+// Étiquette en petites capitales, pour les intitulés de champ.
+@mixin surtitre {
+  font-family: $police-mono;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba($blanc, 0.6);
+}
+
+// Texte lisible sur photo : un voile plutôt qu'une ombre portée.
+@mixin sur-photo {
+  color: $blanc;
+  text-shadow: 0 2px 24px rgba(#000, 0.55);
+}
+
+@mixin focus-visible {
+  &:focus-visible {
+    outline: 2px solid $cyan;
+    outline-offset: 3px;
+    border-radius: $r-champ;
+  }
+}
+
+@function couleur-section($nom) {
+  @return map.get($sections, $nom);
+}

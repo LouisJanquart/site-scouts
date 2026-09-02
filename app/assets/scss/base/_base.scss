@@ -1,0 +1,51 @@
+@use 'sass:map';
+@use '../abstracts' as *;
+
+// Les couleurs de section deviennent des variables CSS pour pouvoir être
+// pilotées par un attribut data-section sur n'importe quel conteneur.
+:root {
+  --section-teinte: #{$cyan};
+
+  @each $nom, $teinte in $sections {
+    --section-#{$nom}: #{$teinte};
+  }
+}
+
+@each $nom, $teinte in $sections {
+  [data-section='#{$nom}'] {
+    --section-teinte: #{$teinte};
+  }
+}
+
+body {
+  background: $noir-profond;
+  color: $blanc;
+  font-family: $police-ui;
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba($cyan, 0.3);
+}
+
+// Lien d'évitement, visible seulement au clavier.
+.saut-contenu {
+  position: fixed;
+  inset-block-start: 0.5rem;
+  inset-inline-start: 0.5rem;
+  z-index: 200;
+  padding: 0.5rem 1rem;
+  background: $cyan;
+  color: $noir;
+  border-radius: $r-pilule;
+  font-weight: 600;
+  transform: translateY(-200%);
+  transition: transform $vite $courbe;
+
+  &:focus {
+    transform: none;
+  }
+}

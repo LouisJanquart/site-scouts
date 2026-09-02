@@ -1,0 +1,65 @@
+@use '../abstracts' as *;
+
+// Archivo est chargée avec son axe de largeur : on l'étire pour les grands
+// titres, ce qui donne le côté affiche sportswear sans changer de famille.
+.titre {
+  font-family: $police-titre;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 118;
+  letter-spacing: -0.015em;
+  line-height: 1.02;
+  text-transform: uppercase;
+  text-wrap: balance;
+
+  &--geant {
+    font-size: clamp(2.5rem, 7vw, 5rem);
+  }
+  &--grand {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+  }
+  &--moyen {
+    font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+  }
+  &--petit {
+    font-size: 1rem;
+    font-variation-settings: 'wdth' 108;
+    letter-spacing: 0.01em;
+  }
+}
+
+.surtitre {
+  @include surtitre;
+}
+
+.mono {
+  font-family: $police-mono;
+  font-variant-numeric: tabular-nums;
+}
+
+.prose {
+  max-inline-size: 60ch;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: rgba($blanc, 0.72);
+  line-height: 1.7;
+
+  strong {
+    color: $blanc;
+    font-weight: 600;
+  }
+
+  a {
+    color: $cyan;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.doux {
+  color: rgba($blanc, 0.64);
+}
+
+.tres-doux {
+  color: rgba($blanc, 0.56);
+}
