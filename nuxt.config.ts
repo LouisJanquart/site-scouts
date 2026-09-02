@@ -30,6 +30,22 @@ export default defineNuxtConfig({
             "Unité scoute et guide 16e Fleurus, Notre-Dame des Champs. Sept sections, des réunions tous les dimanches, des camps chaque été. Depuis 1968.",
         },
         { name: 'theme-color', content: '#10111A' },
+
+        // Aperçu au partage. L'image est produite par un rendu de la page
+        // d'accueil, pas dessinée à part : elle reste juste si le site change.
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: '16e Fleurus' },
+        { property: 'og:locale', content: 'fr_BE' },
+        { property: 'og:title', content: '16e Fleurus — unité scoute et guide' },
+        {
+          property: 'og:description',
+          content:
+            'Six sections, des réunions tous les dimanches de septembre à mai, un camp chaque été. Notre-Dame des Champs, depuis 1968.',
+        },
+        { property: 'og:image', content: '/og.jpg' },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { name: 'twitter:card', content: 'summary_large_image' },
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
