@@ -42,7 +42,9 @@ export default defineNuxtConfig({
           content:
             'Six sections, des réunions tous les dimanches de septembre à mai, un camp chaque été. Notre-Dame des Champs, depuis 1968.',
         },
-        { property: 'og:image', content: '/og.jpg' },
+        // URL absolue : Facebook et quelques autres refusent un chemin relatif.
+        // À changer le jour où l'unité aura son propre nom de domaine.
+        { property: 'og:image', content: 'https://16e-fleurus.netlify.app/og.jpg' },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
         { name: 'twitter:card', content: 'summary_large_image' },

@@ -51,12 +51,6 @@ export function useAujourdhui() {
 export function usePlanning() {
   const aujourdhui = useAujourdhui()
 
-  const jours = computed(() => planning)
-
-  const prochainsJours = computed(() =>
-    planning.filter((j) => j.date >= aujourdhui.value).slice(0, 12),
-  )
-
   function planningDeSection(slug: string): Array<JourPlanning & { libelle: string; type: TypeReunion | null }> {
     const cle = parSlug[slug]?.cleplanning
     if (!cle) return []
@@ -69,18 +63,10 @@ export function usePlanning() {
     return planningDeSection(slug).find((j) => j.date >= aujourdhui.value) ?? null
   }
 
-  const horaireDuJour = computed(() => {
-    const prochain = planning.find((j) => j.date >= aujourdhui.value)
-    return prochain?.horaire ?? 'ete'
-  })
-
   return {
     saison,
-    jours,
-    prochainsJours,
     planningDeSection,
     prochaineReunion,
-    horaireDuJour,
     aujourdhui,
   }
 }

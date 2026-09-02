@@ -144,8 +144,3 @@ export const evenements: Evenement[] = [
     public: 'tous',
   },
 ]
-
-export function evenementsAVenir(depuis = new Date()): Evenement[] {
-  const jour = depuis.toISOString().slice(0, 10)
-  return evenements.filter((e) => (e.dateFin ?? e.date) >= jour).sort((a, b) => a.date.localeCompare(b.date))
-}
