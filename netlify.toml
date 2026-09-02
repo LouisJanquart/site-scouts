@@ -1,6 +1,9 @@
 [build]
-  command = "npm run generate"
+  # npm install plutôt que npm ci : le lockfile est généré par npm 12, dont
+  # certaines images de build plus anciennes se plaignent.
+  command = "npm install --no-audit --no-fund && npm run generate"
   publish = ".output/public"
 
 [build.environment]
   NODE_VERSION = "22"
+  NODE_OPTIONS = "--max-old-space-size=4096"

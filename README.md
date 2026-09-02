@@ -110,9 +110,24 @@ repères ARIA, `prefers-reduced-motion` respecté.
 
 En ligne : <https://16e-fleurus.netlify.app> (non indexé).
 
-Netlify construit le site lui-même : `npm run generate`, publication de
-`.output/public`. Le projet était sous pnpm au départ, ce que l'image de build
-de Netlify n'avalait pas ; il est repassé sous npm pour cette raison.
+`netlify.toml` décrit le build attendu (`npm run generate`, publication de
+`.output/public`), mais **ce build échoue côté Netlify** et je n'ai pas pu
+lire leurs journaux depuis l'environnement où le projet a été monté. Six
+tentatives, sous pnpm puis sous npm, avec et sans configuration.
+
+En attendant, on dépose la sortie déjà construite :
+
+```bash
+npm run generate
+rm -rf /tmp/deploy && mkdir /tmp/deploy
+cp -r .output/public/. /tmp/deploy/
+printf '[build]\n  publish = "."\n  command = ""\n' > /tmp/deploy/netlify.toml
+# puis déployer /tmp/deploy sur le site 16e-fleurus
+```
+
+Première chose à faire : ouvrir les journaux du dernier build échoué sur
+<https://app.netlify.com/projects/16e-fleurus/deploys>. La cause y est
+forcément écrite.
 
 Les en-têtes (noindex, type des flux iCal, cache des images) viennent de
 `public/_headers`, copié dans la sortie statique.
