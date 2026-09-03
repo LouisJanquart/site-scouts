@@ -34,7 +34,11 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
   <AppPage
     :titre="`La saison ${saison}`"
     surtitre="Calendrier"
-    chapo="Le planning de l’unité, tel qu’il est tenu par le staff d’unité. Une ligne par dimanche, une colonne par section."
+    :chapo="
+      voitLeCalendrier
+        ? 'Le planning de l’unité, tel qu’il est tenu par le staff d’unité. Une ligne par dimanche, une colonne par section.'
+        : 'Les réunions ont lieu le dimanche après-midi, de septembre à mai.'
+    "
   >
     <template #entete>
       <div v-if="voitLeCalendrier" class="barre">
