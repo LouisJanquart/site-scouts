@@ -7,6 +7,16 @@
 //   Source : https://www.guides.be/animateur/administratif/montant-des-cotisations
 //   Relevé le 3 septembre 2026 pour la saison 2026-2027.
 //
+// UN SEUL BARÈME, ET C'EST CELUI DES GUIDES.
+//
+// La 16e a des sections qui portent des noms scouts — Louveteaux, Scouts — et
+// des sections non mixtes. Ça ne veut pas dire double affiliation : l'unité est
+// née de la fusion de deux unités non mixtes, et l'ensemble est affilié aux
+// Guides. Les noms de sections et le lore sont restés, l'affiliation non.
+//
+// Autrement dit : ne pas ajouter un barème « Scouts » en voyant les noms. Tout
+// le monde ici relève de la grille ci-dessous.
+//
 // Deux choses à comprendre avant de toucher à ce fichier :
 //
 //   1. Le tarif famille s'applique à TOUS les membres du ménage, pas seulement
@@ -15,10 +25,10 @@
 //      cher aux familles.
 //
 //   2. Il compte les membres d'un même ménage inscrits chez les Guides, ou un
-//      chez les Guides et un chez les Scouts. Une fratrie répartie entre les
-//      deux fédérations a donc droit au tarif famille — le site ne peut pas le
-//      deviner tout seul, d'où la case « frère ou sœur inscrit chez les Scouts »
-//      dans le dossier.
+//      chez les Guides et un chez les Scouts. Un enfant de la 16e dont le frère
+//      est inscrit AILLEURS, dans une unité affiliée aux Scouts, ouvre donc le
+//      tarif famille — mais le site ne voit que ses propres inscrits. D'où le
+//      champ « membresAilleurs », que le staff d'unité renseigne à la main.
 //
 // Le barème par défaut est ici, mais chaque saison peut le remplacer en base
 // (colonne « bareme »). Le staff d'unité peut donc corriger un montant sans

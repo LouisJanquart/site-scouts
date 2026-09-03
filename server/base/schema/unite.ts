@@ -41,8 +41,9 @@ export const familles = pgTable('familles', {
   // devrait avoir à cocher « je suis en difficulté » devant un écran.
   tarifSocial: boolean('tarif_social').notNull().default(false),
   tarifSocialAccordeLe: timestamp('tarif_social_accorde_le', { withTimezone: true }),
-  // Frères et sœurs inscrits chez les Scouts plutôt que chez les Guides : la
-  // fédération les compte dans le tarif famille, mais le site ne les voit pas.
+  // Frères et sœurs inscrits dans une AUTRE unité affiliée aux Scouts. La
+  // fédération les compte dans le tarif famille ; le site, qui ne voit que ses
+  // propres inscrits, ne peut pas le deviner. Renseigné à la main par le staff.
   membresAilleurs: integer('membres_ailleurs').notNull().default(0),
   creeLe: timestamp('cree_le', { withTimezone: true }).notNull().defaultNow(),
 })

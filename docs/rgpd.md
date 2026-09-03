@@ -161,4 +161,6 @@ Le code ne peut pas tout. Ces points-là demandent une décision de l'unité :
    engage l'unité, pas le développeur.
 6. **Vérifier ce que la fédération exige** exactement comme données transmises :
    la politique annonce nom, prénom, date de naissance et adresse. Si elle en
-   demande plus, il faut le dire.
+   demande plus, il faut le dire. La fédération concernée est celle des
+   **Guides** — toutes les sections, y compris celles qui portent des noms
+   scouts. Voir la note en tête de `app/data/sections.ts`.

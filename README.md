@@ -112,6 +112,18 @@ docs/              RGPD et exploitation
 - `docs/exploitation.md` — héberger, sauvegarder, mettre en route.
 - `server/utils/droits.ts` — la seule place où l'on décide qui voit quoi.
 
+### Une singularité de l'unité, à connaître avant de toucher au code
+
+La 16e est née de la fusion de deux unités non mixtes. Elle est affiliée **aux
+Guides**, toutes sections confondues — il y avait une embrouille avec la
+fédération scoute au moment de la fusion. Mais les sections non mixtes ont été
+gardées avec leurs noms et leur lore : Lutins et Guides d'un côté, Louveteaux et
+Scouts de l'autre.
+
+Donc : **un seul barème de cotisation, celui des Guides**, malgré les noms de
+sections. C'est le genre de détail qu'on « corrige » de travers en arrivant sur
+le projet.
+
 ### Les données
 
 Deux sources, et c'est volontaire.

@@ -1,6 +1,17 @@
 // Les huit entrées du rail de navigation, dans l'ordre des maquettes Figma.
 // Les noms sont ceux du fichier Figma (Louveteaux, Pios) et non ceux du
 // classeur de planning (Loups, Horizons) : le mapping se fait ici.
+//
+// Pourquoi des noms scouts dans une unité guide
+// ---------------------------------------------
+// La 16e est née de la fusion de deux unités non mixtes. L'ensemble est affilié
+// aux GUIDES — il y avait une embrouille avec la fédération scoute au moment de
+// la fusion. Mais les sections non mixtes ont été gardées (Lutins et Guides
+// d'un côté, Louveteaux et Scouts de l'autre), avec leurs noms et leur lore.
+//
+// Conséquence pratique : un seul barème de cotisation, celui des Guides, pour
+// toutes les sections. Voir shared/cotisations.ts. Ne pas se laisser tromper
+// par les noms.
 
 export interface Section {
   slug: string
