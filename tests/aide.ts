@@ -42,8 +42,8 @@ export function navigateur() {
 
 export async function ouvrirLaSaison() {
   await sql`
-    insert into saisons (libelle, debut, fin, cotisation_centimes, cotisation_fratrie_centimes, active)
-    values ('2026-2027', '2026-09-01', '2027-08-31', 8000, 6500, true)
+    insert into saisons (libelle, debut, fin, supplement_local_centimes, active)
+    values ('2026-2027', '2026-09-01', '2027-08-31', 0, true)
     on conflict (libelle) do nothing
   `
 }

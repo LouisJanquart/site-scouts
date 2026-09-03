@@ -23,6 +23,47 @@ async function pointer(id: string, statut: 'paye' | 'ouvert', moyen?: 'virement'
 
 const reste = computed(() => (data.value?.total.du ?? 0) - (data.value?.total.encaisse ?? 0))
 
+const libellesMotif: Record<string, string> = {
+  plein: 'tarif plein',
+  'famille-2': 'famille (2)',
+  'famille-3': 'famille (3+)',
+  social: 'tarif social',
+  route: 'assurance seule',
+  tardive: 'inscription tardive',
+  ressource: 'personne-ressource',
+}
+
+// Le barème vient de la fédération, pas de nous : on l'affiche avec sa source,
+// pour que le trésorier puisse vérifier et que personne n'ait à croire le site
+// sur parole.
+const grille = computed(() => {
+  const b = data.value?.bareme
+  if (!b) return []
+  return [
+    { cas: 'Un seul membre du ménage', montant: b.pleinCentimes },
+    { cas: 'Deux membres — chacun', montant: b.famille2Centimes },
+    { cas: 'Trois membres ou plus — chacun', montant: b.famille3PlusCentimes },
+    { cas: 'Route, tardive, personne-ressource', montant: b.reduitCentimes },
+    { cas: 'Tarif social', montant: b.socialCentimes },
+  ]
+})
+
+async function basculerTarifSocial(familleId: string, accorde: boolean) {
+  enCours.value = familleId
+  souci.value = null
+  try {
+    await $fetch(`/api/staff/familles/${familleId}/tarif-social`, {
+      method: 'POST',
+      body: { accorde },
+    })
+    await refresh()
+  } catch (e: any) {
+    souci.value = e?.data?.statusMessage ?? 'Impossible d’enregistrer.'
+  } finally {
+    enCours.value = null
+  }
+}
+
 useHead({ title: 'Cotisations — 16e Fleurus' })
 </script>
 
@@ -49,6 +90,30 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
         </div>
       </div>
 
+      <details v-if="grille.length" class="bareme">
+        <summary>
+          Le barème {{ data?.bareme.version }}
+          <span class="doux">— pourquoi chacun paie ce qu’il paie</span>
+        </summary>
+        <div class="bareme__corps">
+          <p class="doux petit">
+            Il vient de la fédération, pas de l’unité. Le point à retenir : le tarif famille
+            s’applique à <strong>tous</strong> les membres du ménage inscrits, pas seulement au
+            deuxième — deux enfants, c’est 46 € + 46 €, pas 57,50 € + 46 €.
+          </p>
+          <ul class="bareme__grille">
+            <li v-for="g in grille" :key="g.cas">
+              <span>{{ g.cas }}</span>
+              <span class="mono">{{ euros(g.montant) }}</span>
+            </li>
+          </ul>
+          <p class="doux petit">
+            Supplément local de l’unité : {{ euros(data?.supplementLocalCentimes ?? 0) }} par enfant.
+            <a :href="data?.bareme.source" target="_blank" rel="noopener">Le barème publié</a>
+          </p>
+        </div>
+      </details>
+
       <p v-if="souci" class="alerte alerte--erreur" role="alert">
         <UiIcone nom="alerte" :taille="18" /><span>{{ souci }}</span>
       </p>
@@ -62,6 +127,7 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
               <th scope="col">Animé</th>
               <th scope="col">Section</th>
               <th scope="col">Dû</th>
+              <th scope="col">Tarif</th>
               <th scope="col">Moyen</th>
               <th scope="col">Communication</th>
               <th scope="col">État</th>
@@ -73,6 +139,11 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
               <th scope="row">{{ l.prenom }} {{ l.nom }}</th>
               <td>{{ nomSection(l.sectionSlug) }}</td>
               <td class="mono">{{ euros(l.duCentimes) }}</td>
+              <td>
+                <span class="motif" :class="{ 'motif--social': l.motifTarif === 'social' }">
+                  {{ libellesMotif[l.motifTarif ?? ''] ?? '—' }}
+                </span>
+              </td>
               <td>{{ l.moyen ?? '—' }}</td>
               <td class="mono petit">{{ l.communication ?? '—' }}</td>
               <td>
@@ -90,7 +161,7 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
                   :disabled="enCours === l.paiementId"
                   @click="pointer(l.paiementId!, 'paye', 'virement')"
                 >
-                  <UiIcone nom="check" :taille="13" /> Pointer reçu
+                  <UiIcone nom="check" :taille="13" /> Pointer
                 </button>
                 <button
                   v-else-if="l.paiementId"
@@ -99,7 +170,20 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
                   :disabled="enCours === l.paiementId"
                   @click="pointer(l.paiementId!, 'ouvert')"
                 >
-                  Annuler le pointage
+                  Dépointer
+                </button>
+                <button
+                  class="mini mini--social"
+                  type="button"
+                  :disabled="enCours === l.familleId"
+                  :title="
+                    l.tarifSocial
+                      ? 'Retirer le tarif social à la famille ' + l.familleNom
+                      : 'Accorder le tarif social à la famille ' + l.familleNom
+                  "
+                  @click="basculerTarifSocial(l.familleId, !l.tarifSocial)"
+                >
+                  {{ l.tarifSocial ? 'Retirer social' : 'Social' }}
                 </button>
               </td>
             </tr>
@@ -167,7 +251,68 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
 }
 
 .petit {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+
+.bareme {
+  background: rgba($blanc, 0.03);
+  border-radius: $r-champ;
+  padding: 0.75rem 1rem;
+
+  summary {
+    cursor: pointer;
+    font-size: 0.86rem;
+    font-weight: 600;
+    @include focus-visible;
+  }
+
+  &__corps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-block-start: 0.75rem;
+    max-inline-size: 40rem;
+  }
+
+  &__grille {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.35rem 0.6rem;
+      background: rgba($blanc, 0.03);
+      border-radius: 6px;
+      font-size: 0.82rem;
+    }
+
+    .mono {
+      color: $cyan;
+      font-weight: 500;
+    }
+  }
+
+  a {
+    color: $cyan;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.motif {
+  font-size: 0.72rem;
+  color: rgba($blanc, 0.66);
+
+  &--social {
+    color: #86efac;
+  }
 }
 
 .mini {
@@ -187,6 +332,17 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
   &--annuler {
     background: rgba($blanc, 0.07);
     color: rgba($blanc, 0.6);
+  }
+
+  &--social {
+    margin-inline-start: 0.35rem;
+    background: rgba($blanc, 0.07);
+    color: rgba($blanc, 0.66);
+
+    &:hover {
+      background: rgba(#4ade80, 0.16);
+      color: #86efac;
+    }
   }
 }
 

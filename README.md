@@ -54,6 +54,11 @@ le serveur :
 - Un back office : liste d'appel du chef limitée à sa section, dossiers à
   relire, fiches santé, état des cotisations (le montant reste au CU et au
   trésorier), distribution des rôles.
+- Le barème d'affiliation de la fédération, appliqué correctement : le tarif
+  famille vaut pour **tous** les membres du ménage inscrits, pas seulement pour
+  le deuxième — inscrire un cadet fait donc baisser la cotisation de l'aîné, et
+  le site recalcule toute la fratrie. Route, inscription tardive, tarif social
+  et réduction animateur breveté sont couverts (`shared/cotisations.ts`).
 - Le paiement de la cotisation par Bancontact ou carte (Mollie), avec le
   virement à communication structurée comme solution de repli — et un
   simulateur de paiement tant que le compte Mollie n'est pas ouvert, pour

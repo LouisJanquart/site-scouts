@@ -19,12 +19,23 @@ const { data: saison } = await useFetch('/api/saison')
 const anneeSaison = computed(() =>
   saison.value && 'debut' in saison.value ? anneeDeSaison(new Date(saison.value.debut)) : anneeDeSaison(),
 )
-const cotisation = computed(() =>
-  saison.value && 'cotisationCentimes' in saison.value ? saison.value.cotisationCentimes : 0,
+const bareme = computed(() =>
+  saison.value && 'bareme' in saison.value ? saison.value.bareme : null,
+)
+const supplement = computed(() =>
+  saison.value && 'supplementLocalCentimes' in saison.value
+    ? saison.value.supplementLocalCentimes
+    : 0,
 )
 
 const politiqueLue = ref(false)
-const resultat = ref<{ inscriptionId: string; montantCentimes: number; communication: string | null } | null>(null)
+const resultat = ref<{
+  inscriptionId: string
+  montantCentimes: number
+  explicationTarif: string | null
+  fratrieRecalculee: { prenom: string; montantCentimes: number }[]
+  communication: string | null
+} | null>(null)
 
 const etapes = [
   { cle: 'enfant', titre: 'L’enfant' },
@@ -115,7 +126,14 @@ async function deposer() {
   if (bloquant.value) return
 
   const r = await envoyer(() =>
-    $fetch<{ ok: true; inscriptionId: string; montantCentimes: number; communication: string | null }>(
+    $fetch<{
+      ok: true
+      inscriptionId: string
+      montantCentimes: number
+      explicationTarif: string | null
+      fratrieRecalculee: { prenom: string; montantCentimes: number }[]
+      communication: string | null
+    }>(
       '/api/inscriptions',
       {
         method: 'POST',
@@ -172,9 +190,25 @@ useHead({ title: 'Inscrire un enfant — 16e Fleurus' })
       <section v-if="resultat.montantCentimes > 0" class="groupe">
         <h2 class="groupe__titre">La cotisation</h2>
         <p class="groupe__chapo">
-          Il reste {{ euros(resultat.montantCentimes) }}. L’inscription devient définitive à
-          réception du paiement et après relecture par le staff.
+          Il reste {{ euros(resultat.montantCentimes) }}.
+          <template v-if="resultat.explicationTarif">{{ resultat.explicationTarif }}</template>
+          L’inscription devient définitive à réception du paiement et après relecture par le staff.
         </p>
+
+        <!-- Inscrire un enfant fait baisser le tarif de ses frères et sœurs :
+             il faut le dire, sinon la famille croit à une erreur. -->
+        <div v-if="resultat.fratrieRecalculee.length" class="alerte alerte--bien">
+          <UiIcone nom="check" :taille="18" />
+          <span>
+            La cotisation de
+            <template v-for="(f, i) in resultat.fratrieRecalculee" :key="f.prenom">
+              <template v-if="i > 0">{{ i === resultat.fratrieRecalculee.length - 1 ? ' et ' : ', ' }}</template>
+              <strong>{{ f.prenom }}</strong>
+            </template>
+            a baissé en même temps — le tarif famille s’applique à toute la fratrie, pas seulement
+            au dernier inscrit. Les nouveaux montants sont dans votre espace.
+          </span>
+        </div>
         <div class="fin__actions">
           <NuxtLink class="bouton bouton--principal" :to="`/mon-espace/paiement/${resultat.inscriptionId}`">
             <UiIcone nom="carte" :taille="16" /> Payer en ligne
@@ -237,7 +271,8 @@ useHead({ title: 'Inscrire un enfant — 16e Fleurus' })
           v-else
           v-model:politique-lue="politiqueLue"
           :champs="champs"
-          :cotisation-centimes="cotisation"
+          :bareme="bareme"
+          :supplement-local-centimes="supplement"
           :deja-connecte="connecte"
         />
 

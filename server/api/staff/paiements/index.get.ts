@@ -1,5 +1,5 @@
 import { and, desc, eq, sql } from 'drizzle-orm'
-import { animes, inscriptions, paiements, personnes, saisons } from '../../../base/schema'
+import { animes, familles, inscriptions, paiements, personnes, saisons } from '../../../base/schema'
 
 // Le suivi de la caisse. Réservé au CU et au trésorier : un chef de section n'a
 // pas à voir qui a payé et qui n'a pas payé — c'est une information qui range
@@ -14,11 +14,16 @@ export default defineEventHandler(async (event) => {
   const lignes = await base
     .select({
       inscriptionId: inscriptions.id,
+      familleId: animes.familleId,
+      familleNom: familles.nom,
+      tarifSocial: familles.tarifSocial,
+      membresAilleurs: familles.membresAilleurs,
       prenom: personnes.prenom,
       nom: personnes.nom,
       sectionSlug: inscriptions.sectionSlug,
       statutInscription: inscriptions.statut,
       duCentimes: inscriptions.cotisationDueCentimes,
+      motifTarif: inscriptions.motifTarif,
       paiementId: paiements.id,
       moyen: paiements.moyen,
       statut: paiements.statut,
@@ -28,6 +33,7 @@ export default defineEventHandler(async (event) => {
     })
     .from(inscriptions)
     .innerJoin(animes, eq(animes.id, inscriptions.animeId))
+    .innerJoin(familles, eq(familles.id, animes.familleId))
     .innerJoin(personnes, eq(personnes.id, animes.personneId))
     .leftJoin(paiements, eq(paiements.inscriptionId, inscriptions.id))
     .where(eq(inscriptions.saisonId, saison.id))
@@ -50,6 +56,8 @@ export default defineEventHandler(async (event) => {
 
   return {
     saison: saison.libelle,
+    bareme: baremeDeLaSaison(saison),
+    supplementLocalCentimes: saison.supplementLocalCentimes,
     lignes,
     total: { du: totaux?.du ?? 0, encaisse: encaisse?.somme ?? 0 },
   }

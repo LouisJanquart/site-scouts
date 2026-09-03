@@ -1,12 +1,12 @@
-import { pgTable, uuid, text, timestamp, boolean, date, integer, index, uniqueIndex } from 'drizzle-orm/pg-core'
+import { pgTable, uuid, text, timestamp, boolean, date, integer, jsonb, index, uniqueIndex } from 'drizzle-orm/pg-core'
 import { personnes, comptes } from './comptes'
 
 // ---------------------------------------------------------------------------
 // La vie de l'unité : les saisons, les familles, les animés, les inscriptions.
 // ---------------------------------------------------------------------------
 
-// Une saison scoute va de septembre à août. C'est elle qui porte le montant de
-// la cotisation et les dates d'ouverture des inscriptions.
+// Une saison scoute va de septembre à août. C'est elle qui porte le barème des
+// cotisations et les dates d'ouverture des inscriptions.
 export const saisons = pgTable(
   'saisons',
   {
@@ -14,10 +14,16 @@ export const saisons = pgTable(
     libelle: text('libelle').notNull(), // « 2026-2027 »
     debut: date('debut').notNull(),
     fin: date('fin').notNull(),
-    // En centimes, comme partout où il est question d'argent : pas de flottant.
-    cotisationCentimes: integer('cotisation_centimes').notNull().default(0),
-    // Dégressivité fratrie : montant appliqué au deuxième enfant, au troisième…
-    cotisationFratrieCentimes: integer('cotisation_fratrie_centimes'),
+    // Le barème d'affiliation de la fédération, tel qu'il s'applique cette
+    // saison-là. Laissé vide, c'est celui de shared/cotisations.ts qui sert.
+    // Le stocker permet au staff d'unité de corriger un montant sans attendre
+    // un déploiement — et de garder la trace du barème réellement appliqué une
+    // fois la saison passée.
+    bareme: jsonb('bareme'),
+    // Ce que l'unité ajoute par enfant, au-delà de l'affiliation, pour le
+    // matériel et le local. En centimes, comme partout où il est question
+    // d'argent : pas de flottant.
+    supplementLocalCentimes: integer('supplement_local_centimes').notNull().default(0),
     ouvertureInscriptions: timestamp('ouverture_inscriptions', { withTimezone: true }),
     clotureInscriptions: timestamp('cloture_inscriptions', { withTimezone: true }),
     active: boolean('active').notNull().default(false),
@@ -30,6 +36,14 @@ export const saisons = pgTable(
 export const familles = pgTable('familles', {
   id: uuid('id').primaryKey().defaultRandom(),
   nom: text('nom').notNull(),
+  // Le tarif social ne se demande pas dans le formulaire : il s'accorde, par le
+  // staff d'unité, après une conversation. C'est volontaire — personne ne
+  // devrait avoir à cocher « je suis en difficulté » devant un écran.
+  tarifSocial: boolean('tarif_social').notNull().default(false),
+  tarifSocialAccordeLe: timestamp('tarif_social_accorde_le', { withTimezone: true }),
+  // Frères et sœurs inscrits chez les Scouts plutôt que chez les Guides : la
+  // fédération les compte dans le tarif famille, mais le site ne les voit pas.
+  membresAilleurs: integer('membres_ailleurs').notNull().default(0),
   creeLe: timestamp('cree_le', { withTimezone: true }).notNull().defaultNow(),
 })
 
@@ -90,6 +104,12 @@ export const inscriptions = pgTable(
     // Un rappel : nouvel arrivant ou renouvellement. Change le suivi côté staff.
     nouvelle: boolean('nouvelle').notNull().default(true),
     cotisationDueCentimes: integer('cotisation_due_centimes').notNull().default(0),
+    // Pourquoi ce montant-là : plein, famille-2, famille-3, social, route,
+    // tardive. Affiché à la famille et au trésorier — un montant sans raison
+    // est un montant qu'on conteste.
+    motifTarif: text('motif_tarif'),
+    // L'animé est un animateur breveté (cas des Pios et de la Route).
+    brevete: boolean('brevete').notNull().default(false),
     deposeeLe: timestamp('deposee_le', { withTimezone: true }),
     valideeLe: timestamp('validee_le', { withTimezone: true }),
     valideePar: uuid('validee_par').references(() => comptes.id, { onDelete: 'set null' }),

@@ -85,6 +85,17 @@ Un animé de douze ans n'a pas à découvrir un antécédent médical sur un éc
 fiche se consulte auprès des parents ou des chefs. Appliqué dans
 `exigerAccesFicheSante()`.
 
+### Le tarif social ne se demande pas dans le formulaire
+
+Il n'y a aucune case « je suis en difficulté financière » à l'inscription.
+Le tarif social s'accorde par le staff d'unité, après une conversation, depuis
+le back office. La raison est simple : demander à quelqu'un de déclarer sa
+difficulté devant un écran, dans un formulaire qui demande par ailleurs la
+fiche santé de son enfant, est une façon sûre de le faire renoncer.
+
+Conséquence côté données : le drapeau vit sur la famille, pas sur l'inscription,
+et il n'est visible que du CU et du trésorier.
+
 ### Un chef voit l'état d'une cotisation, pas son montant
 
 Un chef de section doit savoir si la cotisation d'un de ses animés est réglée :

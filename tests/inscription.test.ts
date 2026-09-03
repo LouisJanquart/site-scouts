@@ -66,20 +66,61 @@ describe('dépôt d’un dossier', () => {
     expect(lignes[0]!.version_texte).toBe('2026-09')
   })
 
-  it('applique la dégressivité au deuxième enfant de la famille', async () => {
+  it('fait BAISSER le tarif de l’aîné quand un cadet s’inscrit', async () => {
+    // Le piège du barème de la fédération : le tarif famille s'applique à tous
+    // les membres, pas seulement au deuxième. Inscrire un cadet ne coûte donc
+    // pas 46 € de plus à la famille — il fait passer les deux enfants de 57,50
+    // à 46. C'est l'erreur la plus coûteuse qu'on puisse faire ici.
     const n = navigateur()
     const premier = await n.appel('/api/inscriptions', {
       method: 'POST',
       body: JSON.stringify(dossier('Aine', 'Fratrie')),
     })
-    expect(premier.corps.montantCentimes).toBe(8000)
-    // Le parent est maintenant connecté : le second enfant rejoint la famille.
+    expect(premier.corps.montantCentimes).toBe(5750)
+
     const second = await n.appel('/api/inscriptions', {
       method: 'POST',
       body: JSON.stringify({ ...dossier('Cadet', 'Fratrie', 'nutons', '2020-04-04'), motDePasse: undefined }),
     })
     expect(second.statut).toBe(200)
-    expect(second.corps.montantCentimes).toBe(6500)
+    expect(second.corps.montantCentimes).toBe(4600)
+    // Et l'aîné a suivi.
+    expect(second.corps.fratrieRecalculee).toEqual([
+      expect.objectContaining({ prenom: 'Aine', montantCentimes: 4600 }),
+    ])
+
+    const [aine] = await sql<{ cotisation_due_centimes: number }[]>`
+      select i.cotisation_due_centimes
+      from inscriptions i
+      join animes a on a.id = i.anime_id
+      join personnes p on p.id = a.personne_id
+      where p.prenom = 'Aine'
+    `
+    expect(aine!.cotisation_due_centimes).toBe(4600)
+  })
+
+  it('passe toute la fratrie au tarif trois enfants', async () => {
+    const n = navigateur()
+    await n.appel('/api/inscriptions', { method: 'POST', body: JSON.stringify(dossier('Un', 'Trois')) })
+    await n.appel('/api/inscriptions', {
+      method: 'POST',
+      body: JSON.stringify({ ...dossier('Deux', 'Trois', 'nutons', '2020-01-01'), motDePasse: undefined }),
+    })
+    const troisieme = await n.appel('/api/inscriptions', {
+      method: 'POST',
+      body: JSON.stringify({ ...dossier('Trois', 'Trois', 'guides', '2012-05-05'), motDePasse: undefined }),
+    })
+    expect(troisieme.corps.montantCentimes).toBe(3900)
+
+    const lignes = await sql<{ prenom: string; cotisation_due_centimes: number }[]>`
+      select p.prenom, i.cotisation_due_centimes
+      from inscriptions i
+      join animes a on a.id = i.anime_id
+      join personnes p on p.id = a.personne_id
+      where p.nom = 'Trois'
+    `
+    expect(lignes).toHaveLength(3)
+    for (const l of lignes) expect(l.cotisation_due_centimes).toBe(3900)
   })
 
   it('produit une communication structurée valide', async () => {

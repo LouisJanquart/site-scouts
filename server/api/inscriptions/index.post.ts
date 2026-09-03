@@ -198,26 +198,18 @@ export default defineEventHandler(async (event) => {
       .values({ personneId: personneEnfant!.id, familleId })
       .returning()
 
-    // 4. La cotisation : dégressive à partir du deuxième enfant de la famille.
-    const [compte] = await tx
-      .select({ dejaInscrits: sql<number>`count(*)::int` })
-      .from(inscriptions)
-      .innerJoin(animes, eq(animes.id, inscriptions.animeId))
-      .where(and(eq(animes.familleId, familleId), eq(inscriptions.saisonId, saison.id)))
-    const dejaInscrits = compte?.dejaInscrits ?? 0
-    const montant =
-      dejaInscrits > 0 && saison.cotisationFratrieCentimes != null
-        ? saison.cotisationFratrieCentimes
-        : saison.cotisationCentimes
-
+    // 4. L'inscription. Le montant est posé à zéro : il sera calculé juste
+    //    après, pour la fratrie entière — le tarif de chaque enfant dépend du
+    //    nombre total de membres du ménage inscrits, donc celui-ci fait
+    //    éventuellement baisser celui des autres.
     const [inscription] = await tx
       .insert(inscriptions)
       .values({
         animeId: anime!.id,
         saisonId: saison.id,
         sectionSlug: dossier.enfant.sectionSlug,
-        statut: montant > 0 ? 'en-attente-paiement' : 'envoyee',
-        cotisationDueCentimes: montant,
+        statut: 'en-attente-paiement',
+        cotisationDueCentimes: 0,
         deposeeLe: new Date(),
         remarqueFamille: dossier.remarqueFamille,
       })
@@ -264,7 +256,18 @@ export default defineEventHandler(async (event) => {
       })),
     )
 
-    // 8. L'appel de cotisation. Le virement existe toujours, même quand le
+    // 8. Le calcul, pour toute la fratrie d'un coup.
+    const recalcul = await recalculerLaFratrie(familleId, saison.id, tx)
+    const maLigne = recalcul.lignes.find((l) => l.inscriptionId === inscription!.id)
+    const montant = maLigne?.montantCentimes ?? 0
+    if (montant === 0) {
+      await tx
+        .update(inscriptions)
+        .set({ statut: 'envoyee' })
+        .where(eq(inscriptions.id, inscription!.id))
+    }
+
+    // 9. L'appel de cotisation. Le virement existe toujours, même quand le
     //    paiement en ligne marche : tout le monde n'a pas de carte.
     let communication: string | null = null
     if (montant > 0) {
@@ -282,6 +285,13 @@ export default defineEventHandler(async (event) => {
       inscriptionId: inscription!.id,
       animeId: anime!.id,
       montant,
+      explicationTarif: maLigne?.explication ?? null,
+      // Les frères et sœurs dont le tarif vient de changer : la famille doit le
+      // savoir, sinon elle croit à une erreur.
+      fratrieRecalculee: recalcul.lignes
+        .filter((l) => l.inscriptionId !== inscription!.id)
+        .map((l) => ({ prenom: l.prenom, montantCentimes: l.montantCentimes })),
+      ecartsApresPaiement: recalcul.ecartsApresPaiement,
       communication,
       nouveauCompte: !connecte,
     }
@@ -329,6 +339,8 @@ ${urlDuSite()}/mon-espace`,
     ok: true,
     inscriptionId: resultat.inscriptionId,
     montantCentimes: resultat.montant,
+    explicationTarif: resultat.explicationTarif,
+    fratrieRecalculee: resultat.fratrieRecalculee,
     communication: resultat.communication,
   }
 })

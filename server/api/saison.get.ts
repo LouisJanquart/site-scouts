@@ -21,8 +21,10 @@ export default defineEventHandler(async () => {
     close,
     libelle: saison.libelle,
     debut: saison.debut,
-    cotisationCentimes: saison.cotisationCentimes,
-    cotisationFratrieCentimes: saison.cotisationFratrieCentimes,
+    // Le barème complet, pour que le formulaire puisse annoncer le bon montant
+    // avant même que le dossier existe.
+    bareme: baremeDeLaSaison(saison),
+    supplementLocalCentimes: saison.supplementLocalCentimes,
     ouvertureInscriptions: saison.ouvertureInscriptions,
     clotureInscriptions: saison.clotureInscriptions,
   }

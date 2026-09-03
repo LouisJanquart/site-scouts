@@ -2,11 +2,33 @@
 import { consentementsCatalogue } from '#shared/consentements'
 import { bornesSections } from '#shared/orientation'
 
+import type { Bareme } from '#shared/cotisations'
+
 const props = defineProps<{
   champs: Record<string, string>
-  cotisationCentimes: number
+  bareme: Bareme | null
+  supplementLocalCentimes: number
   dejaConnecte: boolean
 }>()
+
+// On n'annonce pas un montant : on montre le barème.
+//
+// Le tarif dépend du nombre de membres du ménage inscrits, y compris les frères
+// et sœurs chez les Scouts, et l'unité ne connaît pas encore la fratrie à ce
+// stade. Afficher « 57,50 € » à une famille qui paiera 39 € serait faux, et
+// afficher un montant qui bouge après coup fait croire à une erreur. On montre
+// donc la grille, et le montant exact arrive au dépôt.
+const grille = computed(() => {
+  const b = props.bareme
+  if (!b) return []
+  const sup = props.supplementLocalCentimes
+  return [
+    { cas: 'Un seul membre du ménage inscrit', montant: b.pleinCentimes + sup },
+    { cas: 'Deux membres — le tarif s’applique aux deux', montant: b.famille2Centimes + sup },
+    { cas: 'Trois membres ou plus — à chacun', montant: b.famille3PlusCentimes + sup },
+    { cas: 'Route, ou inscription après le 1er avril', montant: b.reduitCentimes + sup },
+  ]
+})
 
 const { dossier } = useDossier()
 const politiqueLue = ref(false)
@@ -72,10 +94,7 @@ defineExpose({ discordant })
             </span>
           </dd>
         </div>
-        <div>
-          <dt>Cotisation</dt>
-          <dd>{{ euros(cotisationCentimes) }}</dd>
-        </div>
+
       </dl>
 
       <!-- La fiche santé n'est PAS récapitulée : l'afficher en clair sur un
@@ -83,6 +102,26 @@ defineExpose({ discordant })
       <p class="note">
         La fiche santé n’est pas réaffichée ici, volontairement. Vous pourrez la relire et la
         corriger depuis votre espace, après l’inscription.
+      </p>
+    </section>
+
+    <section v-if="grille.length" class="groupe">
+      <h2 class="groupe__titre">La cotisation</h2>
+      <p class="groupe__chapo">
+        Elle dépend du nombre d’enfants de votre ménage inscrits — et le tarif famille s’applique
+        à <em>tous</em>, pas seulement au deuxième. Votre montant exact sera calculé au moment du
+        dépôt, et il baissera tout seul si vous inscrivez un autre enfant plus tard.
+      </p>
+      <ul class="grille">
+        <li v-for="g in grille" :key="g.cas">
+          <span>{{ g.cas }}</span>
+          <span class="grille__montant mono">{{ euros(g.montant) }}</span>
+        </li>
+      </ul>
+      <p class="note">
+        Un frère ou une sœur inscrit chez les Scouts compte aussi : dites-le dans la remarque, le
+        staff l’ajoutera. Et si le montant pose un problème, écrivez au staff d’unité — un tarif
+        social existe, il s’accorde discrètement et il ne se demande pas sur un formulaire.
       </p>
     </section>
 
@@ -226,6 +265,34 @@ defineExpose({ discordant })
     &--non {
       color: rgba($blanc, 0.5);
     }
+  }
+}
+
+.grille {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba($blanc, 0.03);
+    border-radius: $r-champ;
+    font-size: 0.85rem;
+    color: rgba($blanc, 0.78);
+  }
+
+  &__montant {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: $cyan;
+    white-space: nowrap;
   }
 }
 
