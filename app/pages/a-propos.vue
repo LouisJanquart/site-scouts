@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { unite } from '~/data/unite'
 import { sections } from '~/data/sections'
-import { totalChefs } from '~/data/staff'
-import { planning, saison } from '~/data/planning'
 
-const nbEvenements = computed(() => planning.filter((j) => j.evenement).length)
+// Le décompte des chefs et celui des dates viennent de l'API : ce sont les
+// seules choses de cette page qui ne sont pas publiques par nature, et le
+// décompte, lui, l'est.
+const { planning, saison } = usePlanning()
+const { totalChefs } = useContenu()
+
+const nbEvenements = computed(() => planning.value.filter((j) => j.evenement).length)
 
 useHead({ title: 'À propos — 16e Fleurus' })
 </script>

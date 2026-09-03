@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { actusVisibles } from '~/data/actus'
 import { parSlug } from '~/data/sections'
 
-const { role, definition } = useRole()
-const liste = computed(() => actusVisibles(role.value))
+const { definition } = useRole()
+const { actus } = useContenu()
+const liste = computed(() => actus.value)
 
 useHead({ title: 'Les actus — 16e Fleurus' })
 </script>

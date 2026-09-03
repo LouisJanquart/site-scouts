@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { evenementsVisibles } from '~/data/evenements'
 import { parSlug } from '~/data/sections'
 
 const { aujourdhui } = usePlanning()
-const { role, voitLesEvenementsInternes } = useRole()
+const { voitLesEvenementsInternes } = useRole()
+// Déjà filtrée par le serveur : un visiteur ne reçoit que les rendez-vous
+// ouverts au dehors.
+const { evenements } = useContenu()
 
-const liste = computed(() => evenementsVisibles(role.value))
+const liste = computed(() => evenements.value)
 
 const aVenir = computed(() =>
   liste.value.filter((e) => (e.dateFin ?? e.date) >= aujourdhui.value),

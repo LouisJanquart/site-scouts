@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { sections } from '~/data/sections'
 import { unite } from '~/data/unite'
-import { evenementPublicDuJour } from '~/data/evenements'
 
 // L'accueil reprend l'écran Desktop-7 des maquettes : une photo plein cadre, le
 // logotype par-dessus, et un encart incrusté en bas à gauche. L'illustration
@@ -28,6 +27,10 @@ const selection = useJourSelectionne()
 const { aujourdhui } = usePlanning()
 const { meteoPour } = useMeteo()
 const { voitLeCalendrier } = useRole()
+// Le planning et les événements arrivent de l'API, déjà filtrés selon le
+// compte : l'intitulé d'un rendez-vous réservé n'atteint jamais le navigateur
+// d'un visiteur, il n'y a donc plus rien à masquer ici.
+const { evenements } = useContenu()
 
 const meteo = computed(() => meteoPour(jour.value?.date))
 
@@ -41,13 +44,9 @@ const sectionsDuJour = computed(() =>
     .map((s) => ({ s, entree: jour.value!.sections[s.cleplanning!]! })),
 )
 
-// Un visiteur ne voit un intitulé d'événement que s'il s'agit d'un rendez-vous
-// ouvert au dehors. Les Saint-Nicolas et veillées de Noël ne le regardent pas.
-const evenementAffiche = computed(() => {
-  if (!jour.value) return null
-  if (voitLeCalendrier.value) return jour.value.evenement
-  return evenementPublicDuJour(jour.value.date)?.titre ?? null
-})
+// L'intitulé vient du planning que le serveur a envoyé : complet pour une
+// famille, réduit aux rendez-vous ouverts au dehors pour un visiteur.
+const evenementAffiche = computed(() => jour.value?.evenement ?? null)
 
 const estChoisi = computed(() => Boolean(selection.value))
 const estPasse = computed(() => Boolean(jour.value && jour.value.date < aujourdhui.value))
@@ -104,7 +103,9 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     <span class="accueil__plaque" />
 
     <div class="accueil__encart">
-      <div class="accueil__jour">
+      <!-- Le planning arrive de l'API : il peut manquer le temps d'une requête.
+           On garde alors la place plutôt que de faire sauter la mise en page. -->
+      <div v-if="jour" class="accueil__jour">
         <!-- Pas d'icône météo au-delà de la fenêtre de prévision : mieux vaut
              ne rien montrer qu'un nuage par défaut. -->
         <div v-if="meteo" class="accueil__meteo">

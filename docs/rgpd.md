@@ -53,6 +53,8 @@ proposent un type ; il suffit de l'accepter et d'en garder une copie.
 | Journal des accès | `server/utils/journal.ts` |
 | Durées de conservation, purge automatique | `server/tasks/menage.ts` |
 | Catalogue des consentements et leur texte | `shared/consentements.ts` |
+| Ce que chaque rôle a le droit de lire du contenu | `server/utils/contenu.ts` |
+| Clé personnelle des flux iCal | `server/utils/calendrierPrive.ts` |
 | Export, journal et demandes côté famille | `server/api/mon-espace/` |
 | Tableau de bord RGPD du CU | `server/api/staff/rgpd/` |
 

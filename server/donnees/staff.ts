@@ -5,16 +5,18 @@
 // famille, le numéro de téléphone personnel et l'adresse mail personnelle.
 // Rien de tout cela n'est repris ici, et ce n'est pas un oubli.
 //
-// Ce site est généré en statique : tout ce qui se trouve dans ce fichier est
-// téléchargé par n'importe quel visiteur, quel que soit le rôle affiché à
-// l'écran. Le sélecteur de rôle masque des informations, il ne les protège
-// pas. Publier 63 numéros de téléphone derrière un simple masquage côté
-// navigateur reviendrait à les publier tout court.
+// Ce fichier vit désormais dans server/donnees/ : il n'est PAS téléchargé par
+// le navigateur. Il ne sort que par /api/contenu/staff, qui vérifie le compte
+// avant de répondre — un visiteur non connecté n'obtient qu'un décompte.
 //
-// Les coordonnées personnelles n'apparaîtront donc qu'une fois qu'une vraie
-// authentification et un rendu côté serveur existeront. En attendant, les
-// vues « parent » et « animé » affichent l'adresse mail de section, qui est
-// une adresse de fonction déjà partagée par l'unité.
+// Cela dit, le nom de famille, le téléphone personnel et l'adresse mail
+// personnelle des 63 chefs ne sont toujours pas repris ici, et ce n'est
+// toujours pas un oubli. Le jour où l'unité voudra les mettre en ligne, il
+// faudra le demander aux 63 personnes concernées, une par une : le fait qu'un
+// mécanisme d'accès existe ne vaut pas consentement.
+//
+// Les adresses de section, elles, sont des adresses de fonction déjà partagées
+// par l'unité : elles sont ci-dessous, et servies aux familles connectées.
 // ---------------------------------------------------------------------------
 
 export interface Chef {
@@ -23,6 +25,18 @@ export interface Chef {
   section: string
   chefDeStaff?: boolean
   note?: string
+}
+
+/** Les adresses de fonction des sections. Pas des adresses personnelles. */
+export const adressesDeSection: Record<string, string> = {
+  'nutons': 'staffnutonfleurus@gmail.com',
+  'lutins': 'lutin16he@gmail.com',
+  'louveteaux': 'akela.fleurus@gmail.com',
+  'guides': 'staffguidesfleurus@gmail.com',
+  'scouts': 'scouts.fleurus@gmail.com',
+  'pios': 'horizons16.fleurus@gmail.com',
+  'route': 'route.fleurus@gmail.com',
+  'staff': 'scout.fleu@gmail.com',
 }
 
 export const chefs: Chef[] = [

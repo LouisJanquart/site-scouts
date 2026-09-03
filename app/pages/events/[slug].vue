@@ -1,26 +1,23 @@
 <script setup lang="ts">
-import { evenements } from '~/data/evenements'
 import { parSlug } from '~/data/sections'
 
 const route = useRoute()
-const evenement = computed(() => evenements.find((e) => e.slug === String(route.params.slug)))
-
-if (!evenement.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Événement inconnu', fatal: true })
-}
-
 const { aujourdhui } = usePlanning()
-const { role } = useRole()
+// La liste est déjà filtrée par le serveur : si l'événement n'y est pas, c'est
+// soit qu'il n'existe pas, soit qu'on n'y a pas droit — et de l'extérieur, les
+// deux se ressemblent, ce qui est voulu.
+const { evenements, chargement } = useContenu()
 
-// Un rendez-vous interne n'est pas montré à un visiteur, même en arrivant
-// directement par son adresse.
-const RANG: Record<string, number> = { tous: 0, parents: 1, animes: 1, chefs: 2 }
-const autorise = computed(() => {
-  const n = role.value === 'chef' ? 2 : role.value === 'visiteur' ? 0 : 1
-  return RANG[evenement.value!.public] <= n
-})
+const evenement = computed(() =>
+  evenements.value.find((e: any) => e.slug === String(route.params.slug)),
+)
+const autorise = computed(() => Boolean(evenement.value))
 
-const passe = computed(() => (evenement.value!.dateFin ?? evenement.value!.date) < aujourdhui.value)
+const passe = computed(() =>
+  evenement.value
+    ? (evenement.value.dateFin ?? evenement.value.date) < aujourdhui.value
+    : false,
+)
 
 // Un fichier .ics généré à la volée, pour ajouter la date à son agenda sans
 // que l'unité ait à publier quoi que ce soit.

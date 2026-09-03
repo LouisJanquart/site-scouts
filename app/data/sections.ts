@@ -12,6 +12,14 @@
 // Conséquence pratique : un seul barème de cotisation, celui des Guides, pour
 // toutes les sections. Voir shared/cotisations.ts. Ne pas se laisser tromper
 // par les noms.
+//
+// Ce fichier est PUBLIC
+// ---------------------
+// Il part dans le paquet JavaScript téléchargé par n'importe quel visiteur.
+// N'y mettre que ce qui peut être lu par tout le monde : l'identité des
+// sections, leurs âges, leur résumé. Les adresses de contact, le planning, le
+// staff et les documents vivent dans server/donnees/ et passent par l'API,
+// qui vérifie les droits à chaque requête.
 
 export interface Section {
   slug: string
@@ -21,7 +29,6 @@ export interface Section {
   cleplanning: string | null
   ages: string | null
   genre: 'mixte' | 'filles' | 'garcons' | null
-  email: string | null
   icone: string
   resume: string
   description: string
@@ -36,7 +43,6 @@ export const sections: Section[] = [
     cleplanning: 'nutons',
     ages: '5 à 7 ans',
     genre: 'mixte',
-    email: 'staffnutonfleurus@gmail.com',
     icone: 'etoile',
     resume: 'La première section. On y arrive avant de savoir lire, on en repart en sachant faire un nœud.',
     description:
@@ -50,7 +56,6 @@ export const sections: Section[] = [
     cleplanning: 'lutins',
     ages: '7 à 11 ans',
     genre: 'filles',
-    email: 'lutin16he@gmail.com',
     icone: 'feuille',
     resume: 'La plus grande section de l’unité, et celle qui ne tient jamais en place.',
     description:
@@ -64,7 +69,6 @@ export const sections: Section[] = [
     cleplanning: 'louveteaux',
     ages: '8 à 11 ans',
     genre: 'garcons',
-    email: 'akela.fleurus@gmail.com',
     icone: 'patte',
     resume: 'La meute. Akela, les sizaines, et un camp sous tente qui compte comme un premier vrai camp.',
     description:
@@ -78,7 +82,6 @@ export const sections: Section[] = [
     cleplanning: 'guides',
     ages: '11 à 16 ans',
     genre: 'filles',
-    email: 'staffguidesfleurus@gmail.com',
     icone: 'trefle',
     resume: 'Compagnies, hikes de plusieurs jours, et un camp qu’on construit soi-même.',
     description:
@@ -92,7 +95,6 @@ export const sections: Section[] = [
     cleplanning: 'scouts',
     ages: '11 à 16 ans',
     genre: 'garcons',
-    email: 'scouts.fleurus@gmail.com',
     icone: 'lys',
     resume: 'Patrouilles, constructions, hikes traqueurs. La section qui campe le plus longtemps.',
     description:
@@ -106,7 +108,6 @@ export const sections: Section[] = [
     cleplanning: 'pios',
     ages: '16 à 18 ans',
     genre: 'mixte',
-    email: 'horizons16.fleurus@gmail.com',
     icone: 'montagne',
     resume: 'Le moment où l’on passe de l’autre côté : on organise autant qu’on participe.',
     description:
@@ -120,7 +121,6 @@ export const sections: Section[] = [
     cleplanning: 'route',
     ages: '18 ans et plus',
     genre: 'mixte',
-    email: 'route.fleurus@gmail.com',
     icone: 'feu',
     resume: 'Les plus de dix-huit ans. Le bar, la marche Adeps, la cavalcade, la veillée de Noël.',
     description:
@@ -135,7 +135,6 @@ export const sections: Section[] = [
     cleplanning: null,
     ages: null,
     genre: 'mixte',
-    email: 'scout.fleu@gmail.com',
     icone: 'bouclier',
     resume: 'Celles et ceux qui tiennent la baraque : le calendrier, le local, le matériel, les comptes.',
     description:

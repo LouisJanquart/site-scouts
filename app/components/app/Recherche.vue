@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { sections } from '~/data/sections'
-import { evenementsVisibles } from '~/data/evenements'
-import { actusVisibles } from '~/data/actus'
-import { planning } from '~/data/planning'
 import { infosPratiques } from '~/data/unite'
 
-// Recherche locale sur tout ce que le site connaît : sections, événements,
-// actualités, questions pratiques et les 96 dates du planning de la saison.
-// Aucune requête réseau, l'index tient dans le bundle.
+// Recherche sur tout ce que le compte a le droit de voir : sections, événements,
+// actualités, questions pratiques et les dates du planning.
+//
+// L'index se construit dans le navigateur, mais il ne contient que ce que le
+// serveur a bien voulu envoyer. Autrement dit : la recherche d'un visiteur ne
+// peut pas faire remonter un rendez-vous réservé, parce qu'il n'est pas là.
 
 const ouverte = defineModel<boolean>('ouverte', { default: false })
-const { role, voitLeCalendrier } = useRole()
+const { evenements, actus, planning } = useContenu()
 const requete = ref('')
 const champ = ref<HTMLInputElement | null>(null)
 
@@ -41,7 +41,7 @@ const index = computed<Resultat[]>(() => {
       icone: s.icone,
     })
   }
-  for (const e of evenementsVisibles(role.value)) {
+  for (const e of evenements.value) {
     out.push({
       titre: e.titre,
       detail: `${formaterDate(e.date)} · ${e.lieu}`,
@@ -50,7 +50,7 @@ const index = computed<Resultat[]>(() => {
       icone: 'calendrier',
     })
   }
-  for (const a of actusVisibles(role.value)) {
+  for (const a of actus.value) {
     out.push({
       titre: a.titre,
       detail: a.chapo,
@@ -68,19 +68,17 @@ const index = computed<Resultat[]>(() => {
       icone: 'info',
     })
   }
-  // Le planning n'entre dans l'index que pour les familles : c'est lui qui
-  // porte le programme de chaque section.
-  if (voitLeCalendrier.value) {
-    for (const j of planning) {
-      if (j.evenement) {
-        out.push({
-          titre: j.evenement,
-          detail: formaterDate(j.date, true),
-          categorie: 'Planning',
-          url: '/calendrier',
-          icone: 'calendrier',
-        })
-      }
+  // Les dates d'événements du classeur. Pour un visiteur, le serveur n'a laissé
+  // passer que celles des rendez-vous ouverts au dehors.
+  for (const j of planning.value) {
+    if (j.evenement) {
+      out.push({
+        titre: j.evenement,
+        detail: formaterDate(j.date, true),
+        categorie: 'Planning',
+        url: '/calendrier',
+        icone: 'calendrier',
+      })
     }
   }
   return out

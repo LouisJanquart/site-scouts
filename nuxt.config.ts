@@ -123,25 +123,14 @@ export default defineNuxtConfig({
       routes: [
         '/',
         '/sitemap.xml',
-        // Les flux iCal sont produits au build et servis en statique, pour que
-        // les agendas puissent s'y abonner.
-        '/calendriers/unite.ics',
-        '/calendriers/nutons.ics',
-        '/calendriers/lutins.ics',
-        '/calendriers/louveteaux.ics',
-        '/calendriers/guides.ics',
-        '/calendriers/scouts.ics',
-        '/calendriers/pios.ics',
-        '/calendriers/route.ics',
-        // Les actus réservées ne sont liées nulle part dans la vue visiteur :
-        // on les prérend explicitement.
-        '/actus/horaires-ete-hiver',
-        '/actus/souper-dias-appel',
-        // Idem pour les rendez-vous internes, absents de la vue visiteur.
-        '/events/passages-2026',
-        '/events/saint-nicolas-2026',
-        '/events/veillee-noel-2026',
-        '/events/temps-unite-2027',
+        // Les flux iCal ne sont PLUS prérendus. Ils contenaient le programme
+        // complet de la saison dans des fichiers publics : n'importe qui
+        // connaissant l'adresse — huit adresses évidentes — lisait tout le
+        // classeur. Ils sont maintenant servis à la demande, contre une clé
+        // personnelle. Voir server/routes/calendriers/[slug].ts.
+        // Les actus et les rendez-vous réservés ne sont PLUS prérendus : leur
+        // contenu ne doit pas exister en fichier public. Ils sont rendus à la
+        // demande, et le serveur vérifie le compte avant de répondre.
       ],
     },
   },

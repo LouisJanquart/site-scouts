@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { categories, documentsPour } from '~/data/documents'
-
-const { role, definition } = useRole()
-const liste = computed(() => documentsPour(role.value))
+const { definition } = useRole()
+const { contenu, documents } = useContenu()
 
 const parCategorie = computed(() =>
-  categories
-    .map((c) => ({ ...c, docs: liste.value.filter((d) => d.categorie === c.cle) }))
+  contenu.value.categoriesDocuments
+    .map((c) => ({ ...c, docs: documents.value.filter((d: any) => d.categorie === c.cle) }))
     .filter((c) => c.docs.length),
 )
 

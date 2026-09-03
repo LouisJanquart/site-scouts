@@ -4,24 +4,10 @@
 // est une copie figée, à remplacer par une lecture des flux iCal que le
 // classeur génère déjà (voir composables/usePlanning.ts).
 
-export type TypeReunion =
-  | 'normale'
-  | 'speciale'
-  | 'hike'
-  | 'grande-sortie'
-  | 'relache'
-  | 'unite'
-  | 'bar'
-
-export interface JourPlanning {
-  date: string
-  horaire: 'ete' | 'hiver' | null
-  remarque: string | null
-  evenement: string | null
-  occupation: string | null
-  rangement: string | null
-  sections: Record<string, { libelle: string; type: TypeReunion | null }>
-}
+// Les types vivent dans shared/planning.ts : le navigateur en a besoin pour
+// afficher ce que l'API lui envoie, mais il ne doit jamais recevoir les dates.
+export type { TypeReunion, JourPlanning } from '../../shared/planning'
+import type { JourPlanning } from '../../shared/planning'
 
 export const saison = '2026-2027'
 

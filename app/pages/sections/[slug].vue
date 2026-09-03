@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { parSlug, sections } from '~/data/sections'
-import { chefsDeSection } from '~/data/staff'
 import { typesReunion } from '~/composables/usePlanning'
 
 const route = useRoute()
@@ -11,10 +10,14 @@ if (!section.value) {
   throw createError({ statusCode: 404, statusMessage: 'Section inconnue', fatal: true })
 }
 
-const { planningDeSection, prochaineReunion, aujourdhui } = usePlanning()
+const { planningDeSection, prochaineReunion, prochainDimanche, aujourdhui } = usePlanning()
 const { voitLesContacts, role, voitLeCalendrier, voitLeStaff } = useRole()
+const { chefsDeSection, adressesDeSection } = useContenu()
 
 const staff = computed(() => chefsDeSection(slug.value))
+// L'adresse de fonction de la section : servie aux familles, jamais aux
+// visiteurs.
+const adresse = computed(() => adressesDeSection.value[slug.value] ?? null)
 const chefDeStaff = computed(() => staff.value.find((c) => c.chefDeStaff))
 const prochaine = computed(() => prochaineReunion(slug.value))
 
@@ -128,19 +131,19 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
         </li>
       </ul>
 
-      <div v-if="voitLesContacts && section.email" class="contact">
+      <div v-if="adresse" class="contact">
         <UiIcone nom="mail" :taille="18" />
-        <a :href="`mailto:${section.email}`">{{ section.email }}</a>
+        <a :href="`mailto:${adresse}`">{{ adresse }}</a>
       </div>
-      <p v-else-if="section.email" class="verrou">
+      <p v-else class="verrou">
         <UiIcone nom="cadenas" :taille="16" />
-        L’adresse de la section est visible pour les parents et les animés.
+        L’adresse de la section est réservée aux familles de l’unité.
       </p>
 
       <p v-if="role === 'chef'" class="note-chantier">
-        Les numéros et les adresses personnelles des {{ staff.length }} chefs ne sont pas
-        embarqués dans ce site : sur un site généré en statique, ils seraient téléchargeables par
-        n’importe qui. Ils reviendront quand il y aura une vraie connexion.
+        Les noms de famille, numéros et adresses personnelles des {{ staff.length }} chefs ne sont
+        toujours pas dans le site. Le mécanisme d’accès existe désormais, mais il ne vaut pas
+        consentement : il faudra le demander aux personnes concernées, une par une.
       </p>
     </section>
 
@@ -201,12 +204,28 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
     </section>
 
     <section v-if="!voitLeCalendrier" class="bloc">
+      <!-- Ce qu'un visiteur a le droit de savoir : quand la section se réunit.
+           Pas ce qu'elle y fait. -->
+      <div v-if="prochainDimanche()" class="prochaine">
+        <UiIcone nom="calendrier" :taille="20" />
+        <div>
+          <p class="prochaine__titre">Prochaine réunion</p>
+          <p class="prochaine__date">
+            {{ formaterDate(prochainDimanche()!.date, true) }},
+            {{ prochainDimanche()!.horaire === 'hiver' ? 'de 14h à 17h' : 'de 14h à 17h30' }}
+          </p>
+          <p v-if="prochainDimanche()!.evenement" class="prochaine__event">
+            {{ prochainDimanche()!.evenement }}
+          </p>
+        </div>
+      </div>
+
       <div class="reserve">
         <UiIcone nom="cadenas" :taille="20" />
         <div>
           <p class="reserve__titre">Le reste est réservé aux familles</p>
           <p class="reserve__texte">
-            Le calendrier détaillé de la section, son staff et le programme de chaque dimanche ne
+            Le programme de chaque dimanche, le staff de la section et son adresse de contact ne
             sont pas publics. Pour découvrir la section, le plus simple est de venir aux portes
             ouvertes de septembre.
           </p>
@@ -233,6 +252,37 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
 </template>
 
 <style lang="scss" scoped>
+.prochaine {
+  display: flex;
+  gap: 0.85rem;
+  padding: 1.1rem 1.25rem;
+  margin-block-end: 0.6rem;
+  background: color-mix(in srgb, var(--section-teinte) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--section-teinte) 26%, transparent);
+  border-radius: $r-carte;
+  color: var(--section-teinte);
+  max-inline-size: 44rem;
+
+  &__titre {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__date {
+    margin-block-start: 0.2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $blanc;
+  }
+
+  &__event {
+    margin-block-start: 0.15rem;
+    font-size: 0.85rem;
+    color: rgba($blanc, 0.7);
+  }
+}
+
 .reserve {
   display: flex;
   gap: 0.85rem;

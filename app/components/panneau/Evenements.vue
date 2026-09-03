@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { evenementsVisibles } from '~/data/evenements'
 import { parSlug } from '~/data/sections'
 
 // Le panneau de gauche des maquettes : les trois prochains rendez-vous, puis
 // un lien vers la liste complète.
+//
+// La liste vient de l'API, déjà filtrée selon le compte : un visiteur ne reçoit
+// que les rendez-vous ouverts au dehors.
 
 const { aujourdhui } = usePlanning()
-
-const { role } = useRole()
-const liste = computed(() => evenementsVisibles(role.value))
+const { evenements } = useContenu()
+const liste = computed(() => evenements.value)
 
 const prochains = computed(() =>
   liste.value

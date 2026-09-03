@@ -33,6 +33,9 @@ export function useCompte() {
   async function seDeconnecter() {
     await $fetch('/api/auth/deconnexion', { method: 'POST' }).catch(() => {})
     moi.value = { connecte: false }
+    // Le contenu réservé doit repartir : sinon la page garde en mémoire ce que
+    // la session permettait de voir.
+    await useContenu().rafraichir()
     await navigateTo('/')
   }
 

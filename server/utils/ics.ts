@@ -1,5 +1,15 @@
-import { planning } from '../../app/data/planning'
+import { planning } from '../donnees/planning'
+import { evenementsVisibles } from '../donnees/evenements'
 import { sections } from '../../app/data/sections'
+
+// Deux niveaux de flux, comme partout ailleurs sur ce site :
+//
+//   privé   — le programme complet de la section, dimanche par dimanche, avec
+//             les remarques du classeur. Réservé aux familles, servi contre une
+//             clé personnelle.
+//   public  — seulement les rendez-vous ouverts au dehors. Une famille qui
+//             découvre l'unité peut mettre les portes ouvertes dans son agenda
+//             sans avoir de compte, et c'est très bien.
 
 // Génération des flux iCalendar. Chaque section a le sien, plus un flux
 // « unité » avec les seuls grands rendez-vous. Ces fichiers sont produits au
@@ -30,9 +40,15 @@ function plier(ligne: string) {
   return morceaux.join('\r\n')
 }
 
-export function fluxSection(slug: string): string | null {
+/** Les dates des rendez-vous ouverts au dehors, indexées par date. */
+function rendezVousPublics(): Map<string, string> {
+  return new Map(evenementsVisibles('visiteur').map((e) => [e.date, e.titre]))
+}
+
+export function fluxSection(slug: string, complet = false): string | null {
   const section = sections.find((s) => s.slug === slug)
   if (!section) return null
+  const publics = complet ? null : rendezVousPublics()
 
   const lignes: string[] = [
     'BEGIN:VCALENDAR',
@@ -47,16 +63,24 @@ export function fluxSection(slug: string): string | null {
   const cle = section.cleplanning
 
   for (const jour of planning) {
-    const entree = cle ? jour.sections[cle] : undefined
-    const titre = entree?.libelle ?? (cle ? null : jour.evenement)
+    let titre: string | null
+    const details: string[] = []
+
+    if (complet) {
+      const entree = cle ? jour.sections[cle] : undefined
+      titre = entree?.libelle ?? (cle ? null : jour.evenement)
+      if (jour.evenement) details.push(`Événement d'unité : ${jour.evenement}`)
+      if (jour.remarque) details.push(jour.remarque)
+      if (jour.occupation) details.push(`Local : ${jour.occupation}`)
+    } else {
+      // Sans clé : seulement les rendez-vous ouverts au dehors, sans le
+      // programme de la section ni les remarques internes.
+      titre = publics!.get(jour.date) ?? null
+    }
     if (!titre) continue
 
     const d = jour.date.replace(/-/g, '')
     const { debut, fin } = horaires(jour.horaire)
-    const details: string[] = []
-    if (jour.evenement) details.push(`Événement d'unité : ${jour.evenement}`)
-    if (jour.remarque) details.push(jour.remarque)
-    if (jour.occupation) details.push(`Local : ${jour.occupation}`)
 
     lignes.push(
       'BEGIN:VEVENT',
@@ -74,7 +98,8 @@ export function fluxSection(slug: string): string | null {
   return lignes.join('\r\n')
 }
 
-export function fluxUnite(): string {
+export function fluxUnite(complet = false): string {
+  const publics = complet ? null : rendezVousPublics()
   const lignes: string[] = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -86,7 +111,8 @@ export function fluxUnite(): string {
   ]
 
   for (const jour of planning) {
-    if (!jour.evenement) continue
+    const titre = complet ? jour.evenement : (publics!.get(jour.date) ?? null)
+    if (!titre) continue
     const d = jour.date.replace(/-/g, '')
     const { debut, fin } = horaires(jour.horaire)
     lignes.push(
@@ -95,8 +121,8 @@ export function fluxUnite(): string {
       `DTSTAMP:${d}T120000Z`,
       `DTSTART;TZID=Europe/Brussels:${d}T${debut}`,
       `DTEND;TZID=Europe/Brussels:${d}T${fin}`,
-      plier(`SUMMARY:${echapper(jour.evenement)}`),
-      jour.remarque ? plier(`DESCRIPTION:${echapper(jour.remarque)}`) : 'DESCRIPTION:',
+      plier(`SUMMARY:${echapper(titre)}`),
+      complet && jour.remarque ? plier(`DESCRIPTION:${echapper(jour.remarque)}`) : 'DESCRIPTION:',
       'END:VEVENT',
     )
   }

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { planning } from '~/data/planning'
-import { evenementsVisibles } from '~/data/evenements'
 
 // Le calendrier du panneau de gauche.
 //
@@ -12,7 +10,10 @@ import { evenementsVisibles } from '~/data/evenements'
 
 const { aujourdhui } = usePlanning()
 const selection = useJourSelectionne()
-const { voitLeCalendrier, role } = useRole()
+const { voitLeCalendrier } = useRole()
+// Le planning et les événements viennent de l'API, déjà filtrés : un visiteur
+// n'en reçoit que le squelette, sans le programme des sections.
+const { planning, evenements } = useContenu()
 const route = useRoute()
 const router = useRouter()
 
@@ -21,10 +22,10 @@ const MOIS = [
   'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
 ]
 
-const parDate = computed(() => Object.fromEntries(planning.map((j) => [j.date, j])))
+const parDate = computed(() => Object.fromEntries(planning.value.map((j) => [j.date, j])))
 
-const premierMois = computed(() => planning[0]?.date.slice(0, 7) ?? '2026-09')
-const dernierMois = computed(() => planning.at(-1)?.date.slice(0, 7) ?? '2027-07')
+const premierMois = computed(() => planning.value[0]?.date.slice(0, 7) ?? '2026-09')
+const dernierMois = computed(() => planning.value.at(-1)?.date.slice(0, 7) ?? '2027-07')
 
 function moisDeDepart() {
   const m = aujourdhui.value.slice(0, 7)
@@ -100,9 +101,9 @@ function choisir(c: Case) {
 // (« Portes Ouvertes + CU ») qui ne veut rien dire pour un visiteur.
 const prochainEvenement = computed(
   () =>
-    evenementsVisibles(role.value)
-      .filter((e) => (e.dateFin ?? e.date) >= aujourdhui.value)
-      .sort((a, b) => a.date.localeCompare(b.date))[0] ?? null,
+    evenements.value
+      .filter((e: any) => (e.dateFin ?? e.date) >= aujourdhui.value)
+      .sort((a: any, b: any) => a.date.localeCompare(b.date))[0] ?? null,
 )
 </script>
 

@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { actus } from '~/data/actus'
 import { parSlug } from '~/data/sections'
 
 const route = useRoute()
-const actu = computed(() => actus.find((a) => a.slug === String(route.params.slug)))
-
-if (!actu.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Actu inconnue', fatal: true })
-}
+// Déjà filtrée par le serveur : une actu réservée n'arrive pas jusqu'ici pour
+// un visiteur, et la page affiche alors la même chose qu'une actu inexistante.
+const { actus, chargement } = useContenu()
+const actu = computed(() => actus.value.find((a: any) => a.slug === String(route.params.slug)))
 
 useHead(() => ({ title: `${actu.value?.titre} — 16e Fleurus` }))
 </script>

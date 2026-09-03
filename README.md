@@ -128,9 +128,18 @@ le projet.
 
 Deux sources, et c'est volontaire.
 
-**Le contenu éditorial** est dans `app/data/`, en TypeScript : il change au
-rythme des saisons, il se relit en revue de code, et il n'a pas besoin d'une
-base.
+**Le contenu éditorial** est en TypeScript, et il est coupé en deux selon qui a
+le droit de le lire :
+
+- `app/data/` — public. Ce dossier part dans le paquet JavaScript téléchargé par
+  n'importe quel visiteur. N'y mettre que ce que tout le monde peut lire :
+  l'identité des sections, l'unité, les infos pratiques.
+- `server/donnees/` — réservé. Le planning, le staff, les événements, les actus,
+  les documents. Le navigateur ne reçoit jamais ces fichiers ; ils sortent par
+  `/api/contenu`, filtrés selon le compte.
+
+La règle pour trancher : *est-ce que je serais gêné de le voir apparaître dans
+un fichier public ?* Si oui, c'est `server/donnees/`.
 
 **Les données des personnes** sont dans PostgreSQL. Elles changent tous les
 jours, elles sont privées, et elles doivent pouvoir être effacées.
@@ -204,12 +213,20 @@ Ce qui est vrai :
 - Le formulaire de connexion et celui de mot de passe oublié ne révèlent pas si
   une adresse est connue.
 
+- Le contenu réservé n'est plus dans le paquet JavaScript public. Le planning
+  des sections, les intitulés internes du classeur, les adresses des staffs, les
+  actus et rendez-vous réservés vivent dans `server/donnees/` et sortent par
+  `/api/contenu`, qui lit le rôle dans la session. Un visiteur reçoit le
+  squelette du planning — les dates et les horaires, qui sont publics — et rien
+  d'autre. Vérifié par des tests écrits du point de vue de quelqu'un qui
+  interroge l'API directement.
+- Les flux iCalendar ne sont plus des fichiers publics. Ils sont servis contre
+  une clé personnelle, que chacun peut changer d'un bouton.
+
 Ce qui ne l'est pas encore :
 
-- Le sélecteur de rôle en bas à gauche reste un outil de démonstration. Il ne
-  s'affiche plus quand on est connecté, mais il masque toujours sans protéger —
-  et le contenu réservé du site public (planning des sections, contacts) est
-  toujours livré dans le paquet JavaScript à qui va le chercher. La suite
-  logique est de faire passer ces données-là par l'API, comme tout le reste.
+- Le sélecteur de rôle en bas à gauche reste un outil de démonstration, pour
+  les visiteurs uniquement. Il ne change plus que l'affichage de ce que le
+  serveur a déjà accepté d'envoyer — c'est-à-dire presque rien.
 - Pas de deuxième facteur pour les comptes du staff d'unité.
 - Pas de limitation de débit sur les autres routes que la connexion.

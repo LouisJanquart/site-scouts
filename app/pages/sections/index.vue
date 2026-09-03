@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { sections } from '~/data/sections'
-import { chefsDeSection } from '~/data/staff'
 
 const { prochaineReunion } = usePlanning()
+const { chefsDeSection } = useContenu()
 const { voitLeStaff, voitLeCalendrier } = useRole()
 
 useHead({ title: 'Les sections — 16e Fleurus' })

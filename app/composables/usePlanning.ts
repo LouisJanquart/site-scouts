@@ -1,4 +1,4 @@
-import { planning, saison, type JourPlanning, type TypeReunion } from '~/data/planning'
+import type { JourPlanning, TypeReunion } from '#shared/planning'
 import { parSlug } from '~/data/sections'
 
 // Libellés et couleurs des types de réunion, calqués sur les codes du classeur
@@ -59,25 +59,36 @@ export function useJourSelectionne() {
 
 // Le jour que l'accueil doit décrire : celui qu'on a choisi, sinon le prochain
 // rendez-vous de la saison.
+//
+// Le planning ne vient plus d'un fichier importé mais de l'API : il peut donc
+// être vide le temps de la première requête. Tout ce qui s'en sert doit
+// supporter un « null ».
 export function useJourAffiche() {
   const aujourdhui = useAujourdhui()
   const selection = useJourSelectionne()
-  return computed(() => {
+  const { planning } = useContenu()
+
+  return computed<JourPlanning | null>(() => {
+    const jours = planning.value
+    if (!jours.length) return null
     if (selection.value) {
-      const trouve = planning.find((j) => j.date === selection.value)
+      const trouve = jours.find((j) => j.date === selection.value)
       if (trouve) return trouve
     }
-    return planning.find((j) => j.date >= aujourdhui.value) ?? planning.at(-1)!
+    return jours.find((j) => j.date >= aujourdhui.value) ?? jours.at(-1) ?? null
   })
 }
 
 export function usePlanning() {
   const aujourdhui = useAujourdhui()
+  const { planning, saison } = useContenu()
 
-  function planningDeSection(slug: string): Array<JourPlanning & { libelle: string; type: TypeReunion | null }> {
+  function planningDeSection(
+    slug: string,
+  ): Array<JourPlanning & { libelle: string; type: TypeReunion | null }> {
     const cle = parSlug[slug]?.cleplanning
     if (!cle) return []
-    return planning
+    return planning.value
       .filter((j) => j.sections[cle])
       .map((j) => ({ ...j, libelle: j.sections[cle]!.libelle, type: j.sections[cle]!.type }))
   }
@@ -86,10 +97,20 @@ export function usePlanning() {
     return planningDeSection(slug).find((j) => j.date >= aujourdhui.value) ?? null
   }
 
+  /** Les dimanches où l'unité se réunit, sans le détail des sections. */
+  const joursDeReunion = computed(() => planning.value)
+
+  function prochainDimanche() {
+    return planning.value.find((j) => j.date >= aujourdhui.value) ?? null
+  }
+
   return {
     saison,
+    planning,
+    joursDeReunion,
     planningDeSection,
     prochaineReunion,
+    prochainDimanche,
     aujourdhui,
   }
 }

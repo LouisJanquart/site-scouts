@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { planning, saison } from '~/data/planning'
 import { sections } from '~/data/sections'
 import { typesReunion } from '~/composables/usePlanning'
 
@@ -9,23 +8,71 @@ import { typesReunion } from '~/composables/usePlanning'
 // Toutes les sections qui ont une colonne dans le classeur, Route comprise.
 const colonnesPossibles = sections.filter((s) => s.cleplanning)
 
-const { aujourdhui } = usePlanning()
+const { aujourdhui, planning, saison } = usePlanning()
 const { voitLeCalendrier } = useRole()
 
 const filtre = ref<string | null>(null)
 const masquerPasse = ref(true)
 
 const lignes = computed(() =>
-  planning.filter((j) => (masquerPasse.value ? j.date >= aujourdhui.value : true)),
+  planning.value.filter((j) => (masquerPasse.value ? j.date >= aujourdhui.value : true)),
 )
 
 const colonnes = computed(() =>
   filtre.value ? colonnesPossibles.filter((s) => s.slug === filtre.value) : colonnesPossibles,
 )
 
-const nbAVenir = computed(() => planning.filter((j) => j.date >= aujourdhui.value).length)
+const nbAVenir = computed(
+  () => planning.value.filter((j) => j.date >= aujourdhui.value).length,
+)
 
 const legende = Object.entries(typesReunion).map(([cle, v]) => ({ cle, ...v }))
+
+// -----------------------------------------------------------------------
+// Les flux iCal.
+//
+// Une application d'agenda ne peut pas envoyer de cookie : le seul moyen de
+// lui donner un flux privé est de mettre une clé dans l'adresse. Même
+// principe que l'« adresse secrète » de Google Agenda, avec les mêmes
+// limites — d'où le bouton pour en changer.
+// -----------------------------------------------------------------------
+const { data: calendrier, refresh: rafraichirCle } = await useFetch<{ cle: string }>(
+  '/api/mon-espace/calendrier',
+  { immediate: false, default: () => ({ cle: '' }) },
+)
+onMounted(() => {
+  if (voitLeCalendrier.value) rafraichirCle()
+})
+
+const origine = computed(() => (import.meta.client ? window.location.origin : ''))
+function adresseFlux(slug: string) {
+  const cle = calendrier.value?.cle
+  return `${origine.value}/calendriers/${slug}.ics${cle ? `?cle=${cle}` : ''}`
+}
+
+const renouvellement = ref(false)
+const cleRenouvelee = ref(false)
+async function renouvelerLaCle() {
+  if (!confirm(
+    'Changer la clé coupe tous les agendas déjà abonnés — les vôtres comme ceux à qui vous auriez transmis l’adresse. Continuer ?',
+  )) return
+  renouvellement.value = true
+  try {
+    await $fetch('/api/mon-espace/calendrier', { method: 'POST' })
+    await rafraichirCle()
+    cleRenouvelee.value = true
+  } finally {
+    renouvellement.value = false
+  }
+}
+
+async function copier(slug: string) {
+  try {
+    await navigator.clipboard.writeText(adresseFlux(slug))
+  } catch {
+    // Presse-papiers refusé : l'adresse reste sélectionnable à la main.
+  }
+}
 
 useHead({ title: 'Le calendrier — 16e Fleurus' })
 </script>
@@ -159,22 +206,50 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
         Chaque section a son flux iCalendar. Copiez l’adresse dans Google Agenda, Apple Calendrier
         ou Outlook et les réunions apparaissent automatiquement dans votre agenda.
       </p>
+
+      <div class="alerte alerte--info">
+        <UiIcone nom="cadenas" :taille="18" />
+        <span>
+          Ces adresses contiennent <strong>votre clé personnelle</strong>. Une application
+          d’agenda ne peut pas se connecter avec un mot de passe : c’est la clé dans l’adresse qui
+          fait office de laissez-passer. Qui l’a, lit votre calendrier — ne la publiez nulle part.
+          Si vous l’avez transmise par erreur, changez-la ci-dessous.
+        </span>
+      </div>
+
       <ul class="abonnement">
         <li>
-          <a class="abonnement__lien" href="/calendriers/unite.ics">
+          <button class="abonnement__lien" type="button" @click="copier('unite')">
             <UiIcone nom="lys" :taille="18" />
             <span class="abonnement__nom">Événements d’unité</span>
-            <span class="abonnement__url mono">/calendriers/unite.ics</span>
-          </a>
+            <span class="abonnement__url mono">copier l’adresse</span>
+          </button>
         </li>
         <li v-for="s in colonnesPossibles" :key="s.slug" :data-section="s.slug">
-          <a class="abonnement__lien" :href="`/calendriers/${s.slug}.ics`">
+          <button class="abonnement__lien" type="button" @click="copier(s.slug)">
             <UiIcone :nom="s.icone" :taille="18" />
             <span class="abonnement__nom">{{ s.nom }}</span>
-            <span class="abonnement__url mono">/calendriers/{{ s.slug }}.ics</span>
-          </a>
+            <span class="abonnement__url mono">copier l’adresse</span>
+          </button>
         </li>
       </ul>
+
+      <p v-if="cleRenouvelee" class="alerte alerte--bien" role="status">
+        <UiIcone nom="check" :taille="18" />
+        <span>Nouvelle clé en place. Les anciens abonnements ne fonctionnent plus : recopiez les
+          adresses dans votre agenda.</span>
+      </p>
+      <div>
+        <button
+          class="bouton bouton--fantome"
+          type="button"
+          :disabled="renouvellement"
+          @click="renouvelerLaCle"
+        >
+          <UiIcone nom="reglages" :taille="15" />
+          {{ renouvellement ? 'Changement…' : 'Changer ma clé' }}
+        </button>
+      </div>
     </section>
 
     <section class="bloc">
@@ -399,6 +474,8 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
   }
 
   &__lien {
+    inline-size: 100%;
+    text-align: start;
     display: flex;
     align-items: center;
     gap: 0.6rem;

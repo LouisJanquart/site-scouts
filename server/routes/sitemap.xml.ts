@@ -1,6 +1,6 @@
 import { sections } from '../../app/data/sections'
-import { evenements } from '../../app/data/evenements'
-import { actus } from '../../app/data/actus'
+import { evenementsVisibles } from '../donnees/evenements'
+import { actusVisibles } from '../donnees/actus'
 
 export default defineEventHandler((event) => {
   const base = 'https://16efleurus.netlify.app'
@@ -8,8 +8,8 @@ export default defineEventHandler((event) => {
     '/', '/sections', '/events', '/actus', '/calendrier',
     '/infos', '/documents', '/photos', '/a-propos',
     ...sections.map((s) => `/sections/${s.slug}`),
-    ...evenements.map((e) => `/events/${e.slug}`),
-    ...actus.map((a) => `/actus/${a.slug}`),
+    ...evenementsVisibles('visiteur').map((e) => `/events/${e.slug}`),
+    ...actusVisibles('visiteur').map((a) => `/actus/${a.slug}`),
   ]
   setHeader(event, 'content-type', 'application/xml; charset=utf-8')
   return `<?xml version="1.0" encoding="UTF-8"?>

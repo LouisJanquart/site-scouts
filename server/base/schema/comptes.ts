@@ -60,12 +60,19 @@ export const comptes = pgTable(
     // Posé quand le compte a été créé par un tiers (invitation d'un chef).
     doitChangerMdp: boolean('doit_changer_mdp').notNull().default(false),
     derniereConnexionLe: timestamp('derniere_connexion_le', { withTimezone: true }),
+    // La clé secrète des flux iCal. Une application d'agenda ne peut pas
+    // envoyer de cookie : le seul moyen de lui donner un flux privé est de
+    // mettre un secret dans l'adresse. C'est ce que font Google Agenda et
+    // Outlook, avec les mêmes limites — qui a l'adresse a le flux, d'où le
+    // bouton pour en changer.
+    jetonCalendrier: text('jeton_calendrier'),
     desactiveLe: timestamp('desactive_le', { withTimezone: true }),
     creeLe: timestamp('cree_le', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     uniqueIndex('comptes_email_idx').on(t.email),
     uniqueIndex('comptes_personne_idx').on(t.personneId),
+    uniqueIndex('comptes_jeton_calendrier_idx').on(t.jetonCalendrier),
   ],
 )
 

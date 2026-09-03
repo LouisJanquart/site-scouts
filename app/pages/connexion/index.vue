@@ -27,6 +27,8 @@ async function connecter() {
   )
   if (!r) return
   await charger(true)
+  // Le contenu réservé dépend du compte : on le redemande avant de naviguer.
+  await useContenu().rafraichir()
   const { estStaff } = useCompte()
   await navigateTo(suite.value ?? (estStaff.value ? '/staff' : '/mon-espace'))
 }

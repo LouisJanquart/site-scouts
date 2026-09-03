@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { parSlug } from '~/data/sections'
-import { actusVisibles } from '~/data/actus'
 
-// Le panneau de droite : les actus visibles pour le rôle courant, avec leurs
+// Le panneau de droite : les actus auxquelles le compte a droit, avec leurs
 // étiquettes de section, séparées par des filets fins comme dans la maquette.
+//
+// Le filtrage ne se fait plus ici mais sur le serveur : les actus réservées ne
+// sont jamais envoyées au navigateur d'un visiteur.
 
-const { role } = useRole()
-const liste = computed(() => actusVisibles(role.value).slice(0, 4))
+const { actus } = useContenu()
+const liste = computed(() => actus.value.slice(0, 4))
 </script>
 
 <template>
