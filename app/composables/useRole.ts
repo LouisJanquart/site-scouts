@@ -72,6 +72,13 @@ export function useRole() {
   const voitLesPhotos = computed(() => role.value !== 'visiteur')
   const voitLesDocumentsStaff = computed(() => role.value === 'chef')
 
+  // Le calendrier des sections est réservé aux familles. Un visiteur voit que
+  // l'unité se réunit le dimanche et à quelle heure, pas ce que chaque section
+  // fait chaque semaine.
+  const voitLeCalendrier = computed(() => role.value !== 'visiteur')
+  const voitLeStaff = computed(() => role.value !== 'visiteur')
+  const voitLesEvenementsInternes = computed(() => role.value !== 'visiteur')
+
   const definition = computed(
     () => rolesDisponibles.find((r) => r.cle === role.value) ?? rolesDisponibles[0]!,
   )
@@ -85,5 +92,8 @@ export function useRole() {
     voitLesContacts,
     voitLesPhotos,
     voitLesDocumentsStaff,
+    voitLeCalendrier,
+    voitLeStaff,
+    voitLesEvenementsInternes,
   }
 }

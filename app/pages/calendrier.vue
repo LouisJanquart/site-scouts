@@ -10,6 +10,7 @@ import { typesReunion } from '~/composables/usePlanning'
 const colonnesPossibles = sections.filter((s) => s.cleplanning)
 
 const { aujourdhui } = usePlanning()
+const { voitLeCalendrier } = useRole()
 
 const filtre = ref<string | null>(null)
 const masquerPasse = ref(true)
@@ -36,7 +37,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
     chapo="Le planning de l’unité, tel qu’il est tenu par le staff d’unité. Une ligne par dimanche, une colonne par section."
   >
     <template #entete>
-      <div class="barre">
+      <div v-if="voitLeCalendrier" class="barre">
         <div class="barre__filtres">
           <button
             class="puce"
@@ -65,6 +66,20 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
       </div>
     </template>
 
+    <div v-if="!voitLeCalendrier" class="verrou">
+      <UiIcone nom="cadenas" :taille="22" />
+      <div>
+        <p class="verrou__titre">Réservé aux familles de l’unité</p>
+        <p class="verrou__texte">
+          Le planning des sections, dimanche par dimanche, n’est pas public. Les rendez-vous
+          ouverts à tout le monde, eux, sont sur la
+          <NuxtLink to="/events">page des événements</NuxtLink>, et les horaires de réunion sont
+          dans les <NuxtLink to="/infos">infos pratiques</NuxtLink>.
+        </p>
+      </div>
+    </div>
+
+    <template v-else>
     <section class="bloc">
       <div class="tableau-cadre" tabindex="0" role="group" aria-label="Tableau du planning, défilement horizontal">
         <table class="tableau">
@@ -166,10 +181,40 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
         être reportée ici à la main.
       </p>
     </section>
+    </template>
   </AppPage>
 </template>
 
 <style lang="scss" scoped>
+.verrou {
+  display: flex;
+  gap: 0.85rem;
+  padding: 1.1rem 1.25rem;
+  background: rgba($blanc, 0.04);
+  border: 1px solid rgba($blanc, 0.09);
+  border-radius: $r-carte;
+  color: rgba($blanc, 0.66);
+  max-inline-size: 44rem;
+
+  &__titre {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: $blanc;
+  }
+
+  &__texte {
+    margin-block-start: 0.35rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+
+    a {
+      color: $cyan;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
 .barre {
   display: flex;
   flex-direction: column;

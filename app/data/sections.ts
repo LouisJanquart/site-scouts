@@ -5,6 +5,8 @@
 export interface Section {
   slug: string
   nom: string
+  /** Version courte pour le rail, quand le nom complet déborde. */
+  nomCourt?: string
   cleplanning: string | null
   ages: string | null
   genre: 'mixte' | 'filles' | 'garcons' | null
@@ -39,7 +41,7 @@ export const sections: Section[] = [
     genre: 'filles',
     email: 'lutin16he@gmail.com',
     icone: 'feuille',
-    resume: 'Le plus gros staff de l’unité, dix chefs pour une section qui ne tient pas en place.',
+    resume: 'La plus grande section de l’unité, et celle qui ne tient jamais en place.',
     description:
       "Chez les Lutins, on apprend à vivre en sizaine, on part en hike, on construit, on chante. La section a le plus grand staff de l'unité, ce qui permet des grands jeux ambitieux et des réunions spéciales régulières.",
     photo: '/images/foret-clairiere.jpg',
@@ -109,7 +111,7 @@ export const sections: Section[] = [
     genre: 'mixte',
     email: 'route.fleurus@gmail.com',
     icone: 'feu',
-    resume: 'Dix-huit routiers. Le bar, la marche Adeps, la cavalcade, la veillée de Noël.',
+    resume: 'Les plus de dix-huit ans. Le bar, la marche Adeps, la cavalcade, la veillée de Noël.',
     description:
       "La Route rassemble les plus de dix-huit ans qui ne sont pas (ou pas seulement) dans un staff. C'est elle qui porte les gros événements de l'unité : le bar, la marche Adeps, la cavalcade, la veillée de Noël, le beer pong. Et qui finance une bonne partie du matériel.",
     photo: '/images/camp-crepuscule.jpg',
@@ -118,12 +120,13 @@ export const sections: Section[] = [
   {
     slug: 'staff',
     nom: "Staff d'U",
+    nomCourt: 'Staff',
     cleplanning: null,
     ages: null,
     genre: 'mixte',
     email: 'scout.fleu@gmail.com',
     icone: 'bouclier',
-    resume: 'Le staff d’unité. Six personnes qui tiennent la baraque, le local et les comptes.',
+    resume: 'Celles et ceux qui tiennent la baraque : le calendrier, le local, le matériel, les comptes.',
     description:
       "Le staff d'unité coordonne les six sections animées et la Route : le calendrier commun, le local, le matériel, les inscriptions, les relations avec la fédération et les parents. C'est aussi lui qui organise les temps d'unité et les portes ouvertes.",
     photo: '/images/camp-prairie-large.jpg',

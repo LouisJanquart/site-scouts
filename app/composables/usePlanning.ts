@@ -3,17 +3,19 @@ import { parSlug } from '~/data/sections'
 
 // Libellés et couleurs des types de réunion, calqués sur les codes du classeur
 // (RN, H, RS, RU, GS, BA, B) que le staff utilise déjà.
+// Note : ces teintes servent de couleur de texte sur fond sombre. Elles ont
+// été éclaircies pour passer 4.5:1, comme la palette de section.
 export const typesReunion: Record<
   TypeReunion,
   { nom: string; code: string; teinte: string }
 > = {
   normale: { nom: 'Réunion normale', code: 'RN', teinte: 'var(--section-teinte)' },
-  speciale: { nom: 'Réunion spéciale', code: 'RS', teinte: '#c46be8' },
+  speciale: { nom: 'Réunion spéciale', code: 'RS', teinte: '#d492f2' },
   hike: { nom: 'Hike', code: 'H', teinte: '#f0a32e' },
   'grande-sortie': { nom: 'Grande sortie', code: 'GS', teinte: '#6fd8c4' },
-  unite: { nom: 'Réunion d’unité', code: 'RU', teinte: '#e72c1c' },
-  bar: { nom: 'Bar', code: 'B', teinte: '#7c8ce8' },
-  relache: { nom: 'Relâche', code: '—', teinte: '#4a4a58' },
+  unite: { nom: 'Réunion d’unité', code: 'RU', teinte: '#ff8377' },
+  bar: { nom: 'Bar', code: 'B', teinte: '#9aa8f2' },
+  relache: { nom: 'Relâche', code: '—', teinte: '#9298ad' },
 }
 
 const MOIS = [
@@ -46,6 +48,27 @@ export function nomJour(iso: string): string {
 // tel qu'il sera un autre jour de la saison.
 export function useAujourdhui() {
   return useState<string>('aujourdhui', () => new Date().toISOString().slice(0, 10))
+}
+
+// Le jour choisi dans le calendrier du panneau de gauche. Il est partagé parce
+// que le calendrier ne l'affiche pas lui-même : c'est l'encart de l'accueil,
+// à sa droite, qui se met à jour. Le calendrier garde ainsi une taille fixe.
+export function useJourSelectionne() {
+  return useState<string | null>('jour-selectionne', () => null)
+}
+
+// Le jour que l'accueil doit décrire : celui qu'on a choisi, sinon le prochain
+// rendez-vous de la saison.
+export function useJourAffiche() {
+  const aujourdhui = useAujourdhui()
+  const selection = useJourSelectionne()
+  return computed(() => {
+    if (selection.value) {
+      const trouve = planning.find((j) => j.date === selection.value)
+      if (trouve) return trouve
+    }
+    return planning.find((j) => j.date >= aujourdhui.value) ?? planning.at(-1)!
+  })
 }
 
 export function usePlanning() {

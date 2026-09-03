@@ -2,6 +2,9 @@
 // classeur de planning 2026-2027 et des comptes rendus de réunion route.
 // Les descriptions sont à relire par le staff d'unité avant publication.
 
+// « tous » = ouvert au dehors, un visiteur qui découvre l'unité peut venir.
+// « parents » et « animes » = ça concerne les familles de l'unité.
+// « chefs » = interne au staff.
 export type PublicCible = 'tous' | 'parents' | 'animes' | 'chefs'
 
 export interface Evenement {
@@ -46,7 +49,7 @@ export const evenements: Evenement[] = [
       'Le dimanche où chacun change de section. Réunion d’unité pour tout le monde, bar tenu par la Route.',
     description:
       "Les passages marquent le vrai début de l'année scoute : les plus grands de chaque section montent d'un cran. C'est une réunion d'unité, toutes sections mélangées, avec un bar tenu par la Route pour les parents qui accompagnent.",
-    public: 'tous',
+    public: 'parents',
     photo: '/images/foret-clairiere.jpg',
   },
   {
@@ -83,7 +86,7 @@ export const evenements: Evenement[] = [
     resume: 'La veillée organisée par la Route, toutes sections réunies, en réunion spéciale.',
     description:
       "Chaque année, la Route monte la veillée de Noël pour l'ensemble de l'unité. Réunion spéciale pour toutes les sections, occupation du local en soirée.",
-    public: 'tous',
+    public: 'parents',
   },
   {
     slug: 'carnaval-2027',
@@ -130,7 +133,7 @@ export const evenements: Evenement[] = [
     resume: 'Toutes les sections en relâche, l’unité se retrouve au complet.',
     description:
       "Le temps d'unité rassemble toutes les sections sur une même journée. Toutes les sections sont en relâche ce dimanche-là : il n'y a pas de réunion classique.",
-    public: 'tous',
+    public: 'parents',
   },
   {
     slug: 'fun-fest-2027',
@@ -144,3 +147,21 @@ export const evenements: Evenement[] = [
     public: 'tous',
   },
 ]
+
+const RANG: Record<PublicCible, number> = { tous: 0, parents: 1, animes: 1, chefs: 2 }
+
+function niveau(role: string): number {
+  if (role === 'chef') return 2
+  if (role === 'visiteur') return 0
+  return 1
+}
+
+/** Les événements qu'un rôle a le droit de voir. */
+export function evenementsVisibles(role: string): Evenement[] {
+  return evenements.filter((e) => RANG[e.public] <= niveau(role))
+}
+
+/** L'événement public qui tombe ce jour-là, s'il y en a un. */
+export function evenementPublicDuJour(date: string): Evenement | null {
+  return evenements.find((e) => e.date === date && e.public === 'tous') ?? null
+}

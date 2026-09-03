@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { evenements } from '~/data/evenements'
+import { evenementsVisibles } from '~/data/evenements'
 import { parSlug } from '~/data/sections'
 
 // Le panneau de gauche des maquettes : les trois prochains rendez-vous, puis
@@ -7,8 +7,11 @@ import { parSlug } from '~/data/sections'
 
 const { aujourdhui } = usePlanning()
 
+const { role } = useRole()
+const liste = computed(() => evenementsVisibles(role.value))
+
 const prochains = computed(() =>
-  evenements
+  liste.value
     .filter((e) => (e.dateFin ?? e.date) >= aujourdhui.value)
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(0, 3),
@@ -17,7 +20,7 @@ const prochains = computed(() =>
 // Si la saison est finie, on montre quand même les derniers passés plutôt
 // qu'un panneau vide.
 const aAfficher = computed(() =>
-  prochains.value.length ? prochains.value : evenements.slice(-3).reverse(),
+  prochains.value.length ? prochains.value : liste.value.slice(-3).reverse(),
 )
 const passes = computed(() => prochains.value.length === 0)
 </script>

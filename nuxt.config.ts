@@ -81,6 +81,11 @@ export default defineNuxtConfig({
         // on les prérend explicitement.
         '/actus/horaires-ete-hiver',
         '/actus/souper-dias-appel',
+        // Idem pour les rendez-vous internes, absents de la vue visiteur.
+        '/events/passages-2026',
+        '/events/saint-nicolas-2026',
+        '/events/veillee-noel-2026',
+        '/events/temps-unite-2027',
       ],
     },
   },

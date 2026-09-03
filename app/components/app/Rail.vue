@@ -1,17 +1,35 @@
 <script setup lang="ts">
 import { sections } from '~/data/sections'
 
-// La pilule de navigation des huit sections, reprise du composant « side » des
-// maquettes (six positions à l'origine, huit ici pour inclure la Route et le
-// staff d'unité).
+// La pilule de navigation, reprise du composant « side » des maquettes (six
+// positions à l'origine, huit ici pour inclure la Route et le staff d'unité).
+//
+// Elle commence par le retour à l'accueil : c'est le seul élément présent sur
+// toutes les pages, donc le seul endroit où ce bouton est toujours au même
+// endroit.
 
 const route = useRoute()
 const actif = computed(() => route.path.match(/^\/sections\/([a-z-]+)/)?.[1] ?? null)
+const surAccueil = computed(() => route.path === '/')
 </script>
 
 <template>
-  <nav class="rail" aria-label="Sections de l’unité">
+  <nav class="rail" aria-label="Navigation de l’unité">
     <ul class="rail__liste">
+      <li class="rail__element rail__element--accueil">
+        <NuxtLink
+          class="rail__lien rail__lien--accueil"
+          :class="{ 'rail__lien--actif': surAccueil }"
+          to="/"
+          :aria-current="surAccueil ? 'page' : undefined"
+        >
+          <UiIcone nom="lys" :taille="22" class="rail__icone" />
+          <span class="rail__nom">Accueil</span>
+        </NuxtLink>
+      </li>
+
+      <li class="rail__separateur" aria-hidden="true"></li>
+
       <li v-for="s in sections" :key="s.slug" class="rail__element">
         <NuxtLink
           class="rail__lien"
@@ -21,7 +39,7 @@ const actif = computed(() => route.path.match(/^\/sections\/([a-z-]+)/)?.[1] ?? 
           :aria-current="actif === s.slug ? 'page' : undefined"
         >
           <UiIcone :nom="s.icone" :taille="22" class="rail__icone" />
-          <span class="rail__nom">{{ s.nom }}</span>
+          <span class="rail__nom">{{ s.nomCourt ?? s.nom }}</span>
         </NuxtLink>
       </li>
     </ul>
@@ -34,6 +52,7 @@ const actif = computed(() => route.path.match(/^\/sections\/([a-z-]+)/)?.[1] ?? 
 
   &__liste {
     display: flex;
+    align-items: center;
     gap: 0.25rem;
     margin: 0;
     padding: 0.4rem;
@@ -50,15 +69,23 @@ const actif = computed(() => route.path.match(/^\/sections\/([a-z-]+)/)?.[1] ?? 
     }
   }
 
+  &__separateur {
+    flex: 0 0 auto;
+    inline-size: 1px;
+    block-size: 2rem;
+    background: rgba($blanc, 0.12);
+    margin-inline: 0.2rem;
+  }
+
   &__lien {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.15rem;
-    inline-size: 4.4rem;
+    inline-size: 4.1rem;
     padding: 0.5rem 0.25rem 0.45rem;
     border-radius: $r-pilule;
-    color: rgba($blanc, 0.66);
+    color: rgba($blanc, 0.62);
     transition:
       color $vite $courbe,
       background $vite $courbe;
@@ -73,6 +100,21 @@ const actif = computed(() => route.path.match(/^\/sections\/([a-z-]+)/)?.[1] ?? 
     &--actif {
       color: var(--section-teinte);
       background: rgba($blanc, 0.07);
+    }
+
+    // Le retour à l'accueil porte la couleur de l'unité, pas celle de la
+    // section consultée : il doit se distinguer du reste du rail.
+    &--accueil {
+      color: $rouge-texte;
+
+      &:hover {
+        color: $blanc;
+      }
+
+      &.rail__lien--actif {
+        color: $rouge-texte;
+        background: rgba($rouge, 0.14);
+      }
     }
   }
 

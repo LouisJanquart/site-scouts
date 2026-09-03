@@ -87,6 +87,9 @@ defineProps<{
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
+    // Hors accueil la page occupe toute la largeur : on garde malgré tout une
+    // largeur de lecture raisonnable.
+    max-inline-size: 68rem;
   }
 }
 </style>

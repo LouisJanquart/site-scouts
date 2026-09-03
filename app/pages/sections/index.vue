@@ -3,6 +3,7 @@ import { sections } from '~/data/sections'
 import { chefsDeSection } from '~/data/staff'
 
 const { prochaineReunion } = usePlanning()
+const { voitLeStaff, voitLeCalendrier } = useRole()
 
 useHead({ title: 'Les sections — 16e Fleurus' })
 </script>
@@ -27,9 +28,10 @@ useHead({ title: 'Les sections — 16e Fleurus' })
             <p v-if="s.ages" class="tuile__ages mono">{{ s.ages }}</p>
             <p class="tuile__resume">{{ s.resume }}</p>
             <p class="tuile__pied mono">
-              {{ chefsDeSection(s.slug).length }} chefs
+              <template v-if="voitLeStaff">{{ chefsDeSection(s.slug).length }} chefs</template>
+              <template v-if="voitLeStaff && voitLeCalendrier && prochaineReunion(s.slug)"> · </template>
               <template v-if="prochaineReunion(s.slug)">
-                · prochaine : {{ formaterDateCourte(prochaineReunion(s.slug)!.date) }}
+                prochaine réunion&nbsp;: {{ formaterDateCourte(prochaineReunion(s.slug)!.date) }}
               </template>
             </p>
           </div>

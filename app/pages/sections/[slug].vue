@@ -12,7 +12,7 @@ if (!section.value) {
 }
 
 const { planningDeSection, prochaineReunion, aujourdhui } = usePlanning()
-const { voitLesContacts, role } = useRole()
+const { voitLesContacts, role, voitLeCalendrier, voitLeStaff } = useRole()
 
 const staff = computed(() => chefsDeSection(slug.value))
 const chefDeStaff = computed(() => staff.value.find((c) => c.chefDeStaff))
@@ -69,10 +69,11 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
         <p class="prochaine__date titre titre--moyen">
           {{ formaterDate(prochaine.date, true) }}
         </p>
-        <p class="prochaine__quoi">{{ prochaine.libelle }}</p>
+        <p v-if="voitLeCalendrier" class="prochaine__quoi">{{ prochaine.libelle }}</p>
+        <p v-else class="prochaine__quoi">Réunion au local</p>
         <p class="prochaine__horaire mono doux">
           {{ prochaine.horaire === 'hiver' ? '14h00 – 17h00' : '14h00 – 17h30' }}
-          <template v-if="prochaine.remarque"> · {{ prochaine.remarque }}</template>
+          <template v-if="voitLeCalendrier && prochaine.remarque"> · {{ prochaine.remarque }}</template>
         </p>
       </div>
     </section>
@@ -99,11 +100,11 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
             }}
           </dd>
         </div>
-        <div class="fiche__ligne">
+        <div v-if="voitLeStaff" class="fiche__ligne">
           <dt>Staff</dt>
           <dd>{{ staff.length }} animateur{{ staff.length > 1 ? 's' : '' }}</dd>
         </div>
-        <div class="fiche__ligne">
+        <div v-if="voitLeCalendrier" class="fiche__ligne">
           <dt>Dates prévues cette saison</dt>
           <dd>{{ total }}</dd>
         </div>
@@ -111,7 +112,7 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
     </section>
 
     <!-- Le staff : ce qui est affiché dépend du rôle. -->
-    <section class="bloc">
+    <section v-if="voitLeStaff" class="bloc">
       <h2 class="surtitre">Le staff</h2>
       <ul class="staff">
         <li v-for="c in staff" :key="c.prenom + c.totem">
@@ -144,7 +145,7 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
     </section>
 
     <!-- L'année vue de haut. -->
-    <section v-if="repartition.length" class="bloc">
+    <section v-if="voitLeCalendrier && repartition.length" class="bloc">
       <h2 class="surtitre">Une saison, en gros</h2>
       <ul class="repartition">
         <li v-for="r in repartition" :key="r.type">
@@ -164,7 +165,7 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
     </section>
 
     <!-- L'agenda complet de la section. -->
-    <section class="bloc">
+    <section v-if="voitLeCalendrier" class="bloc">
       <h2 class="surtitre">Le calendrier de la section</h2>
       <ul class="agenda">
         <li v-for="j in agenda" :key="j.date" class="agenda__ligne">
@@ -199,6 +200,24 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
       </ul>
     </section>
 
+    <section v-if="!voitLeCalendrier" class="bloc">
+      <div class="reserve">
+        <UiIcone nom="cadenas" :taille="20" />
+        <div>
+          <p class="reserve__titre">Le reste est réservé aux familles</p>
+          <p class="reserve__texte">
+            Le calendrier détaillé de la section, son staff et le programme de chaque dimanche ne
+            sont pas publics. Pour découvrir la section, le plus simple est de venir aux portes
+            ouvertes de septembre.
+          </p>
+          <NuxtLink class="lien-fleche reserve__lien" to="/events">
+            Les rendez-vous ouverts à tous
+            <UiIcone nom="chevrons-droite" :taille="14" />
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+
     <section class="bloc">
       <h2 class="surtitre">Les autres sections</h2>
       <ul class="autres">
@@ -214,6 +233,34 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
 </template>
 
 <style lang="scss" scoped>
+.reserve {
+  display: flex;
+  gap: 0.85rem;
+  padding: 1.1rem 1.25rem;
+  background: rgba($blanc, 0.04);
+  border: 1px solid rgba($blanc, 0.09);
+  border-radius: $r-carte;
+  color: rgba($blanc, 0.66);
+  max-inline-size: 44rem;
+
+  &__titre {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: $blanc;
+  }
+
+  &__texte {
+    margin-block-start: 0.35rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  &__lien {
+    padding-inline: 0;
+    margin-block-start: 0.6rem;
+  }
+}
+
 .bandeau {
   position: relative;
   block-size: 11rem;

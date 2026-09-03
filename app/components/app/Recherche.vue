@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { sections } from '~/data/sections'
-import { evenements } from '~/data/evenements'
-import { actus } from '~/data/actus'
+import { evenementsVisibles } from '~/data/evenements'
+import { actusVisibles } from '~/data/actus'
 import { planning } from '~/data/planning'
 import { infosPratiques } from '~/data/unite'
 
@@ -10,6 +10,7 @@ import { infosPratiques } from '~/data/unite'
 // Aucune requête réseau, l'index tient dans le bundle.
 
 const ouverte = defineModel<boolean>('ouverte', { default: false })
+const { role, voitLeCalendrier } = useRole()
 const requete = ref('')
 const champ = ref<HTMLInputElement | null>(null)
 
@@ -40,7 +41,7 @@ const index = computed<Resultat[]>(() => {
       icone: s.icone,
     })
   }
-  for (const e of evenements) {
+  for (const e of evenementsVisibles(role.value)) {
     out.push({
       titre: e.titre,
       detail: `${formaterDate(e.date)} · ${e.lieu}`,
@@ -49,7 +50,7 @@ const index = computed<Resultat[]>(() => {
       icone: 'calendrier',
     })
   }
-  for (const a of actus) {
+  for (const a of actusVisibles(role.value)) {
     out.push({
       titre: a.titre,
       detail: a.chapo,
@@ -67,15 +68,19 @@ const index = computed<Resultat[]>(() => {
       icone: 'info',
     })
   }
-  for (const j of planning) {
-    if (j.evenement) {
-      out.push({
-        titre: j.evenement,
-        detail: formaterDate(j.date, true),
-        categorie: 'Planning',
-        url: '/calendrier',
-        icone: 'calendrier',
-      })
+  // Le planning n'entre dans l'index que pour les familles : c'est lui qui
+  // porte le programme de chaque section.
+  if (voitLeCalendrier.value) {
+    for (const j of planning) {
+      if (j.evenement) {
+        out.push({
+          titre: j.evenement,
+          detail: formaterDate(j.date, true),
+          categorie: 'Planning',
+          url: '/calendrier',
+          icone: 'calendrier',
+        })
+      }
     }
   }
   return out

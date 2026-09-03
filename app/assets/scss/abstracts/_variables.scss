@@ -15,8 +15,11 @@ $ardoise-sourd: #23222f; // séparateurs et champs
 $blanc: #ffffff;
 $rouge: #e72c1c; // red 2 — accent principal, statut, logotype
 // Le rouge de marque ne passe pas les 4.5:1 sur fond sombre en petit corps :
-// cette variante éclaircie sert au texte, l'original aux aplats et pastilles.
+// cette variante éclaircie sert au texte, l'original aux pastilles.
 $rouge-texte: #ff6f60;
+// Et en aplat sous du texte blanc, le rouge de marque tombe à 4.40:1, juste
+// sous le seuil : cette variante à peine plus sombre passe à 4.96:1.
+$rouge-plein: #d82818;
 $cyan: #4dcbf3; // blue 2 — liens, actions, aujourd'hui
 $vert: #1dbf8e; // seconde palette du fichier Figma — validations
 

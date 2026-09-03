@@ -1,9 +1,15 @@
 <script setup lang="ts">
-// La coquille « console » : trois colonnes de panneaux flottants sur grand
-// écran, une pile qui défile en dessous. C'est la transposition directe de
-// l'écran Desktop-7 des maquettes.
+// La coque « console ».
+//
+// Sur l'accueil : trois colonnes de panneaux flottants, comme dans la maquette
+// Desktop-7. Les events, le calendrier et les actus sont des panneaux de
+// l'accueil, pas du site : ailleurs, la page occupe toute la largeur.
+//
+// En dessous du point de rupture « console », tout redevient une pile.
 
 const route = useRoute()
+
+const surAccueil = computed(() => route.path === '/')
 
 // Le rail colore toute l'interface en fonction de la section consultée.
 const sectionCourante = computed(() => {
@@ -16,8 +22,8 @@ const sectionCourante = computed(() => {
   <div class="coque" :data-section="sectionCourante ?? undefined">
     <a class="saut-contenu" href="#contenu">Aller au contenu</a>
 
-    <div class="coque__grille">
-      <div class="coque__flanc coque__flanc--gauche">
+    <div class="coque__grille" :class="{ 'coque__grille--seule': !surAccueil }">
+      <div v-if="surAccueil" class="coque__flanc coque__flanc--gauche">
         <PanneauEvenements />
         <PanneauCalendrier />
       </div>
@@ -30,7 +36,7 @@ const sectionCourante = computed(() => {
         <AppBarreOutils class="coque__outils" />
       </div>
 
-      <div class="coque__flanc coque__flanc--droite">
+      <div v-if="surAccueil" class="coque__flanc coque__flanc--droite">
         <PanneauActus />
       </div>
     </div>
@@ -66,6 +72,16 @@ const sectionCourante = computed(() => {
 
     @media (min-width: $bp-large) {
       grid-template-columns: 18rem minmax(0, 1fr) 20rem;
+    }
+
+    // Hors accueil : une seule colonne, la page prend toute la largeur.
+    &--seule {
+      @include console {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      @media (min-width: $bp-large) {
+        grid-template-columns: minmax(0, 1fr);
+      }
     }
   }
 

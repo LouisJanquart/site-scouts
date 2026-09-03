@@ -1,12 +1,20 @@
 <script setup lang="ts">
 import { planning } from '~/data/planning'
-import { sections, parSlug } from '~/data/sections'
+import { evenementsVisibles } from '~/data/evenements'
 
-// Le calendrier du panneau de gauche. Il lit le planning réel de la saison :
-// un point sous chaque dimanche où il se passe quelque chose, la couleur du
-// point suivant le type dominant (réunion d'unité en rouge, sinon cyan).
+// Le calendrier du panneau de gauche.
+//
+// Deux règles tenues ici :
+//   1. Il ne change JAMAIS de taille. La grille affiche toujours six semaines,
+//      même quand le mois en tient cinq, et le détail du jour choisi n'est pas
+//      affiché ici mais dans l'encart de l'accueil, à sa droite.
+//   2. Il est réservé aux familles. Un visiteur voit une invitation à la place.
 
 const { aujourdhui } = usePlanning()
+const selection = useJourSelectionne()
+const { voitLeCalendrier, role } = useRole()
+const route = useRoute()
+const router = useRouter()
 
 const MOIS = [
   'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
@@ -15,20 +23,21 @@ const MOIS = [
 
 const parDate = computed(() => Object.fromEntries(planning.map((j) => [j.date, j])))
 
-// Le mois affiché démarre sur celui d'aujourd'hui, borné à la saison.
 const premierMois = computed(() => planning[0]?.date.slice(0, 7) ?? '2026-09')
 const dernierMois = computed(() => planning.at(-1)?.date.slice(0, 7) ?? '2027-07')
 
-const moisAffiche = ref('')
-onMounted(() => {
+function moisDeDepart() {
   const m = aujourdhui.value.slice(0, 7)
-  moisAffiche.value = m < premierMois.value ? premierMois.value : m > dernierMois.value ? dernierMois.value : m
-})
-// Valeur de départ pour le rendu serveur, pour éviter un décalage d'hydratation.
-if (!moisAffiche.value) {
-  const m = aujourdhui.value.slice(0, 7)
-  moisAffiche.value = m < premierMois.value ? premierMois.value : m > dernierMois.value ? dernierMois.value : m
+  if (m < premierMois.value) return premierMois.value
+  if (m > dernierMois.value) return dernierMois.value
+  return m
 }
+const moisAffiche = ref(moisDeDepart())
+
+// Si le jour choisi est dans un autre mois, on suit.
+watch(selection, (v) => {
+  if (v) moisAffiche.value = v.slice(0, 7)
+})
 
 const annee = computed(() => Number(moisAffiche.value.slice(0, 4)))
 const mois = computed(() => Number(moisAffiche.value.slice(5, 7)))
@@ -45,128 +54,146 @@ function decaler(pas: number) {
 interface Case {
   jour: number | null
   iso: string | null
+  horsMois: boolean
 }
 
+// Toujours 42 cases, soit six semaines pleines : c'est ce qui garantit que le
+// panneau ne bouge pas d'un mois à l'autre.
 const grille = computed<Case[]>(() => {
   const premier = new Date(annee.value, mois.value - 1, 1)
-  const nbJours = new Date(annee.value, mois.value, 0).getDate()
-  // getDay() : 0 = dimanche. On veut une semaine qui commence le lundi.
-  const decalage = (premier.getDay() + 6) % 7
+  const decalage = (premier.getDay() + 6) % 7 // semaine commençant le lundi
   const cases: Case[] = []
-  for (let i = 0; i < decalage; i++) cases.push({ jour: null, iso: null })
-  for (let j = 1; j <= nbJours; j++) {
+  for (let i = 0; i < 42; i++) {
+    const d = new Date(annee.value, mois.value - 1, 1 + i - decalage)
+    const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+      d.getDate(),
+    ).padStart(2, '0')}`
     cases.push({
-      jour: j,
-      iso: `${annee.value}-${String(mois.value).padStart(2, '0')}-${String(j).padStart(2, '0')}`,
+      jour: d.getDate(),
+      iso,
+      horsMois: d.getMonth() !== mois.value - 1,
     })
   }
   return cases
 })
 
-const selection = ref<string | null>(null)
-const jourSelectionne = computed(() => (selection.value ? parDate.value[selection.value] : null))
-
 function classesJour(c: Case) {
-  if (!c.iso) return {}
-  const j = parDate.value[c.iso]
-  const estUnite = Boolean(j?.evenement)
+  const j = c.iso ? parDate.value[c.iso] : undefined
   return {
-    'calendrier__jour--actif': Boolean(j),
-    'calendrier__jour--unite': estUnite,
+    'calendrier__jour--hors': c.horsMois,
+    'calendrier__jour--actif': Boolean(j) && !c.horsMois,
+    'calendrier__jour--unite': Boolean(j?.evenement) && !c.horsMois,
     'calendrier__jour--aujourdhui': c.iso === aujourdhui.value,
     'calendrier__jour--choisi': c.iso === selection.value,
   }
 }
 
 function choisir(c: Case) {
-  if (!c.iso || !parDate.value[c.iso]) return
+  if (!c.iso || c.horsMois || !parDate.value[c.iso]) return
   selection.value = selection.value === c.iso ? null : c.iso
+  // L'encart qui décrit le jour vit sur l'accueil : on y renvoie.
+  if (selection.value && route.path !== '/') router.push('/')
 }
 
-const sectionsDuJour = computed(() => {
-  const j = jourSelectionne.value
-  if (!j) return []
-  return sections
-    .filter((s) => s.cleplanning && j.sections[s.cleplanning])
-    .map((s) => ({ section: s, entree: j.sections[s.cleplanning!]! }))
-})
+// Pour l'invitation on prend le prochain rendez-vous ouvert au dehors, avec son
+// titre public : le libellé du classeur contient du jargon interne
+// (« Portes Ouvertes + CU ») qui ne veut rien dire pour un visiteur.
+const prochainEvenement = computed(
+  () =>
+    evenementsVisibles(role.value)
+      .filter((e) => (e.dateFin ?? e.date) >= aujourdhui.value)
+      .sort((a, b) => a.date.localeCompare(b.date))[0] ?? null,
+)
 </script>
 
 <template>
   <section class="panneau calendrier" aria-labelledby="titre-calendrier">
     <h2 id="titre-calendrier" class="lecteur-seul">Calendrier de la saison</h2>
 
-    <div class="calendrier__barre">
-      <button
-        class="calendrier__nav"
-        type="button"
-        :disabled="!peutReculer"
-        aria-label="Mois précédent"
-        @click="decaler(-1)"
-      >
-        <UiIcone nom="chevrons-gauche" :taille="16" />
-      </button>
-      <span class="calendrier__mois">{{ libelleMois }}</span>
-      <button
-        class="calendrier__nav"
-        type="button"
-        :disabled="!peutAvancer"
-        aria-label="Mois suivant"
-        @click="decaler(1)"
-      >
-        <UiIcone nom="chevrons-droite" :taille="16" />
-      </button>
-    </div>
-
-    <div class="calendrier__semaine" aria-hidden="true">
-      <span v-for="j in ['L', 'M', 'M', 'J', 'V', 'S', 'D']" :key="j">{{ j }}</span>
-    </div>
-
-    <div class="calendrier__grille">
-      <template v-for="(c, i) in grille" :key="i">
-        <span v-if="!c.jour" class="calendrier__vide" />
+    <template v-if="voitLeCalendrier">
+      <div class="calendrier__barre">
         <button
-          v-else
+          class="calendrier__nav"
+          type="button"
+          :disabled="!peutReculer"
+          aria-label="Mois précédent"
+          @click="decaler(-1)"
+        >
+          <UiIcone nom="chevrons-gauche" :taille="16" />
+        </button>
+        <span class="calendrier__mois">{{ libelleMois }}</span>
+        <button
+          class="calendrier__nav"
+          type="button"
+          :disabled="!peutAvancer"
+          aria-label="Mois suivant"
+          @click="decaler(1)"
+        >
+          <UiIcone nom="chevrons-droite" :taille="16" />
+        </button>
+      </div>
+
+      <div class="calendrier__semaine" aria-hidden="true">
+        <span v-for="(j, i) in ['L', 'M', 'M', 'J', 'V', 'S', 'D']" :key="i">{{ j }}</span>
+      </div>
+
+      <div class="calendrier__grille">
+        <button
+          v-for="(c, i) in grille"
+          :key="i"
           type="button"
           class="calendrier__jour"
           :class="classesJour(c)"
-          :disabled="!parDate[c.iso!]"
-          :aria-label="parDate[c.iso!] ? `${c.jour} ${libelleMois}, activité prévue` : `${c.jour} ${libelleMois}`"
+          :disabled="c.horsMois || !parDate[c.iso!]"
+          :aria-label="
+            parDate[c.iso!] && !c.horsMois
+              ? `${c.jour} ${libelleMois}, activité prévue`
+              : `${c.jour} ${libelleMois}`
+          "
+          :aria-pressed="c.iso === selection"
           @click="choisir(c)"
         >
           {{ c.jour }}
         </button>
-      </template>
-    </div>
+      </div>
 
-    <div v-if="jourSelectionne" class="calendrier__detail">
-      <p class="calendrier__detail-date mono">{{ formaterDate(jourSelectionne.date, true) }}</p>
-      <p v-if="jourSelectionne.evenement" class="calendrier__detail-event">
-        {{ jourSelectionne.evenement }}
-      </p>
-      <p v-if="jourSelectionne.remarque" class="calendrier__detail-note">
-        {{ jourSelectionne.remarque }}
-      </p>
-      <ul v-if="sectionsDuJour.length" class="calendrier__detail-liste">
-        <li v-for="d in sectionsDuJour" :key="d.section.slug" :data-section="d.section.slug">
-          <NuxtLink :to="`/sections/${d.section.slug}`" class="calendrier__detail-ligne">
-            <span class="etiquette">{{ d.section.nom }}</span>
-            <span class="calendrier__detail-libelle">{{ d.entree.libelle }}</span>
-          </NuxtLink>
-        </li>
-      </ul>
-    </div>
+      <NuxtLink class="lien-fleche lien-fleche--droite calendrier__tout" to="/calendrier">
+        Toute la saison
+        <UiIcone nom="chevrons-droite" :taille="14" />
+      </NuxtLink>
+    </template>
 
-    <NuxtLink v-else class="lien-fleche lien-fleche--droite calendrier__tout" to="/calendrier">
-      Toute la saison
-      <UiIcone nom="chevrons-droite" :taille="14" />
-    </NuxtLink>
+    <!-- Vue visiteur : pas de calendrier, une invitation à la place. -->
+    <div v-else class="invitation">
+      <UiIcone nom="tente" :taille="26" class="invitation__icone" />
+      <p class="invitation__titre">Envie de nous rejoindre ?</p>
+      <p class="invitation__texte">
+        Les réunions ont lieu le dimanche après-midi, de septembre à mai. Le calendrier détaillé
+        de chaque section est réservé aux familles de l’unité.
+      </p>
+      <NuxtLink
+        v-if="prochainEvenement"
+        class="bouton bouton--principal invitation__bouton"
+        :to="`/events/${prochainEvenement.slug}`"
+      >
+        {{ prochainEvenement.titre }}
+        <span class="mono invitation__date">{{ formaterDateCourte(prochainEvenement.date) }}</span>
+      </NuxtLink>
+      <NuxtLink class="lien-fleche invitation__lien" to="/infos">
+        Les infos pratiques
+        <UiIcone nom="chevrons-droite" :taille="14" />
+      </NuxtLink>
+    </div>
   </section>
 </template>
 
 <style lang="scss" scoped>
 .calendrier {
   gap: 0.5rem;
+  // Hauteur fixe : six semaines de grille, plus la barre et le lien. Le panneau
+  // ne doit pas changer de taille quand on change de mois ou qu'on choisit un
+  // jour.
+  flex: 0 0 auto;
 
   &__barre {
     display: flex;
@@ -191,7 +218,7 @@ const sectionsDuJour = computed(() => {
       background: rgba($cyan, 0.12);
     }
     &:disabled {
-      color: rgba($blanc, 0.15);
+      color: rgba($blanc, 0.22);
       cursor: default;
     }
   }
@@ -234,8 +261,14 @@ const sectionsDuJour = computed(() => {
 
     @include focus-visible;
 
+    // Les jours du mois précédent ou suivant restent visibles mais éteints :
+    // c'est ce qui permet d'avoir toujours six lignes.
+    &--hors {
+      color: rgba($blanc, 0.14);
+    }
+
     &--actif {
-      color: rgba($blanc, 0.75);
+      color: rgba($blanc, 0.78);
       cursor: pointer;
 
       &::after {
@@ -249,7 +282,7 @@ const sectionsDuJour = computed(() => {
       }
 
       &:hover {
-        background: rgba($blanc, 0.07);
+        background: rgba($blanc, 0.08);
       }
     }
 
@@ -268,71 +301,61 @@ const sectionsDuJour = computed(() => {
     }
 
     &--choisi:not(.calendrier__jour--aujourdhui) {
-      background: rgba($blanc, 0.14);
+      background: rgba($blanc, 0.16);
       color: $blanc;
+
+      &::after {
+        background: $blanc;
+      }
     }
-  }
-
-  &__vide {
-    aspect-ratio: 1;
-  }
-
-  &__detail {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    margin-block-start: 0.5rem;
-    padding-block-start: 0.7rem;
-    border-block-start: 1px solid rgba($blanc, 0.07);
-    max-block-size: 11rem;
-    @include defilement-discret;
-  }
-
-  &__detail-date {
-    font-size: 0.66rem;
-    color: rgba($blanc, 0.6);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  &__detail-event {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: $rouge-texte;
-  }
-
-  &__detail-note {
-    font-size: 0.72rem;
-    color: rgba($blanc, 0.62);
-  }
-
-  &__detail-liste {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    margin-block-start: 0.2rem;
-  }
-
-  &__detail-ligne {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-    align-items: flex-start;
-
-    @include focus-visible;
-    &:hover .calendrier__detail-libelle {
-      color: $blanc;
-    }
-  }
-
-  &__detail-libelle {
-    font-size: 0.72rem;
-    color: rgba($blanc, 0.66);
-    line-height: 1.4;
   }
 
   &__tout {
-    margin-block-start: 0.4rem;
+    margin-block-start: 0.5rem;
+  }
+}
+
+.invitation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.25rem;
+
+  &__icone {
+    color: $cyan;
+    margin-block-end: 0.25rem;
+  }
+
+  &__titre {
+    font-family: $police-titre;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+  }
+
+  &__texte {
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: rgba($blanc, 0.62);
+  }
+
+  &__bouton {
+    margin-block-start: 0.35rem;
+    flex-wrap: wrap;
+    text-align: start;
+  }
+
+  &__date {
+    font-size: 0.68rem;
+    // Ni opacité ni blanc atténué : sur l'aplat rouge, la moindre transparence
+    // fait passer sous le seuil. La date se distingue par sa taille.
+    color: $blanc;
+  }
+
+  &__lien {
+    padding-inline: 0;
   }
 }
 </style>

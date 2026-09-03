@@ -118,11 +118,11 @@
   }
 
   &--principal {
-    background: $rouge;
+    background: $rouge-plein;
     color: $blanc;
 
     &:hover {
-      background: color-mix(in srgb, $rouge 85%, $blanc);
+      background: color-mix(in srgb, $rouge-plein 88%, $blanc);
     }
   }
 

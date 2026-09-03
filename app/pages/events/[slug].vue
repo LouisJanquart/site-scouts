@@ -10,6 +10,16 @@ if (!evenement.value) {
 }
 
 const { aujourdhui } = usePlanning()
+const { role } = useRole()
+
+// Un rendez-vous interne n'est pas montré à un visiteur, même en arrivant
+// directement par son adresse.
+const RANG: Record<string, number> = { tous: 0, parents: 1, animes: 1, chefs: 2 }
+const autorise = computed(() => {
+  const n = role.value === 'chef' ? 2 : role.value === 'visiteur' ? 0 : 1
+  return RANG[evenement.value!.public] <= n
+})
+
 const passe = computed(() => (evenement.value!.dateFin ?? evenement.value!.date) < aujourdhui.value)
 
 // Un fichier .ics généré à la volée, pour ajouter la date à son agenda sans
@@ -48,15 +58,27 @@ useHead(() => ({ title: `${evenement.value?.titre} — 16e Fleurus` }))
     v-if="evenement"
     :titre="evenement.titre"
     :surtitre="formaterDate(evenement.date, true)"
-    :chapo="evenement.resume"
+    :chapo="autorise ? evenement.resume : undefined"
     :retour="{ to: '/events', texte: 'Tous les events' }"
   >
     <template #entete>
-      <div v-if="evenement.photo" class="bandeau">
+      <div v-if="evenement.photo && autorise" class="bandeau">
         <img :src="evenement.photo" alt="" />
       </div>
     </template>
 
+    <div v-if="!autorise" class="verrou">
+      <UiIcone nom="cadenas" :taille="22" />
+      <div>
+        <p class="verrou__titre">Réservé aux familles de l’unité</p>
+        <p class="verrou__texte">
+          Ce rendez-vous ne concerne que les membres de la 16e. Les événements ouverts à tout le
+          monde sont sur la <NuxtLink to="/events">page des événements</NuxtLink>.
+        </p>
+      </div>
+    </div>
+
+    <template v-else>
     <section class="bloc">
       <dl class="fiche">
         <div class="fiche__ligne">
@@ -108,10 +130,40 @@ useHead(() => ({ title: `${evenement.value?.titre} — 16e Fleurus` }))
       </p>
     </section>
     <p v-else class="doux">Cet événement a déjà eu lieu.</p>
+    </template>
   </AppPage>
 </template>
 
 <style lang="scss" scoped>
+.verrou {
+  display: flex;
+  gap: 0.85rem;
+  padding: 1.1rem 1.25rem;
+  background: rgba($blanc, 0.04);
+  border: 1px solid rgba($blanc, 0.09);
+  border-radius: $r-carte;
+  color: rgba($blanc, 0.66);
+  max-inline-size: 44rem;
+
+  &__titre {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: $blanc;
+  }
+
+  &__texte {
+    margin-block-start: 0.35rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+
+    a {
+      color: $cyan;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
 .bandeau {
   block-size: 12rem;
   margin-block: 1.25rem 0.5rem;

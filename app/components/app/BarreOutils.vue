@@ -3,12 +3,12 @@
 // La recherche fonctionne réellement (elle balaie sections, événements, actus,
 // questions pratiques et les 96 dates du planning).
 
-const { definition } = useRole()
+const { definition, voitLeCalendrier } = useRole()
 const recherche = ref(false)
 const menu = ref(false)
 
-const entrees = [
-  { to: '/calendrier', nom: 'Calendrier', icone: 'calendrier' },
+const toutesLesEntrees = [
+  { to: '/calendrier', nom: 'Calendrier', icone: 'calendrier', reserve: true },
   { to: '/sections', nom: 'Sections', icone: 'lys' },
   { to: '/events', nom: 'Événements', icone: 'tente' },
   { to: '/actus', nom: 'Actus', icone: 'document' },
@@ -17,6 +17,10 @@ const entrees = [
   { to: '/infos', nom: 'Infos pratiques', icone: 'info' },
   { to: '/a-propos', nom: 'À propos', icone: 'bouclier' },
 ]
+
+const entrees = computed(() =>
+  toutesLesEntrees.filter((e) => !e.reserve || voitLeCalendrier.value),
+)
 
 const route = useRoute()
 watch(() => route.fullPath, () => { menu.value = false; recherche.value = false })
@@ -56,7 +60,12 @@ function basculerRecherche() {
       <UiIcone nom="recherche" :taille="20" />
     </button>
 
-    <NuxtLink class="outils__bouton" to="/calendrier" aria-label="Calendrier de la saison">
+    <NuxtLink
+      v-if="voitLeCalendrier"
+      class="outils__bouton"
+      to="/calendrier"
+      aria-label="Calendrier de la saison"
+    >
       <UiIcone nom="calendrier" :taille="20" />
     </NuxtLink>
 

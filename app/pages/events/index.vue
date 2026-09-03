@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { evenements } from '~/data/evenements'
+import { evenementsVisibles } from '~/data/evenements'
 import { parSlug } from '~/data/sections'
 
 const { aujourdhui } = usePlanning()
+const { role, voitLesEvenementsInternes } = useRole()
+
+const liste = computed(() => evenementsVisibles(role.value))
 
 const aVenir = computed(() =>
-  evenements.filter((e) => (e.dateFin ?? e.date) >= aujourdhui.value),
+  liste.value.filter((e) => (e.dateFin ?? e.date) >= aujourdhui.value),
 )
 const passes = computed(() =>
-  evenements.filter((e) => (e.dateFin ?? e.date) < aujourdhui.value).reverse(),
+  liste.value.filter((e) => (e.dateFin ?? e.date) < aujourdhui.value).reverse(),
 )
 
 useHead({ title: 'Les événements — 16e Fleurus' })
@@ -20,6 +23,11 @@ useHead({ title: 'Les événements — 16e Fleurus' })
     surtitre="Événements"
     chapo="Portes ouvertes, souper dias, marche Adeps, cavalcade. Les dates qui concernent toute l’unité, en plus des réunions du dimanche."
   >
+    <p v-if="!voitLesEvenementsInternes" class="reserve">
+      <UiIcone nom="cadenas" :taille="16" />
+      Seuls les rendez-vous ouverts au public sont affichés. Les temps d’unité, la Saint-Nicolas
+      et la veillée de Noël ne concernent que les familles de l’unité.
+    </p>
     <section v-if="aVenir.length" class="bloc">
       <h2 class="surtitre">À venir</h2>
       <ul class="liste">
@@ -65,6 +73,19 @@ useHead({ title: 'Les événements — 16e Fleurus' })
 </template>
 
 <style lang="scss" scoped>
+.reserve {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  background: rgba($blanc, 0.04);
+  border: 1px solid rgba($blanc, 0.09);
+  border-radius: $r-champ;
+  font-size: 0.82rem;
+  color: rgba($blanc, 0.66);
+  max-inline-size: 46rem;
+}
+
 .bloc {
   display: flex;
   flex-direction: column;
