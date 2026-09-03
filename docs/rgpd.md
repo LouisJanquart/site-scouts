@@ -85,10 +85,21 @@ Un animé de douze ans n'a pas à découvrir un antécédent médical sur un éc
 fiche se consulte auprès des parents ou des chefs. Appliqué dans
 `exigerAccesFicheSante()`.
 
-### Un chef de section ne voit pas les cotisations
+### Un chef voit l'état d'une cotisation, pas son montant
 
-Savoir qui a payé et qui n'a pas payé range les familles. Ce n'est pas le
-travail d'un chef de section. Réservé au CU et au trésorier.
+Un chef de section doit savoir si la cotisation d'un de ses animés est réglée :
+c'est lui qui rappelle les familles avant un camp, et il ne peut pas le faire à
+l'aveugle. Sa liste d'appel affiche donc « réglée » ou « en attente ».
+
+Le **montant**, en revanche, ne sort que pour le CU et le trésorier. La raison
+est précise : il arrive qu'une cotisation soit réduite pour une famille en
+difficulté. Afficher le montant à toute l'équipe d'animation reviendrait à
+afficher cette difficulté, sans que personne ne l'ait décidé. Le suivi de caisse
+complet — montants, moyens de paiement, communications, totaux, pointage —
+reste réservé au CU et au trésorier.
+
+Appliqué dans `server/api/staff/animes.get.ts`, et testé dans les deux sens :
+un chef ne reçoit pas le champ du montant, un CU le reçoit.
 
 ### Une case par usage pour le droit à l'image
 

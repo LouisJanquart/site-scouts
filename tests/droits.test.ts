@@ -163,7 +163,27 @@ describe('un chef de section', () => {
     expect(r.statut).toBe(404)
   })
 
-  it('ne voit pas les cotisations', async () => {
+  it('voit SI la cotisation de ses animés est réglée', async () => {
+    // Un chef rappelle les familles avant un camp : il ne peut pas le faire à
+    // l'aveugle.
+    const r = await cheffeLutins.appel('/api/staff/animes')
+    const nina = r.corps.animes.find((a: any) => a.prenom === 'Nina')
+    expect(nina).toBeDefined()
+    expect(nina.regle).toBe(false)
+    expect(nina.cotisationAttendue).toBe(true)
+  })
+
+  it('ne voit PAS le montant de la cotisation', async () => {
+    // Une cotisation réduite pour une famille en difficulté ne doit pas
+    // s'afficher à toute l'équipe d'animation.
+    const r = await cheffeLutins.appel('/api/staff/animes')
+    expect(r.corps.voitLesMontants).toBe(false)
+    for (const a of r.corps.animes) {
+      expect(a.cotisationDueCentimes).toBeUndefined()
+    }
+  })
+
+  it('n’entre pas dans le suivi de caisse', async () => {
     const r = await cheffeLutins.appel('/api/staff/paiements')
     expect(r.statut).toBe(403)
   })
@@ -194,6 +214,12 @@ describe('le staff d’unité', () => {
     const r = await cu.appel('/api/staff/paiements')
     expect(r.statut).toBe(200)
     expect(r.corps.total.du).toBeGreaterThan(0)
+  })
+
+  it('voit les montants dans la liste d’appel, contrairement à un chef', async () => {
+    const r = await cu.appel('/api/staff/animes')
+    expect(r.corps.voitLesMontants).toBe(true)
+    expect(r.corps.animes[0].cotisationDueCentimes).toBeGreaterThan(0)
   })
 
   it('ne peut pas se retirer son propre rôle de CU', async () => {

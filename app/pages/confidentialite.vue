@@ -94,9 +94,12 @@ const maj = '3 septembre 2026'
         <li><strong>Un visiteur</strong> : rien. Les pages publiques ne contiennent aucune donnée personnelle.</li>
         <li><strong>Un animé</strong> : son propre dossier, et le détail de sa section. Pas sa fiche santé.</li>
         <li><strong>Un parent</strong> : le dossier de ses enfants, leur fiche santé, et le calendrier de toute l’unité.</li>
-        <li><strong>Un chef</strong> : les animés de sa section, fiches santé comprises. Rien des autres sections.</li>
+        <li>
+          <strong>Un chef</strong> : les animés de sa section, fiches santé comprises, et le fait
+          qu’une cotisation soit réglée ou non — pas son montant. Rien des autres sections.
+        </li>
         <li><strong>Le staff d’unité</strong> : l’ensemble, parce qu’il en répond.</li>
-        <li><strong>Le trésorier</strong> : les cotisations, pas les fiches santé.</li>
+        <li><strong>Le trésorier</strong> : les cotisations, montants compris, pas les fiches santé.</li>
       </ul>
       <p>
         Ces règles ne sont pas de simples réglages d’affichage : elles sont appliquées par le

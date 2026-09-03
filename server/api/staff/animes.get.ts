@@ -3,11 +3,19 @@ import {
   animes, fichesSante, inscriptions, paiements, personnes, responsables, saisons,
 } from '../../base/schema'
 
-// La liste d'appel du chef : ses animés, leur statut, et les deux drapeaux qui
-// se lisent d'un coup d'œil (fiche santé à regarder, cotisation en attente).
+// La liste d'appel du chef : ses animés, leur statut, et les drapeaux qui se
+// lisent d'un coup d'œil (fiche santé à regarder, cotisation en attente).
 //
 // Un chef ne voit que sa section. Le CU voit tout. Il n'y a pas de paramètre
 // pour élargir : la restriction vient du compte, pas de l'URL.
+//
+// Sur la cotisation, deux niveaux volontairement distincts :
+//   - un chef voit si c'est RÉGLÉ ou non. Il en a besoin : c'est lui qui
+//     rappelle les familles avant un camp, et il ne peut pas le faire à
+//     l'aveugle ;
+//   - le MONTANT n'est visible que du CU et du trésorier. Il arrive qu'une
+//     cotisation soit réduite pour une famille en difficulté ; afficher le
+//     montant à toute l'équipe reviendrait à afficher cette difficulté.
 export default defineEventHandler(async (event) => {
   const u = exigerStaff(event)
   const base = useBaseDeDonnees()
@@ -45,6 +53,7 @@ export default defineEventHandler(async (event) => {
       statut: inscriptions.statut,
       nouvelle: inscriptions.nouvelle,
       cotisationDueCentimes: inscriptions.cotisationDueCentimes,
+      cotisationAttendue: sql<boolean>`${inscriptions.cotisationDueCentimes} > 0`,
       pointDAttention: fichesSante.aUnPointDAttention,
       saitNager: fichesSante.saitNager,
       ficheRemplie: fichesSante.majLe,
@@ -62,5 +71,16 @@ export default defineEventHandler(async (event) => {
 
   await journaliser(event, 'lecture', 'liste-animes', null, sections ? sections.join(',') : 'toutes')
 
-  return { saison: saison.libelle, sections: mesSections, animes: lignes }
+  // Le montant ne sort d'ici que pour ceux qui tiennent la caisse.
+  const voitLesMontants = aLeRole(u, 'cu', 'tresorier')
+  const nettoyees = lignes.map(({ cotisationDueCentimes, ...reste }) =>
+    voitLesMontants ? { ...reste, cotisationDueCentimes } : reste,
+  )
+
+  return {
+    saison: saison.libelle,
+    sections: mesSections,
+    voitLesMontants,
+    animes: nettoyees,
+  }
 })

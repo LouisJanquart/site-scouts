@@ -15,7 +15,7 @@ const sectionsFiltrables = computed(() =>
   estCU.value ? bornesSections.map((s) => s.slug) : mesSections.value,
 )
 
-// Trois chiffres qui disent l'état de la section d'un coup d'œil.
+// Les chiffres qui disent l'état de la section d'un coup d'œil.
 const resume = computed(() => {
   const a = data.value?.animes ?? []
   return {
@@ -23,6 +23,9 @@ const resume = computed(() => {
     aValider: a.filter((x) => x.statut !== 'validee').length,
     sansFiche: a.filter((x) => !x.ficheRemplie).length,
     attention: a.filter((x) => x.pointDAttention).length,
+    // Ce chiffre-là sert au chef à savoir combien de familles rappeler avant
+    // un camp. Il compte des dossiers, pas des euros.
+    cotisationDue: a.filter((x) => x.cotisationAttendue && !x.regle).length,
   }
 })
 
@@ -90,6 +93,10 @@ useHead({ title: 'Back office — 16e Fleurus' })
           <span class="chiffre__valeur mono">{{ resume.sansFiche }}</span>
           <span class="chiffre__nom">sans fiche santé</span>
         </div>
+        <div class="chiffre" :class="{ 'chiffre--ambre': resume.cotisationDue }">
+          <span class="chiffre__valeur mono">{{ resume.cotisationDue }}</span>
+          <span class="chiffre__nom">cotisations en attente</span>
+        </div>
         <div class="chiffre chiffre--alerte">
           <span class="chiffre__valeur mono">{{ resume.attention }}</span>
           <span class="chiffre__nom">fiches à lire avant le camp</span>
@@ -135,9 +142,14 @@ useHead({ title: 'Back office — 16e Fleurus' })
                 <span v-else class="doux">rien à signaler</span>
               </td>
               <td>
-                <span v-if="a.regle" class="regle">réglée</span>
-                <span v-else-if="a.cotisationDueCentimes > 0" class="manque">
-                  {{ euros(a.cotisationDueCentimes) }}
+                <!-- Un chef voit l'état, le CU et le trésorier voient aussi le
+                     montant : une cotisation réduite ne doit pas s'afficher à
+                     toute l'équipe. -->
+                <span v-if="a.regle" class="regle">
+                  <UiIcone nom="check" :taille="13" /> réglée
+                </span>
+                <span v-else-if="a.cotisationAttendue" class="manque">
+                  {{ data?.voitLesMontants ? euros(a.cotisationDueCentimes) : 'en attente' }}
                 </span>
                 <span v-else class="doux">—</span>
               </td>
@@ -210,6 +222,10 @@ useHead({ title: 'Back office — 16e Fleurus' })
   &--alerte &__valeur {
     color: $rouge-texte;
   }
+
+  &--ambre &__valeur {
+    color: #f0a32e;
+  }
 }
 
 .tableau-cadre {
@@ -277,6 +293,9 @@ useHead({ title: 'Back office — 16e Fleurus' })
   color: #f0a32e;
 }
 .regle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
   color: #86efac;
 }
 .doux {

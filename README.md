@@ -52,7 +52,8 @@ le serveur :
 - Un espace famille : les enfants, leurs inscriptions, leur fiche santé, leurs
   autorisations — modifiables à tout moment.
 - Un back office : liste d'appel du chef limitée à sa section, dossiers à
-  relire, fiches santé, suivi des cotisations, distribution des rôles.
+  relire, fiches santé, état des cotisations (le montant reste au CU et au
+  trésorier), distribution des rôles.
 - Le paiement de la cotisation par Bancontact ou carte (Mollie), avec le
   virement à communication structurée comme solution de repli.
 - Le RGPD pour de vrai : consentements horodatés et révocables, chiffrement des
