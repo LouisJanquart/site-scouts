@@ -44,6 +44,7 @@ export default defineEventHandler(async (event) => {
     paiements: reglements,
     regle: reglements.some((p) => p.statut === 'paye'),
     enLigneDisponible: paiementEnLigneDisponible(),
+    modeDemo: modeDemo(),
     coordonnees: {
       // À remplir par le staff d'unité dans les paramètres du site.
       iban: process.env.NUXT_IBAN_UNITE ?? null,

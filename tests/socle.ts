@@ -33,6 +33,10 @@ export async function setup() {
       HOST: '127.0.0.1',
       NUXT_CLE_SANTE: 'MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=',
       NUXT_PUBLIC_URL_SITE: ADRESSE,
+      // Pas de compte Mollie pour les tests : le simulateur rejoue la même
+      // chaîne, c'est elle qu'on veut vérifier.
+      NUXT_PAIEMENT_DEMO: '1',
+      NUXT_MOLLIE_CLE: '',
       NODE_ENV: 'production',
     },
     stdio: 'ignore',

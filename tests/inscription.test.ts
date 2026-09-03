@@ -93,6 +93,91 @@ describe('dépôt d’un dossier', () => {
   })
 })
 
+describe('paiement de la cotisation', () => {
+  it('déroule la chaîne complète : ouvrir, encaisser, faire basculer le dossier', async () => {
+    const n = navigateur()
+    const depot = await n.appel('/api/inscriptions', {
+      method: 'POST',
+      body: JSON.stringify(dossier('Paye', 'Cotisation')),
+    })
+    expect(depot.statut).toBe(200)
+    const inscriptionId = depot.corps.inscriptionId
+
+    // Au départ : en attente de paiement, rien de réglé.
+    const avant = await n.appel(`/api/paiements/${inscriptionId}`)
+    expect(avant.corps.regle).toBe(false)
+    expect(avant.corps.inscription.statut).toBe('en-attente-paiement')
+    expect(avant.corps.modeDemo).toBe(true)
+
+    // On ouvre un paiement.
+    const ouverture = await n.appel('/api/paiements/creer', {
+      method: 'POST',
+      body: JSON.stringify({ inscriptionId }),
+    })
+    expect(ouverture.statut).toBe(200)
+    expect(ouverture.corps.url).toMatch(/^\/mon-espace\/simulateur\//)
+    const paiementId = ouverture.corps.url.split('/').pop()
+
+    // On l'encaisse.
+    const issue = await n.appel('/api/paiements/simuler', {
+      method: 'POST',
+      body: JSON.stringify({ paiementId, issue: 'paye' }),
+    })
+    expect(issue.statut).toBe(200)
+
+    // Le paiement ne vaut pas validation : le dossier attend un chef.
+    const apres = await n.appel(`/api/paiements/${inscriptionId}`)
+    expect(apres.corps.regle).toBe(true)
+    expect(apres.corps.inscription.statut).toBe('envoyee')
+  })
+
+  it('refuse de simuler le paiement d’un enfant qui n’est pas le sien', async () => {
+    const famille = navigateur()
+    const depot = await famille.appel('/api/inscriptions', {
+      method: 'POST',
+      body: JSON.stringify(dossier('Voisin', 'Intrus')),
+    })
+    const ouverture = await famille.appel('/api/paiements/creer', {
+      method: 'POST',
+      body: JSON.stringify({ inscriptionId: depot.corps.inscriptionId }),
+    })
+    const paiementId = ouverture.corps.url.split('/').pop()
+
+    const autre = navigateur()
+    await autre.appel('/api/inscriptions', {
+      method: 'POST',
+      body: JSON.stringify(dossier('Aucun', 'Rapport')),
+    })
+    const r = await autre.appel('/api/paiements/simuler', {
+      method: 'POST',
+      body: JSON.stringify({ paiementId, issue: 'paye' }),
+    })
+    expect(r.statut).toBe(404)
+  })
+
+  it('ne réclame pas deux fois une cotisation déjà réglée', async () => {
+    const n = navigateur()
+    const depot = await n.appel('/api/inscriptions', {
+      method: 'POST',
+      body: JSON.stringify(dossier('Deux', 'Fois')),
+    })
+    const inscriptionId = depot.corps.inscriptionId
+    const o = await n.appel('/api/paiements/creer', {
+      method: 'POST',
+      body: JSON.stringify({ inscriptionId }),
+    })
+    await n.appel('/api/paiements/simuler', {
+      method: 'POST',
+      body: JSON.stringify({ paiementId: o.corps.url.split('/').pop(), issue: 'paye' }),
+    })
+    const encore = await n.appel('/api/paiements/creer', {
+      method: 'POST',
+      body: JSON.stringify({ inscriptionId }),
+    })
+    expect(encore.statut).toBe(409)
+  })
+})
+
 describe('connexion', () => {
   it('donne le même message que le compte existe ou non', async () => {
     const n = navigateur()

@@ -19,7 +19,11 @@ async function payer() {
       body: { inscriptionId: id.value },
     }),
   )
-  if (r?.url) window.location.href = r.url
+  // Une adresse interne (le simulateur) se suit par le routeur ; celle de la
+  // banque est externe et demande une vraie navigation.
+  if (!r?.url) return
+  if (r.url.startsWith('/')) await navigateTo(r.url)
+  else window.location.href = r.url
 }
 
 useHead({ title: 'Cotisation — 16e Fleurus' })
@@ -60,9 +64,14 @@ useHead({ title: 'Cotisation — 16e Fleurus' })
           <div v-if="data.enLigneDisponible">
             <button class="bouton bouton--principal" type="button" :disabled="enCours" @click="payer">
               <UiIcone nom="carte" :taille="16" />
-              {{ enCours ? 'Ouverture…' : 'Payer par Bancontact ou carte' }}
+              {{ enCours ? 'Ouverture…' : data.modeDemo ? 'Simuler un paiement' : 'Payer par Bancontact ou carte' }}
             </button>
-            <p class="doux petit">
+            <p v-if="data.modeDemo" class="demo">
+              <UiIcone nom="alerte" :taille="14" />
+              Environnement de test : aucun argent ne circule. Le bouton ouvre un simulateur qui
+              déclenche exactement la même chaîne qu’un vrai paiement.
+            </p>
+            <p v-else class="doux petit">
               Vous quittez le site le temps du paiement. Aucune donnée bancaire ne passe par nous.
             </p>
           </div>
@@ -160,5 +169,16 @@ useHead({ title: 'Cotisation — 16e Fleurus' })
   font-size: 0.78rem;
   line-height: 1.55;
   margin-block-start: 0.5rem;
+}
+
+.demo {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin-block-start: 0.6rem;
+  max-inline-size: 32rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: #f0a32e;
 }
 </style>

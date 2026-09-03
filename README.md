@@ -55,7 +55,9 @@ le serveur :
   relire, fiches santé, état des cotisations (le montant reste au CU et au
   trésorier), distribution des rôles.
 - Le paiement de la cotisation par Bancontact ou carte (Mollie), avec le
-  virement à communication structurée comme solution de repli.
+  virement à communication structurée comme solution de repli — et un
+  simulateur de paiement tant que le compte Mollie n'est pas ouvert, pour
+  dérouler toute la chaîne sans banque (`NUXT_PAIEMENT_DEMO=1`).
 - Le RGPD pour de vrai : consentements horodatés et révocables, chiffrement des
   fiches santé, journal des accès visible par les familles, export complet des
   données, demandes d'exercice des droits, purge automatique.

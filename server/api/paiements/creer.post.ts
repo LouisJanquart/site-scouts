@@ -53,6 +53,17 @@ export default defineEventHandler(async (event) => {
     })
     .returning()
 
+  // Sans clé Mollie, et seulement hors production, on passe par le simulateur :
+  // même enchaînement, même écritures en base, pas de banque.
+  if (modeDemo()) {
+    await base
+      .update(paiements)
+      .set({ moyen: 'demo', statut: 'en-cours' })
+      .where(eq(paiements.id, enregistrement!.id))
+    await journaliser(event, 'creation', 'paiement', enregistrement!.id, 'simulateur')
+    return { url: `/mon-espace/simulateur/${enregistrement!.id}` }
+  }
+
   const paiementMollie = await mollie().payments.create({
     amount: { currency: 'EUR', value: (ligne.montant / 100).toFixed(2) },
     description: `Cotisation ${ligne.saison} — ${ligne.prenom} ${ligne.nom}`,
