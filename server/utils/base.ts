@@ -28,7 +28,15 @@ export function useBaseDeDonnees() {
     })
   }
 
-  client = globalThis.__basePg ?? postgres(url, { max: 10, prepare: false })
+  // Sur un hébergement sans serveur, chaque instance ouvre sa propre grappe :
+  // dix connexions par instance épuiseraient le pool de la base en quelques
+  // minutes de trafic. Une seule suffit, l'hébergeur multiplie les instances.
+  // « prepare: false » est indispensable derrière un pooler en mode transaction
+  // (c'est le cas de Neon et de PgBouncer).
+  const sansServeur = Boolean(process.env.VERCEL || process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME)
+  client =
+    globalThis.__basePg ??
+    postgres(url, { max: sansServeur ? 1 : 10, prepare: false, idle_timeout: 20 })
   if (process.env.NODE_ENV !== 'production') globalThis.__basePg = client
 
   instance = drizzle(client, { schema })
