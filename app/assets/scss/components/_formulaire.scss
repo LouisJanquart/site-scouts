@@ -1,0 +1,260 @@
+@use '../abstracts' as *;
+
+// ---------------------------------------------------------------------------
+// Les formulaires.
+//
+// Une seule idée directrice : sur fond sombre, un champ doit se voir. Beaucoup
+// d'interfaces sombres dessinent des champs à peine plus clairs que la page, et
+// on ne sait plus où l'on tape. Ici le champ est nettement en creux, la bordure
+// s'allume au focus, et l'erreur est écrite en toutes lettres sous le champ —
+// jamais seulement en rouge, parce que le rouge ne se voit pas pour tout le
+// monde.
+// ---------------------------------------------------------------------------
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  &__etiquette {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: rgba($blanc, 0.86);
+
+    // L'astérisque des champs obligatoires : lue par les lecteurs d'écran via
+    // l'attribut required, donc purement décorative ici.
+    span[aria-hidden] {
+      color: $rouge-texte;
+      margin-inline-start: 0.15rem;
+    }
+  }
+
+  &__aide {
+    font-size: 0.74rem;
+    line-height: 1.5;
+    color: rgba($blanc, 0.55);
+  }
+
+  &__erreur {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.35rem;
+    font-size: 0.74rem;
+    line-height: 1.45;
+    color: $rouge-texte;
+  }
+
+  &--erreur .saisie {
+    border-color: $rouge-texte;
+  }
+}
+
+.saisie {
+  inline-size: 100%;
+  padding: 0.6rem 0.75rem;
+  background: rgba(#000, 0.28);
+  border: 1px solid rgba($blanc, 0.14);
+  border-radius: $r-champ;
+  color: $blanc;
+  font: inherit;
+  font-size: 0.88rem;
+  transition:
+    border-color $vite $courbe,
+    background $vite $courbe;
+
+  &::placeholder {
+    color: rgba($blanc, 0.34);
+  }
+
+  &:hover:not(:disabled) {
+    border-color: rgba($blanc, 0.24);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: $cyan;
+    box-shadow: 0 0 0 3px rgba($cyan, 0.22);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &--zone {
+    min-block-size: 6rem;
+    resize: vertical;
+    line-height: 1.55;
+  }
+}
+
+select.saisie {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, rgba(255, 255, 255, 0.5) 50%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.5) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% + 2px),
+    calc(100% - 13px) calc(50% + 2px);
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  padding-inline-end: 2.25rem;
+
+  option {
+    background: $noir;
+    color: $blanc;
+  }
+}
+
+// --- Cases à cocher et boutons radio ---------------------------------------
+//
+// La case est grande, et toute la ligne est cliquable : ces formulaires se
+// remplissent au téléphone, souvent le dimanche soir, souvent en vitesse.
+.case {
+  display: grid;
+  grid-template-columns: 1.15rem 1fr;
+  gap: 0.7rem;
+  align-items: start;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba($blanc, 0.1);
+  border-radius: $r-champ;
+  background: rgba($blanc, 0.025);
+  cursor: pointer;
+  transition:
+    border-color $vite $courbe,
+    background $vite $courbe;
+
+  &:hover {
+    background: rgba($blanc, 0.05);
+    border-color: rgba($blanc, 0.18);
+  }
+
+  &:has(input:focus-visible) {
+    border-color: $cyan;
+    box-shadow: 0 0 0 3px rgba($cyan, 0.22);
+  }
+
+  &:has(input:checked) {
+    border-color: rgba($cyan, 0.5);
+    background: rgba($cyan, 0.07);
+  }
+
+  input {
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    margin-block-start: 0.1rem;
+    accent-color: $cyan;
+    cursor: pointer;
+  }
+
+  // Les trois lignes sont des <span> (elles vivent dans un <label>) : sans
+  // display:block, le titre et le texte se retrouveraient collés.
+  &__titre {
+    display: block;
+    font-size: 0.86rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  &__texte {
+    display: block;
+    margin-block-start: 0.25rem;
+    font-size: 0.79rem;
+    line-height: 1.55;
+    color: rgba($blanc, 0.66);
+  }
+
+  &__consequence {
+    display: block;
+    margin-block-start: 0.4rem;
+    font-size: 0.74rem;
+    line-height: 1.5;
+    color: rgba($blanc, 0.5);
+    border-inline-start: 2px solid rgba($blanc, 0.15);
+    padding-inline-start: 0.55rem;
+  }
+
+  &--obligatoire {
+    border-color: rgba($rouge, 0.28);
+  }
+}
+
+// --- Groupes ----------------------------------------------------------------
+.grille-champs {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+
+  &--deux {
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  }
+
+  .plein {
+    grid-column: 1 / -1;
+  }
+}
+
+.pile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.groupe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.15rem;
+  background: rgba($blanc, 0.025);
+  border: 1px solid rgba($blanc, 0.07);
+  border-radius: $r-carte;
+
+  &__titre {
+    font-family: $police-titre;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+  }
+
+  &__chapo {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: rgba($blanc, 0.62);
+    max-inline-size: 46rem;
+  }
+}
+
+// --- Le bandeau d'erreur en tête de formulaire ------------------------------
+.alerte {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border-radius: $r-champ;
+  font-size: 0.84rem;
+  line-height: 1.55;
+
+  &--erreur {
+    background: rgba($rouge, 0.1);
+    border: 1px solid rgba($rouge, 0.32);
+    color: $rouge-texte;
+  }
+
+  &--info {
+    background: rgba($cyan, 0.07);
+    border: 1px solid rgba($cyan, 0.2);
+    color: rgba($blanc, 0.78);
+  }
+
+  &--bien {
+    background: rgba(#4ade80, 0.08);
+    border: 1px solid rgba(#4ade80, 0.28);
+    color: #86efac;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}

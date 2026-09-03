@@ -7,15 +7,31 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "base:generer": "drizzle-kit generate",
+    "base:appliquer": "drizzle-kit migrate",
+    "base:studio": "drizzle-kit studio",
+    "base:semer": "tsx scripts/semer.ts",
+    "test": "vitest run",
+    "base:balayer": "tsx scripts/balayer.ts"
   },
   "dependencies": {
+    "@mollie/api-client": "^4.6.0",
+    "drizzle-orm": "^0.45.2",
+    "nodemailer": "^9.1.1",
     "nuxt": "^4.5.2",
+    "postgres": "^3.4.9",
     "vue": "^3.5.42",
-    "vue-router": "^5.3.0"
+    "vue-router": "^5.3.0",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
-    "sass-embedded": "^1.103.1"
+    "@types/nodemailer": "^8.0.1",
+    "dotenv": "^17.4.2",
+    "drizzle-kit": "^0.31.10",
+    "sass-embedded": "^1.103.1",
+    "tsx": "^4.23.13",
+    "vitest": "^4.1.11"
   },
   "allowScripts": {
     "esbuild@0.28.2": true,

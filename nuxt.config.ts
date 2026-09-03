@@ -61,9 +61,53 @@ export default defineNuxtConfig({
     },
   },
 
+  // -------------------------------------------------------------------------
+  // Deux sites en un.
+  //
+  // La partie publique est faite de pages qui ne changent qu'au déploiement :
+  // elles sont fabriquées une fois pour toutes, servies en fichiers, et ne
+  // touchent jamais la base. C'est ce qui garde le site rapide et ce qui fait
+  // qu'une panne de base de données n'empêche pas de lire les horaires.
+  //
+  // La partie privée — inscription, espace famille, back office — est rendue
+  // dans le navigateur uniquement. Aucune donnée personnelle ne traverse le
+  // HTML : la page arrive vide et va chercher ce à quoi le compte a droit.
+  // -------------------------------------------------------------------------
+  routeRules: {
+    '/inscription/**': { prerender: false, ssr: false },
+    '/connexion/**': { prerender: false, ssr: false },
+    '/connexion': { prerender: false, ssr: false },
+    '/mon-espace/**': { prerender: false, ssr: false, robots: false },
+    '/staff/**': { prerender: false, ssr: false, robots: false },
+    '/api/**': { prerender: false },
+  },
+
+  runtimeConfig: {
+    baseUrl: '',
+    cleSante: '',
+    mollieCle: '',
+    mollieWebhook: '',
+    smtpHote: '',
+    smtpPort: '587',
+    smtpUtilisateur: '',
+    smtpMotdepasse: '',
+    smtpExpediteur: '',
+    public: {
+      urlSite: 'http://localhost:3000',
+    },
+  },
+
   nitro: {
+    // Le ménage RGPD : une fois par nuit. Voir server/tasks/menage.ts.
+    experimental: { tasks: true },
+    scheduledTasks: { '0 3 * * *': ['menage'] },
+
     prerender: {
       crawlLinks: true,
+      // Le robot d'exploration ne doit pas essayer de fabriquer les pages
+      // privées : elles n'existent pas sans compte.
+      ignore: ['/inscription', '/connexion', '/mon-espace', '/staff', '/api'],
+      failOnError: false,
       routes: [
         '/',
         '/sitemap.xml',

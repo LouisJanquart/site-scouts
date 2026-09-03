@@ -1,15 +1,22 @@
 <script setup lang="ts">
 // Outil de démonstration, pas une fonctionnalité du site fini.
-// Il permet de voir, sans authentification, ce que chacun des quatre publics
-// verra une fois les comptes en place. Il s'affiche donc volontairement comme
-// un élément de chantier, et non comme un composant de l'interface.
+//
+// Il permet de voir ce que chacun des quatre publics verra. Depuis qu'il y a de
+// vrais comptes, il disparaît dès qu'on est connecté : le rôle vient alors de
+// la session, et laisser quelqu'un « se mettre en visiteur » donnerait une idée
+// fausse de ce qu'un visiteur voit vraiment.
 
-const { role, definirRole } = useRole()
+const { role, definirRole, apercuPossible } = useRole()
 const ouvert = ref(false)
 </script>
 
 <template>
-  <aside class="chantier" :class="{ 'chantier--ouvert': ouvert }" aria-label="Outil de démonstration">
+  <aside
+    v-if="apercuPossible"
+    class="chantier"
+    :class="{ 'chantier--ouvert': ouvert }"
+    aria-label="Outil de démonstration"
+  >
     <button
       class="chantier__poignee"
       type="button"
@@ -24,9 +31,9 @@ const ouvert = ref(false)
     <div v-if="ouvert" class="chantier__tiroir">
       <p class="chantier__note">
         Sélecteur de démonstration. Il change ce qui est <em>affiché</em>, pas ce qui est
-        <em>protégé</em> : tant qu’il n’y a pas d’authentification, tout ce que contient le site
-        est téléchargé par n’importe quel visiteur. Aucune coordonnée personnelle n’a donc été
-        mise dans le code.
+        <em>protégé</em> : le contenu public du site est téléchargé par n’importe quel visiteur.
+        Aucune coordonnée personnelle n’est donc écrite dans le code — les vraies données passent
+        par un compte, et le serveur vérifie les droits à chaque requête.
       </p>
       <ul class="chantier__liste">
         <li v-for="r in rolesDisponibles" :key="r.cle">

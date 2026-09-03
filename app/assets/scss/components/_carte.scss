@@ -121,8 +121,11 @@
     background: $rouge-plein;
     color: $blanc;
 
+    // Le survol FONCE au lieu d'éclaircir. Éclaircir un aplat rouge sous du
+    // texte blanc fait passer le contraste sous 4,5:1 — le bouton devient
+    // moins lisible au moment précis où on le vise.
     &:hover {
-      background: color-mix(in srgb, $rouge-plein 88%, $blanc);
+      background: color-mix(in srgb, $rouge-plein 88%, $noir-profond);
     }
   }
 

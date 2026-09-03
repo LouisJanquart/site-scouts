@@ -4,8 +4,13 @@
 // questions pratiques et les 96 dates du planning).
 
 const { definition, voitLeCalendrier } = useRole()
+const { moi, charger, connecte, estStaff } = useCompte()
 const recherche = ref(false)
 const menu = ref(false)
+
+// On ne demande « qui es-tu ? » qu'une fois le navigateur en main : les pages
+// publiques sont fabriquées à l'avance et ne doivent pas dépendre d'un compte.
+onMounted(() => charger())
 
 const toutesLesEntrees = [
   { to: '/calendrier', nom: 'Calendrier', icone: 'calendrier', reserve: true },
@@ -18,9 +23,17 @@ const toutesLesEntrees = [
   { to: '/a-propos', nom: 'À propos', icone: 'bouclier' },
 ]
 
-const entrees = computed(() =>
-  toutesLesEntrees.filter((e) => !e.reserve || voitLeCalendrier.value),
-)
+const entrees = computed(() => {
+  const liste = toutesLesEntrees.filter((e) => !e.reserve || voitLeCalendrier.value)
+  return [
+    ...liste,
+    { to: '/inscription', nom: 'Inscrire un enfant', icone: 'plus' },
+    connecte.value
+      ? { to: '/mon-espace', nom: 'Mon espace', icone: 'profil' }
+      : { to: '/connexion', nom: 'Se connecter', icone: 'cadenas' },
+    ...(estStaff.value ? [{ to: '/staff', nom: 'Back office', icone: 'bouclier' }] : []),
+  ]
+})
 
 const route = useRoute()
 watch(() => route.fullPath, () => { menu.value = false; recherche.value = false })
@@ -79,13 +92,15 @@ function basculerRecherche() {
       <UiIcone :nom="menu ? 'croix' : 'menu'" :taille="20" />
     </button>
 
+    <!-- Le bouton de droite mène là où l'on est : son espace quand on est
+         connecté, la page de connexion sinon. -->
     <NuxtLink
       class="outils__profil"
-      to="/infos"
-      :title="`Vue ${definition.nom}`"
-      :aria-label="`Vue ${definition.nom} — infos pratiques`"
+      :to="connecte ? '/mon-espace' : '/connexion'"
+      :title="connecte ? `${moi?.prenom} ${moi?.nom}` : 'Se connecter'"
+      :aria-label="connecte ? 'Mon espace' : 'Se connecter'"
     >
-      <UiIcone :nom="definition.icone" :taille="18" />
+      <UiIcone :nom="connecte ? 'profil' : 'cadenas'" :taille="18" />
     </NuxtLink>
   </nav>
 </template>

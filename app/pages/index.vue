@@ -7,10 +7,21 @@ import { evenementPublicDuJour } from '~/data/evenements'
 // logotype par-dessus, et un encart incrusté en bas à gauche. L'illustration
 // manga est remplacée par une photo de camp.
 //
-// Deux points de forme repris de la maquette :
-//   - l'encart n'est pas un rectangle : son bord droit est une longue pente,
-//     avec des joints arrondis (voir le clipPath « forme-encart » ci-dessous) ;
-//   - c'est lui, et pas le calendrier de gauche, qui décrit le jour choisi.
+// La forme, reprise au plus près de la maquette :
+//   - la photo n'est pas un rectangle. Elle est vraiment DÉCOUPÉE : une encoche
+//     en bas à gauche, qui laisse la place à l'encart du jour, et une entaille
+//     dans le coin supérieur droit, qui laisse la barre d'outils respirer ;
+//   - l'encart lui-même a deux pentes, une sur son bord supérieur et une sur
+//     son bord droit, réunies par un joint largement arrondi ;
+//   - les deux découpes sont décalées l'une de l'autre d'une gouttière, si bien
+//     que le fond de page passe entre les deux panneaux.
+//
+// Les deux chemins sont écrits dans le MÊME repère — celui de « .accueil », en
+// coordonnées relatives — et posés tous les deux en « inset: 0 ». C'est ce qui
+// garantit qu'ils restent alignés quelle que soit la taille du panneau.
+//
+// Enfin, c'est l'encart, et pas le calendrier de gauche, qui décrit le jour
+// choisi.
 
 const jour = useJourAffiche()
 const selection = useJourSelectionne()
@@ -46,13 +57,21 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
 
 <template>
   <div class="accueil">
-    <!-- La forme de l'encart, en coordonnées relatives : elle suit la taille
-         du panneau sans qu'on ait à la recalculer. -->
+    <!-- Les deux découpes, en coordonnées relatives au panneau : elles suivent
+         sa taille sans qu'on ait à les recalculer. -->
     <svg class="accueil__defs" aria-hidden="true" focusable="false">
       <defs>
+        <!-- La photo : coin supérieur droit entaillé, encoche en bas à gauche. -->
+        <clipPath id="forme-photo" clipPathUnits="objectBoundingBox">
+          <path
+            d="M0.030,0 L0.700,0 C0.727,0 0.740,0.010 0.752,0.036 C0.766,0.066 0.782,0.080 0.812,0.080 L0.974,0.080 C0.991,0.080 1,0.090 1,0.110 L1,0.972 C1,0.990 0.991,1 0.974,1 L0.500,1 C0.494,0.960 0.490,0.930 0.482,0.895 L0.410,0.545 C0.398,0.500 0.374,0.480 0.331,0.475 L0.030,0.441 C0.011,0.439 0,0.430 0,0.410 L0,0.030 C0,0.011 0.011,0 0.030,0 Z"
+          />
+        </clipPath>
+
+        <!-- L'encart : deux pentes, bord supérieur et bord droit. -->
         <clipPath id="forme-encart" clipPathUnits="objectBoundingBox">
           <path
-            d="M0,0.18 C0,0.06 0.03,0 0.09,0 L0.58,0 C0.645,0 0.665,0.03 0.695,0.10 L0.955,0.87 C0.985,0.955 0.99,1 1,1 L0,1 Z"
+            d="M0,0.455 C0,0.437 0.011,0.427 0.030,0.428 L0.315,0.462 C0.358,0.467 0.380,0.489 0.392,0.532 L0.462,0.878 C0.469,0.912 0.472,0.932 0.472,0.950 C0.472,0.978 0.458,1 0.432,1 L0.030,1 C0.011,1 0,0.990 0,0.972 Z"
           />
         </clipPath>
       </defs>
@@ -79,6 +98,10 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
         {{ unite.paroisse }} · {{ unite.numero }} {{ unite.region }} · depuis {{ unite.fondation }}
       </p>
     </div>
+
+    <!-- Le fond de l'encart : une plaque qui couvre tout le panneau et qu'on
+         découpe à la forme voulue. Elle partage donc le repère de la photo. -->
+    <span class="accueil__plaque" />
 
     <div class="accueil__encart">
       <div class="accueil__jour">
@@ -140,6 +163,15 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
   background: $noir;
   isolation: isolate;
 
+  // En mise en page « console », le panneau n'a plus de fond ni de coins à lui :
+  // ce sont les deux découpes (la photo et la plaque) qui dessinent la silhouette,
+  // et le fond de page passe dans la gouttière entre les deux.
+  @include console {
+    background: none;
+    border-radius: 0;
+    overflow: visible;
+  }
+
   // En dessous de la mise en page « console », l'accueil redevient une pile
   // normale : la photo passe en fond et tout le reste s'empile.
   @include jusqua($bp-console) {
@@ -160,6 +192,10 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     position: absolute;
     inset: 0;
     z-index: -2;
+
+    @include console {
+      clip-path: url('#forme-photo');
+    }
 
     picture {
       display: block;
@@ -183,6 +219,22 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     background:
       radial-gradient(120% 90% at 78% 15%, transparent 30%, rgba($noir, 0.75) 100%),
       linear-gradient(to top, rgba($noir, 0.92) 0%, rgba($noir, 0.12) 55%);
+  }
+
+  // La plaque de l'encart : elle couvre tout le panneau, donc elle partage le
+  // repère de la photo, et c'est le découpage qui lui donne sa forme. C'est ce
+  // qui garantit que la gouttière entre les deux reste régulière.
+  &__plaque {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: $noir;
+    clip-path: url('#forme-encart');
+    pointer-events: none;
+
+    @include jusqua($bp-console) {
+      display: none;
+    }
   }
 
   &__marque {
@@ -241,38 +293,23 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
   // ------------------------------------------------------------------------
   &__encart {
     position: absolute;
-    inset-block-end: 0;
+    inset-block: 46.5% 0;
     inset-inline-start: 0;
-    inline-size: min(30rem, 66%);
-    padding: 1.75rem 6.5rem 1.75rem 1.75rem;
-    background: rgba($noir, 0.9);
-    backdrop-filter: blur(20px);
+    inline-size: 46%;
+    // Le texte doit rester à l'intérieur des deux pentes : d'où une réserve en
+    // haut (la pente du bord supérieur) et à droite (celle du bord droit).
+    padding: 2.6rem 4.5rem 1.9rem 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    clip-path: url('#forme-encart');
-
-    // La saignée : la même forme, un peu plus grande, remplie de la couleur du
-    // fond de page. Elle dessine la gouttière entre l'encart et la photo, comme
-    // si c'étaient deux panneaux séparés.
-    &::before {
-      content: '';
-      position: absolute;
-      inset: -0.7rem -0.7rem 0 0;
-      background: $noir-profond;
-      clip-path: url('#forme-encart');
-      z-index: -1;
-    }
+    justify-content: flex-start;
+    gap: 0.9rem;
 
     @include jusqua($bp-console) {
       position: static;
       inline-size: 100%;
       padding: 1.5rem;
-      clip-path: none;
-
-      &::before {
-        display: none;
-      }
+      background: rgba($noir, 0.9);
+      backdrop-filter: blur(20px);
     }
   }
 
@@ -448,6 +485,11 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
 
   &__reseaux {
     margin-block-start: 0.25rem;
+
+    // Dans l'encart découpé, les réseaux se posent en bas, comme la maquette.
+    @include console {
+      margin-block-start: auto;
+    }
   }
 }
 </style>
