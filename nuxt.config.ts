@@ -1,6 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2026-09-02',
+
+  // Où Nuxt écrit ses fichiers de travail.
+  //
+  // Par défaut, dans le dossier du projet, ce qui va très bien. Mais il arrive
+  // que ce dossier soit synchronisé, sauvegardé en continu ou monté avec des
+  // droits restreints — et Nuxt, qui efface et recrée son dossier de travail à
+  // chaque démarrage, se bloque alors sur un « operation not permitted ».
+  // Ces deux variables permettent de le déplacer ailleurs sans rien changer au
+  // dépôt.
+  buildDir: process.env.NUXT_BUILD_DIR || undefined,
   devtools: { enabled: true },
   ssr: true,
 
@@ -98,6 +108,8 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    ...(process.env.NUXT_OUTPUT_DIR ? { output: { dir: process.env.NUXT_OUTPUT_DIR } } : {}),
+
     // Le ménage RGPD : une fois par nuit. Voir server/tasks/menage.ts.
     experimental: { tasks: true },
     scheduledTasks: { '0 3 * * *': ['menage'] },
