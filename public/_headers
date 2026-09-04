@@ -1,5 +1,7 @@
-# Déploiement de travail : rien ne doit être indexé tant que le staff d'unité
-# n'a pas relu le contenu et tranché les questions de droit à l'image.
+# Ces en-têtes ne servent QUE si le site part un jour sur Netlify ou Cloudflare
+# Pages : eux seuls lisent ce format. Sur Vercel il est ignoré. La vraie source
+# est « routeRules » dans nuxt.config.ts, appliquée par le serveur lui-même quel
+# que soit l'hébergeur. Si tu changes un en-tête, change-le là-bas AUSSI.
 /*
   X-Robots-Tag: noindex, nofollow
   X-Content-Type-Options: nosniff

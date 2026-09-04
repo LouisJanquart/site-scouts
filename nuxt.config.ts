@@ -83,7 +83,25 @@ export default defineNuxtConfig({
   // dans le navigateur uniquement. Aucune donnée personnelle ne traverse le
   // HTML : la page arrive vide et va chercher ce à quoi le compte a droit.
   // -------------------------------------------------------------------------
+  //
+  // Les en-têtes sont écrits ICI, et pas dans un fichier « public/_headers » :
+  // ce format-là n'est lu que par Netlify et Cloudflare. Vercel l'ignore
+  // silencieusement — et un « noindex » qu'on croit posé alors qu'il ne l'est
+  // pas est pire que pas de noindex du tout. Dans routeRules, c'est Nitro qui
+  // les pose, donc n'importe quel hébergeur les applique.
   routeRules: {
+    '/**': {
+      headers: {
+        // Déploiement de travail : rien ne s'indexe tant que le staff d'unité
+        // n'a pas relu le contenu et tranché les questions de droit à l'image.
+        'X-Robots-Tag': 'noindex, nofollow',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+      },
+    },
+    '/images/**': {
+      headers: { 'Cache-Control': 'public, max-age=31536000, immutable' },
+    },
     '/inscription/**': { prerender: false, ssr: false },
     '/connexion/**': { prerender: false, ssr: false },
     '/connexion': { prerender: false, ssr: false },
