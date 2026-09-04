@@ -1,9 +1,24 @@
 [build]
+  # « npm run build » et non « generate » : on veut un vrai serveur.
+  #
+  # Le site n'est pas qu'une vitrine. Les inscriptions, les comptes, le back
+  # office, les cotisations et les calendriers .ics passent tous par des routes
+  # serveur. Un export statique (« generate ») ne les emporte pas : il produit
+  # les pages publiques et rien d'autre, et tout ce qui touche à un compte
+  # tombe en 404. Avec « build » et le preset netlify, Nitro range le serveur
+  # dans .netlify/functions-internal/server, que Netlify sert comme fonction.
+  #
   # npm install plutôt que npm ci : le lockfile est généré par npm 12, dont
   # certaines images de build plus anciennes se plaignent.
-  command = "npm install --no-audit --no-fund && npm run generate"
-  publish = ".output/public"
+  command = "npm install --no-audit --no-fund && npm run build"
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "22"
   NODE_OPTIONS = "--max-old-space-size=4096"
+  # Explicite, parce qu'on impose notre propre commande de build : sans ça,
+  # Nitro choisirait son preset par défaut et il n'y aurait pas de fonction.
+  NITRO_PRESET = "netlify"
+
+# Le ménage RGPD est une fonction planifiée : netlify/functions/menage.mts.
+# Son horaire est déclaré dans le fichier lui-même, pas ici — une seule source.
