@@ -88,10 +88,10 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
 
     <div class="accueil__photo">
       <picture>
-        <source srcset="/images/camp-crepuscule.webp" type="image/webp" />
+        <source srcset="/images/foret-brume.webp" type="image/webp" />
         <img
-          src="/images/camp-crepuscule.jpg"
-          alt="Constructions de camp en bois au crépuscule, sous un ciel bleu nuit"
+          src="/images/foret-brume.jpg"
+          alt="Une tente plantée seule dans une prairie, au pied d’une falaise dans les nuages"
           fetchpriority="high"
         />
       </picture>
@@ -223,22 +223,27 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
       inline-size: 100%;
       block-size: 100%;
       object-fit: cover;
+      // On cadre vers le bas : c'est là que sont la tente et la prairie, et
+      // c'est cette prairie claire qui fait lire la découpe et la gouttière.
+      object-position: 50% 85%;
       // Le traitement dur dont parle la direction visuelle : contraste poussé,
       // désaturation légère, pour que la photo tienne le rôle que tenait
       // l'illustration dans les maquettes.
-      filter: contrast(1.16) saturate(0.9) brightness(0.86);
+      filter: contrast(1.1) saturate(1.02) brightness(1);
     }
   }
 
   &__voile {
     position: absolute;
     inset: 0;
-    // Le voile s'arrête avant le bas : c'est la photo, restée lisible autour de
-    // l'encart, qui donne à voir la découpe et la gouttière. Tout noircir
-    // reviendrait à dessiner la forme pour rien.
+    // Dans la maquette, la photo reste franche et lumineuse jusqu'au bord : le
+    // fond de page est noir, et c'est le contraste entre la photo et ce noir qui
+    // fait lire la découpe et la gouttière. Un voile lourd les efface toutes
+    // les deux. On se contente donc d'assombrir là où il y a du texte : sous le
+    // logotype, en haut à gauche.
     background:
-      radial-gradient(120% 90% at 78% 15%, transparent 34%, rgba($noir-profond, 0.7) 100%),
-      linear-gradient(to top, rgba($noir-profond, 0.5) 0%, rgba($noir-profond, 0.04) 48%);
+      radial-gradient(95% 75% at 22% 26%, rgba($noir-profond, 0.72) 0%, transparent 72%),
+      linear-gradient(to top, rgba($noir-profond, 0.34) 0%, transparent 34%);
   }
 
   // La plaque de l'encart : elle couvre tout le panneau, donc elle partage le

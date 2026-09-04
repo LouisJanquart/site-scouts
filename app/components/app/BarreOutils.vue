@@ -118,6 +118,13 @@ function basculerRecherche() {
   border-radius: $r-pilule;
   inline-size: fit-content;
   margin-inline-start: auto;
+  justify-content: space-evenly;
+
+  // Dans l'entaille du coin supérieur droit, la barre en prend toute la largeur
+  // et les icônes s'y répartissent, comme dans la maquette.
+  @include console {
+    inline-size: 100%;
+  }
 
   &__bouton {
     display: grid;

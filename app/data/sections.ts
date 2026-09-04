@@ -43,7 +43,7 @@ export const sections: Section[] = [
     cleplanning: 'nutons',
     ages: '5 à 7 ans',
     genre: 'mixte',
-    icone: 'etoile',
+    icone: 'neige',
     resume: 'La première section. On y arrive avant de savoir lire, on en repart en sachant faire un nœud.',
     description:
       "Les Nutons, c'est l'entrée dans l'unité. Des réunions courtes, beaucoup de jeu, des histoires, et la découverte de la vie en groupe. Le camp dure quelques jours seulement, souvent en dur plutôt que sous tente.",
@@ -56,7 +56,7 @@ export const sections: Section[] = [
     cleplanning: 'lutins',
     ages: '7 à 11 ans',
     genre: 'filles',
-    icone: 'feuille',
+    icone: 'eau',
     resume: 'La plus grande section de l’unité, et celle qui ne tient jamais en place.',
     description:
       "Chez les Lutins, on apprend à vivre en sizaine, on part en hike, on construit, on chante. La section a le plus grand staff de l'unité, ce qui permet des grands jeux ambitieux et des réunions spéciales régulières.",
@@ -69,7 +69,7 @@ export const sections: Section[] = [
     cleplanning: 'louveteaux',
     ages: '8 à 11 ans',
     genre: 'garcons',
-    icone: 'patte',
+    icone: 'feuille',
     resume: 'La meute. Akela, les sizaines, et un camp sous tente qui compte comme un premier vrai camp.',
     description:
       "Les Louveteaux fonctionnent en meute, avec des sizaines menées par les plus grands. C'est l'âge où l'on prend ses premières responsabilités, où l'on part en hike sur deux jours et où le camp se fait sous tente.",
@@ -82,7 +82,7 @@ export const sections: Section[] = [
     cleplanning: 'guides',
     ages: '11 à 16 ans',
     genre: 'filles',
-    icone: 'trefle',
+    icone: 'tente',
     resume: 'Compagnies, hikes de plusieurs jours, et un camp qu’on construit soi-même.',
     description:
       "Les Guides vivent en compagnie, réparties en patrouilles autonomes. Le camp d'été dure une dizaine de jours, avec des constructions en bois, un hike de plusieurs jours et une vraie prise en charge de l'intendance par les animées.",
@@ -95,7 +95,7 @@ export const sections: Section[] = [
     cleplanning: 'scouts',
     ages: '11 à 16 ans',
     genre: 'garcons',
-    icone: 'lys',
+    icone: 'feu',
     resume: 'Patrouilles, constructions, hikes traqueurs. La section qui campe le plus longtemps.',
     description:
       "La troupe est découpée en patrouilles qui vivent leur camp presque en autonomie : leur coin, leurs constructions, leur intendance. Réunion de patrouille, hike traqueur, grande sortie, et un camp d'été qui va au bout des dix jours.",
@@ -121,7 +121,7 @@ export const sections: Section[] = [
     cleplanning: 'route',
     ages: '18 ans et plus',
     genre: 'mixte',
-    icone: 'feu',
+    icone: 'arbre',
     resume: 'Les plus de dix-huit ans. Le bar, la marche Adeps, la cavalcade, la veillée de Noël.',
     description:
       "La Route rassemble les plus de dix-huit ans qui ne sont pas (ou pas seulement) dans un staff. C'est elle qui porte les gros événements de l'unité : le bar, la marche Adeps, la cavalcade, la veillée de Noël, le beer pong. Et qui finance une bonne partie du matériel.",
@@ -135,7 +135,7 @@ export const sections: Section[] = [
     cleplanning: null,
     ages: null,
     genre: 'mixte',
-    icone: 'bouclier',
+    icone: 'lys',
     resume: 'Celles et ceux qui tiennent la baraque : le calendrier, le local, le matériel, les comptes.',
     description:
       "Le staff d'unité coordonne les six sections animées et la Route : le calendrier commun, le local, le matériel, les inscriptions, les relations avec la fédération et les parents. C'est aussi lui qui organise les temps d'unité et les portes ouvertes.",

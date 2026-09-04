@@ -40,7 +40,7 @@ useHead({ title: `${props.error?.statusCode ?? 404} — 16e Fleurus` })
   place-items: center;
   min-block-size: 100dvh;
   padding: 2rem;
-  background: $sol;
+  background: $noir-profond;
   color: $blanc;
 
   &__contenu {

@@ -5,11 +5,7 @@
 // ---------------------------------------------------------------------------
 
 // Fonds
-$noir-profond: #08090f; // le noir dont on tire les voiles et les survols
-// Le sol de la page. Il est VOLONTAIREMENT plus clair que les panneaux : c'est
-// ce qui fait lire les gouttières, et notamment celle qui sépare la photo de
-// l'accueil de l'encart du jour. C'est la maquette qui le veut ainsi.
-$sol: #1c1d26;
+$noir-profond: #08090f; // le sol de la page, sous les panneaux
 $noir: #10111a; // black 2 — les panneaux
 $ardoise: #302e41; // grey 2 — les cartes posées sur les panneaux
 $ardoise-clair: #3d3b52; // survol
@@ -53,6 +49,12 @@ $r-pilule: 100px;
 // Rythme
 $gouttiere: 1rem;
 $marge-page: 1rem;
+// En mise en page « console », la maquette respire beaucoup plus : 64 px de
+// marge autour de la page et 32 px entre les colonnes, sur un écran de 1440.
+// Serrées à 16 px comme en petit écran, les colonnes se collaient aux bords et
+// le panneau central perdait toute sa présence.
+$marge-console: clamp(1.5rem, 4.4vw, 4rem);
+$gouttiere-console: clamp(1rem, 2.2vw, 2rem);
 
 // Typographie
 $police-titre: 'Archivo', 'Helvetica Neue', Arial, sans-serif;

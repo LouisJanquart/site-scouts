@@ -34,10 +34,11 @@ const sectionCourante = computed(() => {
         </main>
         <AppRail class="coque__rail" />
         <AppBarreOutils class="coque__outils" />
-      </div>
-
-      <div v-if="surAccueil" class="coque__flanc coque__flanc--droite">
-        <PanneauActus />
+        <!-- Les actus ne forment pas une colonne : dans la maquette elles sont
+             POSÉES sur la photo, alignées sous la barre d'outils. C'est ce qui
+             donne au panneau central sa largeur — il court jusqu'au bord droit
+             de la page et passe derrière elles. -->
+        <PanneauActus v-if="surAccueil" class="coque__actus" />
       </div>
     </div>
 
@@ -55,7 +56,7 @@ const sectionCourante = computed(() => {
   @include console {
     block-size: 100dvh;
     overflow: hidden;
-    padding-block-end: $marge-page;
+    padding: $marge-console;
   }
 
   &__grille {
@@ -65,13 +66,14 @@ const sectionCourante = computed(() => {
 
     @include console {
       display: grid;
-      grid-template-columns: 15.5rem minmax(0, 1fr) 16.5rem;
-      gap: $gouttiere;
+      // Deux colonnes, pas trois : le flanc gauche, puis la scène jusqu'au bord.
+      grid-template-columns: 14.5rem minmax(0, 1fr);
+      gap: $gouttiere-console;
       block-size: 100%;
     }
 
     @media (min-width: $bp-large) {
-      grid-template-columns: 18rem minmax(0, 1fr) 20rem;
+      grid-template-columns: 17rem minmax(0, 1fr);
     }
 
     // Hors accueil : une seule colonne, la page prend toute la largeur.
@@ -91,22 +93,19 @@ const sectionCourante = computed(() => {
     gap: $gouttiere;
     min-block-size: 0;
 
+    @include console {
+      gap: $gouttiere-console;
+    }
+
     &--gauche {
       order: 2;
     }
-    &--droite {
-      order: 3;
-    }
 
     @include console {
-      &--gauche,
-      &--droite {
-        order: 0;
-      }
-
-      // Le bandeau « vue : rôle » est fixé en bas à gauche : on lui laisse
-      // sa place plutôt que de le laisser recouvrir le calendrier.
       &--gauche {
+        order: 0;
+        // Le bandeau « vue : rôle » est fixé en bas à gauche : on lui laisse
+        // sa place plutôt que de le laisser recouvrir le calendrier.
         padding-block-end: 2.75rem;
       }
     }
@@ -130,10 +129,10 @@ const sectionCourante = computed(() => {
   &__rail {
     @include console {
       position: absolute;
-      inset-block-start: 1.75rem;
+      inset-block-start: 2rem;
       // Le rail se pose SUR la photo, à gauche de l'entaille du coin supérieur
       // droit : on lui interdit d'aller y mordre.
-      inset-inline: 2rem max(13.5rem, 29%);
+      inset-inline: 2rem max(13.5rem, 30.5%);
       z-index: 20;
       justify-content: flex-start;
     }
@@ -145,13 +144,27 @@ const sectionCourante = computed(() => {
 
   // La barre d'outils ne flotte pas sur la photo : elle se loge dans l'entaille
   // du coin supérieur droit, à fleur du panneau. C'est cette entaille, creusée
-  // d'une gouttière autour d'elle, qui lui fait sa place.
+  // d'une gouttière autour d'elle, qui lui fait sa place. Sa largeur est celle
+  // de l'entaille, sinon l'entaille bâille.
   &__outils {
     @include console {
       position: absolute;
       inset-block-start: 0;
       inset-inline-end: 0;
+      inline-size: 24.4%;
       z-index: 21;
+    }
+  }
+
+  // Les actus, posées sur la photo et alignées sur la barre d'outils : même
+  // largeur, même bord droit. Les proportions sont celles de la maquette.
+  &__actus {
+    @include console {
+      position: absolute;
+      inset-block: 17.9% 16.1%;
+      inset-inline-end: 0;
+      inline-size: 24.4%;
+      z-index: 15;
     }
   }
 }
@@ -168,6 +181,9 @@ const sectionCourante = computed(() => {
   }
   .coque__outils {
     order: -1;
+  }
+  .coque__actus {
+    order: 3;
   }
 }
 </style>

@@ -48,9 +48,9 @@ const liste = computed(() => actus.value.slice(0, 4))
 
 <style lang="scss" scoped>
 .actus {
-  @include console {
-    block-size: 100%;
-  }
+  // Pas de « block-size: 100% » ici : en mise en page « console » le panneau est
+  // posé sur la photo et c'est le gabarit qui lui donne sa hauteur, par ses
+  // bords haut et bas. Une hauteur imposée le ferait déborder sous la page.
 
   &__liste {
     gap: 0;
