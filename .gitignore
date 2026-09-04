@@ -7,3 +7,8 @@ dist
 .DS_Store
 *.log
 .netlify
+
+# Le dossier de transfert et les paquets git qui servent à faire passer le
+# travail d'une machine à l'autre. Rien là-dedans n'appartient au projet.
+_a-supprimer/
+*.bundle
