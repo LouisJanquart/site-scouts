@@ -74,6 +74,28 @@ const passes = computed(() => prochains.value.length === 0)
     min-block-size: 0;
   }
 
+  // Le bento de la maquette tombe juste sur un écran de 1024 de haut : trois
+  // cartes de 128, la gouttière, et le bloc du bas. Plus court, il n'y a plus
+  // la place — et une carte coupée en deux est pire que pas de carte. On en
+  // retire donc une, puis deux, plutôt que de rogner.
+  @include console {
+    .panneau__corps {
+      overflow: hidden;
+    }
+
+    @media (max-height: 60rem) {
+      .panneau__corps > li:nth-child(n + 3) {
+        display: none;
+      }
+    }
+
+    @media (max-height: 48rem) {
+      .panneau__corps > li:nth-child(n + 2) {
+        display: none;
+      }
+    }
+  }
+
   &__icone {
     color: var(--section-teinte);
     opacity: 0.85;

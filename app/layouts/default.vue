@@ -90,6 +90,19 @@ const sectionCourante = computed(() => {
 
     @include console {
       gap: $gouttiere-console;
+
+      // Le bloc du bas garde sa hauteur naturelle, celui du haut prend le
+      // reste. Sur un écran plus court que les 1024 de la maquette, c'est donc
+      // la liste des events qui se réduit — d'une carte entière à la fois,
+      // jamais d'une demie (voir PanneauEvenements).
+      > :first-child {
+        flex: 1 1 0;
+        min-block-size: 0;
+        overflow: hidden;
+      }
+      > :last-child {
+        flex: 0 0 auto;
+      }
     }
 
     &--gauche {
