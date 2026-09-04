@@ -130,25 +130,27 @@ const sectionCourante = computed(() => {
   &__rail {
     @include console {
       position: absolute;
-      inset-block-start: 1rem;
-      // On réserve la place de la barre d'outils à droite, sinon les deux
-      // pilules se chevauchent sur les écrans les plus étroits.
-      inset-inline: 1rem 13.5rem;
+      inset-block-start: 1.75rem;
+      // Le rail se pose SUR la photo, à gauche de l'entaille du coin supérieur
+      // droit : on lui interdit d'aller y mordre.
+      inset-inline: 2rem max(13.5rem, 29%);
       z-index: 20;
       justify-content: flex-start;
     }
 
     @media (min-width: $bp-large) {
-      inset-inline: 1rem 14rem;
       justify-content: center;
     }
   }
 
+  // La barre d'outils ne flotte pas sur la photo : elle se loge dans l'entaille
+  // du coin supérieur droit, à fleur du panneau. C'est cette entaille, creusée
+  // d'une gouttière autour d'elle, qui lui fait sa place.
   &__outils {
     @include console {
       position: absolute;
-      inset-block-start: 1rem;
-      inset-inline-end: 1rem;
+      inset-block-start: 0;
+      inset-inline-end: 0;
       z-index: 21;
     }
   }

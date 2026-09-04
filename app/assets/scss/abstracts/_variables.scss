@@ -5,7 +5,11 @@
 // ---------------------------------------------------------------------------
 
 // Fonds
-$noir-profond: #08090f; // le sol de la page, sous les panneaux
+$noir-profond: #08090f; // le noir dont on tire les voiles et les survols
+// Le sol de la page. Il est VOLONTAIREMENT plus clair que les panneaux : c'est
+// ce qui fait lire les gouttières, et notamment celle qui sépare la photo de
+// l'accueil de l'encart du jour. C'est la maquette qui le veut ainsi.
+$sol: #1c1d26;
 $noir: #10111a; // black 2 — les panneaux
 $ardoise: #302e41; // grey 2 — les cartes posées sur les panneaux
 $ardoise-clair: #3d3b52; // survol

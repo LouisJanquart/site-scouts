@@ -6,14 +6,18 @@ import { unite } from '~/data/unite'
 // logotype par-dessus, et un encart incrusté en bas à gauche. L'illustration
 // manga est remplacée par une photo de camp.
 //
-// La forme, reprise au plus près de la maquette :
+// La forme est relevée sur la maquette au pixel : la silhouette des deux
+// chemins ci-dessous colle à 99,7 % à celle de l'écran Desktop-7.
 //   - la photo n'est pas un rectangle. Elle est vraiment DÉCOUPÉE : une encoche
 //     en bas à gauche, qui laisse la place à l'encart du jour, et une entaille
-//     dans le coin supérieur droit, qui laisse la barre d'outils respirer ;
-//   - l'encart lui-même a deux pentes, une sur son bord supérieur et une sur
-//     son bord droit, réunies par un joint largement arrondi ;
-//   - les deux découpes sont décalées l'une de l'autre d'une gouttière, si bien
-//     que le fond de page passe entre les deux panneaux.
+//     rectangulaire aux angles arrondis dans le coin supérieur droit, où se
+//     loge la barre d'outils ;
+//   - l'encoche a deux pentes : une douce sur le bord supérieur (deux et demie
+//     d'avancée pour une de descente), une raide sur le bord droit (une
+//     avancée pour trois de descente), réunies par un joint largement arrondi ;
+//   - l'encart reprend la même encoche, rentrée d'une gouttière sur ces deux
+//     pentes et à fleur de la photo sur le bord gauche et le bas : c'est le sol
+//     de la page qui passe entre les deux.
 //
 // Les deux chemins sont écrits dans le MÊME repère — celui de « .accueil », en
 // coordonnées relatives — et posés tous les deux en « inset: 0 ». C'est ce qui
@@ -60,17 +64,23 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
          sa taille sans qu'on ait à les recalculer. -->
     <svg class="accueil__defs" aria-hidden="true" focusable="false">
       <defs>
-        <!-- La photo : coin supérieur droit entaillé, encoche en bas à gauche. -->
+        <!-- La photo. Deux morsures dans le rectangle :
+             - en haut à droite, une entaille rectangulaire aux angles arrondis,
+               qui dégage la barre d'outils (le fond de page passe derrière) ;
+             - en bas à gauche, l'encoche de l'encart : une pente douce (une
+               unité de descente pour deux et demie d'avancée) depuis le bord
+               gauche, un joint arrondi, puis une pente raide jusqu'au bas. -->
         <clipPath id="forme-photo" clipPathUnits="objectBoundingBox">
           <path
-            d="M0.030,0 L0.700,0 C0.727,0 0.740,0.010 0.752,0.036 C0.766,0.066 0.782,0.080 0.812,0.080 L0.974,0.080 C0.991,0.080 1,0.090 1,0.110 L1,0.972 C1,0.990 0.991,1 0.974,1 L0.500,1 C0.494,0.960 0.490,0.930 0.482,0.895 L0.410,0.545 C0.398,0.500 0.374,0.480 0.331,0.475 L0.030,0.441 C0.011,0.439 0,0.430 0,0.410 L0,0.030 C0,0.011 0.011,0 0.030,0 Z"
+            d="M0,0.0672 A0.0574,0.0672 0 0 1 0.0574,0 L0.6804,0 A0.0437,0.0511 0 0 1 0.7241,0.0511 L0.7241,0.0555 A0.0437,0.0511 0 0 0 0.7678,0.1066 L0.9401,0.1066 A0.0599,0.0701 0 0 1 1,0.1766 L1,0.9328 A0.0574,0.0672 0 0 1 0.9426,1 L0.4832,1 A0.0499,0.0584 0 0 1 0.4363,0.9615 L0.3347,0.6331 A0.0375,0.0438 0 0 0 0.3133,0.6073 L0.0252,0.4730 A0.0400,0.0467 0 0 1 0,0.4296 Z"
           />
         </clipPath>
 
-        <!-- L'encart : deux pentes, bord supérieur et bord droit. -->
+        <!-- L'encart : la même encoche, rentrée d'une gouttière sur ses deux
+             pentes, et à fleur de la photo sur le bord gauche et le bas. -->
         <clipPath id="forme-encart" clipPathUnits="objectBoundingBox">
           <path
-            d="M0,0.455 C0,0.437 0.011,0.427 0.030,0.428 L0.315,0.462 C0.358,0.467 0.380,0.489 0.392,0.532 L0.462,0.878 C0.469,0.912 0.472,0.932 0.472,0.950 C0.472,0.978 0.458,1 0.432,1 L0.030,1 C0.011,1 0,0.990 0,0.972 Z"
+            d="M0,0.5985 A0.0578,0.0676 0 0 1 0.0791,0.5357 L0.2866,0.6321 A0.0424,0.0496 0 0 1 0.3110,0.6618 L0.3853,0.9107 A0.0574,0.0672 0 0 1 0.3311,1 L0.0574,1 A0.0574,0.0672 0 0 1 0,0.9328 Z"
           />
         </clipPath>
       </defs>
@@ -107,10 +117,13 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
            On garde alors la place plutôt que de faire sauter la mise en page. -->
       <div v-if="jour" class="accueil__jour">
         <!-- Pas d'icône météo au-delà de la fenêtre de prévision : mieux vaut
-             ne rien montrer qu'un nuage par défaut. -->
-        <div v-if="meteo" class="accueil__meteo">
-          <UiIcone :nom="meteo.icone" :taille="34" />
-          <span class="accueil__temp mono">{{ meteo.tempMax }}°</span>
+             ne rien montrer qu'un nuage par défaut. La place, elle, reste
+             prise : c'est elle qui tient le titre à l'écart de la pente. -->
+        <div class="accueil__meteo">
+          <template v-if="meteo">
+            <UiIcone :nom="meteo.icone" :taille="34" />
+            <span class="accueil__temp mono">{{ meteo.tempMax }}°</span>
+          </template>
         </div>
 
         <p class="accueil__jour-nom titre titre--grand">{{ nomJour(jour.date) }}</p>
@@ -163,6 +176,9 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
   overflow: hidden;
   background: $noir;
   isolation: isolate;
+  // Le logotype se règle sur la largeur du panneau, pas sur celle de l'écran :
+  // il tient donc sur une ligne quelle que soit la place laissée par les flancs.
+  container-type: inline-size;
 
   // En mise en page « console », le panneau n'a plus de fond ni de coins à lui :
   // ce sont les deux découpes (la photo et la plaque) qui dessinent la silhouette,
@@ -210,16 +226,19 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
       // Le traitement dur dont parle la direction visuelle : contraste poussé,
       // désaturation légère, pour que la photo tienne le rôle que tenait
       // l'illustration dans les maquettes.
-      filter: contrast(1.18) saturate(0.82) brightness(0.72);
+      filter: contrast(1.16) saturate(0.9) brightness(0.86);
     }
   }
 
   &__voile {
     position: absolute;
     inset: 0;
+    // Le voile s'arrête avant le bas : c'est la photo, restée lisible autour de
+    // l'encart, qui donne à voir la découpe et la gouttière. Tout noircir
+    // reviendrait à dessiner la forme pour rien.
     background:
-      radial-gradient(120% 90% at 78% 15%, transparent 30%, rgba($noir, 0.75) 100%),
-      linear-gradient(to top, rgba($noir, 0.92) 0%, rgba($noir, 0.12) 55%);
+      radial-gradient(120% 90% at 78% 15%, transparent 34%, rgba($noir-profond, 0.7) 100%),
+      linear-gradient(to top, rgba($noir-profond, 0.5) 0%, rgba($noir-profond, 0.04) 48%);
   }
 
   // La plaque de l'encart : elle couvre tout le panneau, donc elle partage le
@@ -242,7 +261,9 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     position: absolute;
     inset-block-start: clamp(4.5rem, 12vh, 8rem);
     inset-inline-start: clamp(1.5rem, 5vw, 4rem);
-    max-inline-size: min(28rem, 70%);
+    // Archivo étirée à 125 % de large : « SCOUTS » demande une bonne moitié de
+    // panneau. Trop serré, le logotype se coupe en deux.
+    max-inline-size: min(40rem, 74%);
 
     @include jusqua($bp-console) {
       position: static;
@@ -265,13 +286,24 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
   }
 
   &__logotype-haut {
+    // Un mot du logotype ne se coupe jamais : on le réduit plutôt.
+    white-space: nowrap;
     font-size: clamp(3rem, 8.5vw, 6.5rem);
+
+    @include console {
+      font-size: min(6.5rem, 10cqi);
+    }
     color: $rouge;
     text-shadow: 0 4px 40px rgba($rouge, 0.35);
   }
 
   &__logotype-bas {
+    white-space: nowrap;
     font-size: clamp(2.1rem, 6vw, 4.6rem);
+
+    @include console {
+      font-size: min(4.6rem, 7.1cqi);
+    }
     color: $blanc;
     padding-inline-start: clamp(1rem, 4vw, 3rem);
     font-variation-settings: 'wdth' 112;
@@ -294,16 +326,22 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
   // ------------------------------------------------------------------------
   &__encart {
     position: absolute;
-    inset-block: 46.5% 0;
+    // Le sommet de l'encart et son bord droit sont ceux du découpage : la boîte
+    // du texte épouse la plaque, elle ne la déborde pas.
+    inset-block: 49.9% 0;
     inset-inline-start: 0;
-    inline-size: 46%;
-    // Le texte doit rester à l'intérieur des deux pentes : d'où une réserve en
-    // haut (la pente du bord supérieur) et à droite (celle du bord droit).
-    padding: 2.6rem 4.5rem 1.9rem 2rem;
+    inline-size: 41.2%;
+    // Le texte doit rester à l'intérieur des deux pentes. Les réserves sont en
+    // pourcentage — donc mesurées, comme les pentes, sur la largeur du panneau —
+    // pour que le texte occupe toujours la même place dans la forme.
+    padding: 8.5% 11.2% 2.9% 3.25%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 0.9rem;
+    // Le titre se règle sur la largeur de l'encart, pas sur celle de l'écran :
+    // il tient donc toujours entre les deux pentes.
+    container-type: inline-size;
 
     @include jusqua($bp-console) {
       position: static;
@@ -326,6 +364,9 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     gap: 0.5rem;
     color: $cyan;
     margin-block-end: 0.4rem;
+    // La hauteur est réservée même sans prévision : le titre reste alors sous
+    // la pente du bord supérieur au lieu de venir mordre dedans.
+    min-block-size: 2.125rem;
   }
 
   &__temp {
@@ -355,6 +396,12 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
 
   &__jour-nom {
     text-transform: capitalize;
+    // Un jour de la semaine ne se coupe pas : plutôt le réduire que le briser.
+    overflow-wrap: normal;
+
+    @include console {
+      font-size: min(2.5rem, 19cqi);
+    }
   }
 
   &__jour-date {
@@ -487,9 +534,11 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
   &__reseaux {
     margin-block-start: 0.25rem;
 
-    // Dans l'encart découpé, les réseaux se posent en bas, comme la maquette.
+    // Dans l'encart découpé, les réseaux se posent en bas à droite, là où la
+    // pente laisse le plus de place, comme dans la maquette.
     @include console {
       margin-block-start: auto;
+      align-self: flex-end;
     }
   }
 }
