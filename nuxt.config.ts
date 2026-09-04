@@ -122,6 +122,9 @@ export default defineNuxtConfig({
     smtpExpediteur: '',
     public: {
       urlSite: 'http://localhost:3000',
+      // Affiche les quatre comptes de démonstration sur la page de connexion.
+      // À laisser vide partout où il y a de vraies familles.
+      comptesDemo: '',
     },
   },
 

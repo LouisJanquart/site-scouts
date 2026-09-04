@@ -4,6 +4,12 @@
  *
  *   npm run base:semer            → saison + comptes staff
  *   npm run base:semer -- --faux  → ajoute des familles fictives
+ *   npm run base:semer -- --demo  → ajoute les quatre comptes de démonstration
+ *
+ * Les comptes de démonstration ont des mots de passe triviaux, exprès : ils
+ * servent à montrer les quatre vues du site à l'unité. Ils ouvrent le back
+ * office, donc les fiches santé. Ils DOIVENT disparaître avant la première
+ * vraie inscription — « npm run base:semer -- --sans-demo » les retire.
  */
 import 'dotenv/config'
 import postgres from 'postgres'
@@ -30,6 +36,10 @@ const sql = postgres(url, { max: 1 })
 const base = drizzle(sql, { schema })
 
 const { personnes, comptes, rolesCompte, saisons } = schema
+
+// Le domaine .test est réservé par l'IETF : aucune de ces adresses ne peut
+// exister pour de vrai, donc aucun courriel ne partira jamais vers elles.
+const DOMAINE_DEMO = 'fleurus.test'
 
 async function main() {
   const faux = process.argv.includes('--faux')
@@ -89,6 +99,8 @@ async function main() {
   }
 
   if (faux) await semerDesFamillesFictives()
+  if (process.argv.includes('--demo')) await semerLesComptesDeDemo(saison)
+  if (process.argv.includes('--sans-demo')) await retirerLesComptesDeDemo()
   await sql.end()
 }
 
@@ -365,6 +377,159 @@ async function semerDesFamillesFictives() {
   }
 
   console.log('\n  Toutes ces familles ont le mot de passe : essai-de-mot-de-passe')
+}
+
+// ---------------------------------------------------------------------------
+// Les quatre comptes de démonstration.
+//
+// Un par vue : animé, parent, chef de section, chef d'unité. Le mot de passe
+// est le nom du rôle. C'est délibérément indéfendable en production — d'où le
+// domaine .test, le rappel à chaque exécution, et « --sans-demo » pour les
+// retirer d'un coup.
+//
+// L'animé et le parent sont rattachés à une vraie famille, avec deux enfants
+// inscrits dans deux sections : sans ça, « Mon espace » serait une page vide et
+// la démonstration ne montrerait rien.
+// ---------------------------------------------------------------------------
+async function semerLesComptesDeDemo(saison: typeof saisons.$inferSelect) {
+  const { familles, animes, inscriptions, responsables } = schema
+
+  console.log('\n--- comptes de démonstration ---')
+
+  async function compte(
+    prenom: string,
+    nom: string,
+    identifiant: string,
+    roles: { role: string; sectionSlug?: string | null }[],
+    personneId?: string,
+  ) {
+    const email = `${identifiant}@${DOMAINE_DEMO}`
+    const [existe] = await base.select().from(comptes).where(eq(comptes.email, email)).limit(1)
+    if (existe) {
+      console.log('·', email, '— déjà là')
+      return existe.id
+    }
+    let pid = personneId
+    if (!pid) {
+      const [p] = await base.insert(personnes).values({ prenom, nom, email }).returning()
+      pid = p!.id
+    }
+    const [c] = await base
+      .insert(comptes)
+      .values({
+        personneId: pid!,
+        email,
+        empreinte: await hacher(identifiant),
+        emailVerifieLe: new Date(),
+      })
+      .returning()
+    for (const r of roles) {
+      await base
+        .insert(rolesCompte)
+        .values({ compteId: c!.id, role: r.role, sectionSlug: r.sectionSlug ?? null })
+    }
+    console.log('·', email, '— mot de passe :', identifiant)
+    return c!.id
+  }
+
+  // La famille de démonstration, avec ses deux enfants.
+  let [famille] = await base.select().from(familles).where(eq(familles.nom, 'Démo')).limit(1)
+  if (!famille) {
+    ;[famille] = await base.insert(familles).values({ nom: 'Démo' }).returning()
+  }
+
+  // Le parent.
+  const [pParent] = await base
+    .select()
+    .from(personnes)
+    .where(eq(personnes.email, `parent@${DOMAINE_DEMO}`))
+    .limit(1)
+  let parentPersonneId = pParent?.id
+  if (!parentPersonneId) {
+    const [p] = await base
+      .insert(personnes)
+      .values({
+        prenom: 'Camille',
+        nom: 'Démo',
+        email: `parent@${DOMAINE_DEMO}`,
+        telephone: '+32470000000',
+        rue: 'Rue de la Démonstration',
+        numero: '1',
+        codePostal: '6220',
+        localite: 'Fleurus',
+      })
+      .returning()
+    parentPersonneId = p!.id
+    await base.insert(responsables).values({
+      familleId: famille!.id,
+      personneId: parentPersonneId,
+      lien: 'mère',
+      autoriteParentale: true,
+      destinataireFacture: true,
+      ordreAppel: 1,
+    })
+  }
+
+  // Les deux enfants. Le premier porte le compte « animé ».
+  const enfants = [
+    { prenom: 'Alix', naissance: '2014-05-12', section: 'lutins', genre: 'f' },
+    { prenom: 'Noé', naissance: '2017-02-03', section: 'nutons', genre: 'm' },
+  ]
+  let animePersonneId: string | undefined
+  for (const [rang, e] of enfants.entries()) {
+    const emailEnfant = rang === 0 ? `anime@${DOMAINE_DEMO}` : null
+    const [deja] = emailEnfant
+      ? await base.select().from(personnes).where(eq(personnes.email, emailEnfant)).limit(1)
+      : [undefined]
+    let pid = deja?.id
+    if (!pid) {
+      const [p] = await base
+        .insert(personnes)
+        .values({
+          prenom: e.prenom,
+          nom: 'Démo',
+          email: emailEnfant,
+          dateNaissance: e.naissance,
+          genre: e.genre,
+          rue: 'Rue de la Démonstration',
+          numero: '1',
+          codePostal: '6220',
+          localite: 'Fleurus',
+        })
+        .returning()
+      pid = p!.id
+      const [a] = await base
+        .insert(animes)
+        .values({ personneId: pid, familleId: famille!.id })
+        .returning()
+      await base.insert(inscriptions).values({
+        animeId: a!.id,
+        saisonId: saison.id,
+        sectionSlug: e.section,
+        statut: 'validee',
+        cotisationDueCentimes: 4600,
+        deposeeLe: new Date('2026-09-01T12:00:00Z'),
+        valideeLe: new Date(),
+      })
+    }
+    if (rang === 0) animePersonneId = pid
+  }
+
+  await compte('Camille', 'Démo', 'parent', [{ role: 'parent' }], parentPersonneId)
+  await compte('Alix', 'Démo', 'anime', [{ role: 'anime' }], animePersonneId)
+  await compte('Dominique', 'Démo', 'chef', [{ role: 'chef', sectionSlug: 'lutins' }])
+  await compte('Sacha', 'Démo', 'cu', [{ role: 'cu' }, { role: 'chef' }])
+
+  console.log('\n  ⚠  Mots de passe triviaux, back office ouvert, fiches santé lisibles.')
+  console.log('     À retirer avant la première vraie inscription :')
+  console.log('     npm run base:semer -- --sans-demo')
+}
+
+async function retirerLesComptesDeDemo() {
+  const { sql: raw } = { sql }
+  const r = await raw`delete from comptes where email like ${'%@' + DOMAINE_DEMO}`
+  console.log(`· ${r.count} compte(s) de démonstration retiré(s)`)
+  console.log('  (les personnes et la famille « Démo » restent : à effacer depuis le back office)')
 }
 
 // La communication structurée belge, recopiée ici : le script tourne hors de

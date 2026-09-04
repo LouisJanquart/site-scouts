@@ -3,10 +3,18 @@
 // La recherche fonctionne réellement (elle balaie sections, événements, actus,
 // questions pratiques et les 96 dates du planning).
 
-const { definition, voitLeCalendrier } = useRole()
-const { moi, charger, connecte, estStaff } = useCompte()
+const { voitLeCalendrier } = useRole()
+const { moi, charger, connecte, estStaff, nomAffiche, seDeconnecter } = useCompte()
 const recherche = ref(false)
 const menu = ref(false)
+const compte = ref(false)
+
+// Les initiales tiennent lieu d'avatar tant qu'on n'a pas de photo de profil.
+const initiales = computed(() => {
+  const m = moi.value
+  if (!m?.connecte) return ''
+  return `${m.prenom?.[0] ?? ''}${m.nom?.[0] ?? ''}`.toUpperCase()
+})
 
 // On ne demande « qui es-tu ? » qu'une fois le navigateur en main : les pages
 // publiques sont fabriquées à l'avance et ne doivent pas dépendre d'un compte.
@@ -36,15 +44,16 @@ const entrees = computed(() => {
 })
 
 const route = useRoute()
-watch(() => route.fullPath, () => { menu.value = false; recherche.value = false })
+watch(() => route.fullPath, () => {
+  menu.value = false
+  recherche.value = false
+  compte.value = false
+})
 
-function basculerMenu() {
-  menu.value = !menu.value
-  if (menu.value) recherche.value = false
-}
-function basculerRecherche() {
-  recherche.value = !recherche.value
-  if (recherche.value) menu.value = false
+function nEnOuvrirQuUn(lequel: 'menu' | 'recherche' | 'compte') {
+  menu.value = lequel === 'menu' ? !menu.value : false
+  recherche.value = lequel === 'recherche' ? !recherche.value : false
+  compte.value = lequel === 'compte' ? !compte.value : false
 }
 </script>
 
@@ -68,7 +77,7 @@ function basculerRecherche() {
       type="button"
       aria-label="Rechercher"
       :aria-expanded="recherche"
-      @click="basculerRecherche"
+      @click="nEnOuvrirQuUn('recherche')"
     >
       <UiIcone nom="recherche" :taille="20" />
     </button>
@@ -87,21 +96,63 @@ function basculerRecherche() {
       type="button"
       aria-label="Menu"
       :aria-expanded="menu"
-      @click="basculerMenu"
+      @click="nEnOuvrirQuUn('menu')"
     >
       <UiIcone :nom="menu ? 'croix' : 'menu'" :taille="20" />
     </button>
 
-    <!-- Le bouton de droite mène là où l'on est : son espace quand on est
-         connecté, la page de connexion sinon. -->
+    <!-- Le compte. Déconnecté, c'est un lien direct vers la connexion : rien à
+         déplier, il n'y a qu'une chose à faire. Connecté, c'est un menu — le
+         nom, l'espace, le back office s'il y a lieu, et la déconnexion, qui doit
+         être atteignable de partout et pas seulement depuis une page perdue. -->
     <NuxtLink
+      v-if="!connecte"
       class="outils__profil"
-      :to="connecte ? '/mon-espace' : '/connexion'"
-      :title="connecte ? `${moi?.prenom} ${moi?.nom}` : 'Se connecter'"
-      :aria-label="connecte ? 'Mon espace' : 'Se connecter'"
+      to="/connexion"
+      aria-label="Se connecter"
+      title="Se connecter"
     >
-      <UiIcone :nom="connecte ? 'profil' : 'cadenas'" :taille="18" />
+      <UiIcone nom="cadenas" :taille="18" />
     </NuxtLink>
+
+    <button
+      v-else
+      class="outils__profil outils__profil--connecte"
+      type="button"
+      :aria-label="`Compte de ${nomAffiche}`"
+      :aria-expanded="compte"
+      :title="nomAffiche"
+      @click="nEnOuvrirQuUn('compte')"
+    >
+      <span aria-hidden="true">{{ initiales }}</span>
+    </button>
+
+    <div v-if="compte && connecte" class="outils__flottant menu menu--compte">
+      <p class="menu__qui">
+        <span class="menu__nom">{{ nomAffiche }}</span>
+        <span class="menu__email mono">{{ moi?.email }}</span>
+      </p>
+      <ul>
+        <li>
+          <NuxtLink class="menu__lien" to="/mon-espace">
+            <UiIcone nom="profil" :taille="18" />
+            Mon espace
+          </NuxtLink>
+        </li>
+        <li v-if="estStaff">
+          <NuxtLink class="menu__lien" to="/staff">
+            <UiIcone nom="lys" :taille="18" />
+            Back office
+          </NuxtLink>
+        </li>
+        <li>
+          <button class="menu__lien menu__lien--sortie" type="button" @click="seDeconnecter()">
+            <UiIcone nom="sortie" :taille="18" />
+            Se déconnecter
+          </button>
+        </li>
+      </ul>
+    </div>
   </nav>
 </template>
 
@@ -155,6 +206,15 @@ function basculerRecherche() {
     color: $noir;
 
     @include focus-visible;
+
+    // Connecté, la pastille porte les initiales : c'est le seul endroit de
+    // l'interface qui dit à qui appartient la session en cours.
+    &--connecte {
+      font-family: $police-titre;
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 0.02em;
+    }
   }
 
   &__flottant {
@@ -167,6 +227,31 @@ function basculerRecherche() {
 
 .menu {
   inline-size: 14rem;
+
+  &--compte {
+    inline-size: 15rem;
+  }
+
+  &__qui {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.6rem 0.7rem 0.7rem;
+    margin: 0 0 0.3rem;
+    border-block-end: 1px solid rgba($blanc, 0.08);
+  }
+
+  &__nom {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: $blanc;
+  }
+
+  &__email {
+    font-size: 0.7rem;
+    color: rgba($blanc, 0.5);
+    overflow-wrap: anywhere;
+  }
   padding: 0.4rem;
   background: rgba(#141520, 0.96);
   backdrop-filter: blur(24px);
@@ -199,6 +284,13 @@ function basculerRecherche() {
     &.router-link-active {
       background: rgba($blanc, 0.06);
       color: $blanc;
+    }
+
+    // La déconnexion est un bouton, pas un lien : elle change l'état du
+    // serveur. Elle prend toute la largeur comme les autres entrées.
+    &--sortie {
+      inline-size: 100%;
+      text-align: start;
     }
   }
 }

@@ -41,8 +41,6 @@ const sectionCourante = computed(() => {
         <PanneauActus v-if="surAccueil" class="coque__actus" />
       </div>
     </div>
-
-    <AppSelecteurRole />
   </div>
 </template>
 
@@ -50,8 +48,6 @@ const sectionCourante = computed(() => {
 .coque {
   min-block-size: 100dvh;
   padding: $marge-page;
-  // Place pour le bandeau « vue : rôle », fixé en bas à gauche.
-  padding-block-end: 4rem;
 
   @include console {
     block-size: 100dvh;
@@ -104,9 +100,6 @@ const sectionCourante = computed(() => {
     @include console {
       &--gauche {
         order: 0;
-        // Le bandeau « vue : rôle » est fixé en bas à gauche : on lui laisse
-        // sa place plutôt que de le laisser recouvrir le calendrier.
-        padding-block-end: 2.75rem;
       }
     }
   }
@@ -124,6 +117,15 @@ const sectionCourante = computed(() => {
   &__contenu {
     block-size: 100%;
     min-block-size: 26rem;
+
+    // Hors accueil, le rail flotte au-dessus du contenu : sans réserve en haut,
+    // il recouvre le surtitre de la page. L'accueil, lui, n'en veut pas — c'est
+    // la photo qui passe sous le rail, c'est le principe.
+    @include console {
+      .coque__grille--seule & {
+        padding-block-start: 7.5rem;
+      }
+    }
   }
 
   &__rail {

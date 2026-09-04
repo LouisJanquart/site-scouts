@@ -1,13 +1,14 @@
 // Quatre publics, quatre vues.
 //
-// Depuis qu'il y a de vrais comptes, ce composable ne DÉCIDE plus rien : il
-// reflète. Le rôle vient de la session, donc du serveur, et le sélecteur en bas
-// de l'écran n'est plus qu'un outil d'aperçu, réservé aux visiteurs non
-// connectés et à la mise au point.
+// Ce composable ne DÉCIDE plus rien et ne se règle plus à la main : il reflète
+// la session. Le rôle est celui que le serveur a mis dans /api/contenu, calculé
+// à partir du cookie — donc la même source que le contenu affiché. Pas de
+// second appel, pas de réglage local, et aucun moyen de « se mettre chef »
+// depuis le navigateur.
 //
-// Ce qu'il masque n'est toujours pas protégé — c'est de l'affichage. La
-// protection est ailleurs : dans server/utils/droits.ts, appliquée à chaque
-// requête. Voir aussi la note en tête de app/data/staff.ts.
+// Ce qu'il masque n'est de toute façon pas ce qui protège : la protection est
+// dans server/utils/droits.ts, refaite à chaque requête. Ici on ne fait que
+// choisir quoi montrer d'un contenu que le serveur a déjà filtré.
 
 export type Role = 'visiteur' | 'parent' | 'anime' | 'chef'
 
@@ -28,7 +29,7 @@ export const rolesDisponibles: DefinitionRole[] = [
   {
     cle: 'parent',
     nom: 'Parent',
-    description: "Voit en plus les contacts des staffs, les documents et les photos.",
+    description: 'Voit en plus les contacts des staffs, les documents et les photos.',
     icone: 'main',
   },
   {
@@ -41,57 +42,17 @@ export const rolesDisponibles: DefinitionRole[] = [
     cle: 'chef',
     nom: 'Chef',
     description: "Accès complet : documents de staff, comptes rendus, ressources d'animation.",
-    icone: 'bouclier',
+    icone: 'lys',
   },
 ]
 
-const CLE_STOCKAGE = '16e-role'
-
 export function useRole() {
-  const role = useState<Role>('role', () => 'visiteur')
+  const { contenu } = useContenu()
 
-  const { moi, charger } = useCompte()
-
-  // Le rôle réel l'emporte toujours sur l'aperçu local.
-  const roleDuCompte = computed<Role | null>(() => {
-    const r = moi.value?.roles ?? []
-    if (!moi.value?.connecte) return null
-    if (r.some((x) => x.role === 'cu' || x.role === 'chef')) return 'chef'
-    if (r.some((x) => x.role === 'parent')) return 'parent'
-    if (r.some((x) => x.role === 'anime')) return 'anime'
-    return 'parent'
+  const role = computed<Role>(() => {
+    const r = contenu.value.role
+    return r === 'parent' || r === 'anime' || r === 'chef' ? r : 'visiteur'
   })
-
-  watch(roleDuCompte, (v) => {
-    if (v) role.value = v
-  })
-
-  // Restauration à la volée, protégée : certains contextes (navigation privée,
-  // stockage désactivé) font lever une exception au simple accès.
-  onMounted(async () => {
-    await charger()
-    if (roleDuCompte.value) {
-      role.value = roleDuCompte.value
-      return
-    }
-    try {
-      const enregistre = localStorage.getItem(CLE_STOCKAGE) as Role | null
-      if (enregistre && rolesDisponibles.some((r) => r.cle === enregistre)) {
-        role.value = enregistre
-      }
-    } catch {
-      // tant pis, on reste sur « visiteur »
-    }
-  })
-
-  function definirRole(nouveau: Role) {
-    role.value = nouveau
-    try {
-      localStorage.setItem(CLE_STOCKAGE, nouveau)
-    } catch {
-      // sans persistance, le choix ne vaut que pour la session
-    }
-  }
 
   const estConnecte = computed(() => role.value !== 'visiteur')
   const estChef = computed(() => role.value === 'chef')
@@ -110,16 +71,9 @@ export function useRole() {
     () => rolesDisponibles.find((r) => r.cle === role.value) ?? rolesDisponibles[0]!,
   )
 
-  // Le sélecteur d'aperçu n'a de sens que hors connexion : un chef connecté ne
-  // doit pas pouvoir « se mettre en visiteur » et croire que c'est ce que voit
-  // vraiment un visiteur.
-  const apercuPossible = computed(() => !moi.value?.connecte)
-
   return {
     role,
-    apercuPossible,
     definition,
-    definirRole,
     estConnecte,
     estChef,
     voitLesContacts,
