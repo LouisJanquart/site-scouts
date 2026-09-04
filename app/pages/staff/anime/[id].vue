@@ -176,14 +176,14 @@ useHead({ title: () => `${dossier.value?.anime.prenom ?? 'Animé'} — Staff` })
   border-radius: $r-champ;
 
   &__nom {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: rgba($blanc, 0.5);
   }
 
   &__valeur {
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 600;
   }
 
@@ -218,14 +218,14 @@ useHead({ title: () => `${dossier.value?.anime.prenom ?? 'Animé'} — Staff` })
   }
 
   dt {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: rgba($blanc, 0.55);
   }
   dd {
     margin: 0;
-    font-size: 0.88rem;
+    font-size: 1rem;
     line-height: 1.5;
   }
 }
@@ -242,7 +242,7 @@ useHead({ title: () => `${dossier.value?.anime.prenom ?? 'Animé'} — Staff` })
     display: grid;
     grid-template-columns: 1.5rem 1fr;
     gap: 0.6rem;
-    font-size: 0.88rem;
+    font-size: 1rem;
     line-height: 1.5;
   }
 
@@ -271,7 +271,7 @@ useHead({ title: () => `${dossier.value?.anime.prenom ?? 'Animé'} — Staff` })
     align-items: baseline;
     gap: 0.6rem;
     flex-wrap: wrap;
-    font-size: 0.85rem;
+    font-size: 1rem;
   }
 }
 

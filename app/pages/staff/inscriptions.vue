@@ -164,14 +164,14 @@ useHead({ title: 'Dossiers à relire — 16e Fleurus' })
 
   &__meta {
     margin-block-start: 0.2rem;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.55);
   }
 
   &__remarque {
     display: flex;
     gap: 0.5rem;
-    font-size: 0.84rem;
+    font-size: 1rem;
     line-height: 1.55;
     color: rgba($blanc, 0.72);
     font-style: italic;
@@ -195,7 +195,7 @@ useHead({ title: 'Dossiers à relire — 16e Fleurus' })
 .pastille {
   padding: 0.15rem 0.6rem;
   border-radius: $r-pilule;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   background: rgba($blanc, 0.08);
   color: rgba($blanc, 0.7);
 

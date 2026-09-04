@@ -41,9 +41,11 @@ $sections: (
 );
 
 // Rayons — repris des maquettes : panneaux très arrondis, cartes moins.
-$r-panneau: 2rem;
-$r-carte: 1rem;
-$r-champ: 0.75rem;
+// Relevés sur Desktop-7 : 64 px pour les panneaux, 32 pour les cartes qu'on y
+// pose, 16 pour les champs. Tout est multiple de 16, comme les espacements.
+$r-panneau: 4rem;
+$r-carte: 2rem;
+$r-champ: 1rem;
 $r-pilule: 100px;
 
 // Rythme

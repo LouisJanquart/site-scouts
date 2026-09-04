@@ -134,14 +134,14 @@ useHead({ title: 'Cotisation — 16e Fleurus' })
     }
   }
   dt {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: rgba($blanc, 0.5);
   }
   dd {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 }
 
@@ -156,7 +156,7 @@ useHead({ title: 'Cotisation — 16e Fleurus' })
   li {
     display: flex;
     gap: 0.9rem;
-    font-size: 0.82rem;
+    font-size: 1rem;
     flex-wrap: wrap;
   }
 
@@ -166,7 +166,7 @@ useHead({ title: 'Cotisation — 16e Fleurus' })
 }
 
 .petit {
-  font-size: 0.78rem;
+  font-size: 1rem;
   line-height: 1.55;
   margin-block-start: 0.5rem;
 }
@@ -177,7 +177,7 @@ useHead({ title: 'Cotisation — 16e Fleurus' })
   gap: 0.4rem;
   margin-block-start: 0.6rem;
   max-inline-size: 32rem;
-  font-size: 0.78rem;
+  font-size: 1rem;
   line-height: 1.55;
   color: #f0a32e;
 }

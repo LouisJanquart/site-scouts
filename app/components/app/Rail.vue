@@ -127,7 +127,7 @@ const surAccueil = computed(() => route.path === '/')
   }
 
   &__nom {
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.01em;
     white-space: nowrap;

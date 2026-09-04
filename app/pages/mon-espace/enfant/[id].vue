@@ -186,7 +186,7 @@ useHead({ title: () => `${dossier.value?.anime.prenom ?? 'Dossier'} — 16e Fleu
     align-items: baseline;
     gap: 0.75rem;
     flex-wrap: wrap;
-    font-size: 0.86rem;
+    font-size: 1rem;
   }
 
   &__saison,
@@ -213,7 +213,7 @@ useHead({ title: () => `${dossier.value?.anime.prenom ?? 'Dossier'} — 16e Fleu
   }
 
   dt {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: rgba($blanc, 0.5);
@@ -221,7 +221,7 @@ useHead({ title: () => `${dossier.value?.anime.prenom ?? 'Dossier'} — 16e Fleu
 
   dd {
     margin: 0;
-    font-size: 0.87rem;
+    font-size: 1rem;
     line-height: 1.5;
   }
 }
@@ -237,7 +237,7 @@ useHead({ title: () => `${dossier.value?.anime.prenom ?? 'Dossier'} — 16e Fleu
 .autorisation {
   &__note {
     margin: 0.3rem 0 0 2rem;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.62);
   }
 }

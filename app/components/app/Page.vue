@@ -62,7 +62,7 @@ defineProps<{
     gap: 0.35rem;
     inline-size: fit-content;
     margin-block-end: 0.5rem;
-    font-size: 0.78rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.62);
 
     @include focus-visible;

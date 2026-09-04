@@ -162,12 +162,12 @@ useHead({ title: 'Mon espace — 16e Fleurus' })
   }
 
   &__saison {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.5);
   }
 
   &__statut {
-    font-size: 0.84rem;
+    font-size: 1rem;
     font-weight: 600;
 
     &--validee {
@@ -187,7 +187,7 @@ useHead({ title: 'Mon espace — 16e Fleurus' })
     align-items: center;
     gap: 0.75rem;
     flex-wrap: wrap;
-    font-size: 0.82rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.72);
   }
 
@@ -195,13 +195,13 @@ useHead({ title: 'Mon espace — 16e Fleurus' })
     display: flex;
     align-items: center;
     gap: 0.35rem;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #86efac;
   }
 }
 
 .bouton--petit {
   padding: 0.3rem 0.75rem;
-  font-size: 0.76rem;
+  font-size: 0.75rem;
 }
 </style>

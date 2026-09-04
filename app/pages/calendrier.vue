@@ -277,13 +277,13 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
 
   &__titre {
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: $blanc;
   }
 
   &__texte {
     margin-block-start: 0.35rem;
-    font-size: 0.85rem;
+    font-size: 1rem;
     line-height: 1.6;
 
     a {
@@ -312,7 +312,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
   border-radius: $r-pilule;
   background: rgba($blanc, 0.05);
   color: rgba($blanc, 0.66);
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 500;
   transition:
     background $vite $courbe,
@@ -335,7 +335,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: rgba($blanc, 0.64);
   cursor: pointer;
   inline-size: fit-content;
@@ -361,7 +361,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
 .tableau {
   inline-size: 100%;
   border-collapse: collapse;
-  font-size: 0.78rem;
+  font-size: 1rem;
 
   th,
   td {
@@ -376,7 +376,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
     inset-block-start: 0;
     background: #171825;
     z-index: 1;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     font-weight: 600;
@@ -398,7 +398,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
   &__event {
     display: block;
     margin-block-start: 0.15rem;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: $rouge-texte;
   }
@@ -406,19 +406,19 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
   &__remarque {
     display: block;
     margin-block-start: 0.15rem;
-    font-size: 0.66rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.58);
   }
 
   &__horaire {
     display: block;
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.25);
   }
 
   &__code {
     display: block;
-    font-size: 0.62rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: rgba($blanc, 0.6);
   }
@@ -448,7 +448,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
   flex-wrap: wrap;
   gap: 0.35rem 1rem;
   margin: 0;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: rgba($blanc, 0.62);
 
   li {
@@ -469,7 +469,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
   margin: 0;
 
   &__intro {
-    font-size: 0.88rem;
+    font-size: 1rem;
     max-inline-size: 44rem;
   }
 
@@ -493,13 +493,13 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
 
   &__nom {
     flex: 1;
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: 500;
     color: $blanc;
   }
 
   &__url {
-    font-size: 0.62rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.55);
   }
 }
@@ -512,7 +512,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
   background: rgba($cyan, 0.06);
   border: 1px solid rgba($cyan, 0.15);
   border-radius: $r-champ;
-  font-size: 0.8rem;
+  font-size: 1rem;
   line-height: 1.55;
   color: rgba($blanc, 0.68);
   max-inline-size: 48rem;

@@ -55,7 +55,7 @@ useHead(() => ({ title: `${actu.value?.titre} — 16e Fleurus` }))
   border: 1px solid rgba(#f0a32e, 0.2);
   border-radius: $r-champ;
   color: rgba(#f0a32e, 0.85);
-  font-size: 0.8rem;
+  font-size: 1rem;
   inline-size: fit-content;
 }
 </style>

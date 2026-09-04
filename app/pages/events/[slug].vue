@@ -144,13 +144,13 @@ useHead(() => ({ title: `${evenement.value?.titre} — 16e Fleurus` }))
 
   &__titre {
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: $blanc;
   }
 
   &__texte {
     margin-block-start: 0.35rem;
-    font-size: 0.85rem;
+    font-size: 1rem;
     line-height: 1.6;
 
     a {
@@ -194,11 +194,11 @@ useHead(() => ({ title: `${evenement.value?.titre} — 16e Fleurus` }))
 
     dt {
       @include surtitre;
-      font-size: 0.6rem;
+      font-size: 0.75rem;
     }
     dd {
       margin: 0.3rem 0 0;
-      font-size: 0.92rem;
+      font-size: 1rem;
       line-height: 1.45;
     }
   }
@@ -208,7 +208,7 @@ useHead(() => ({ title: `${evenement.value?.titre} — 16e Fleurus` }))
   align-items: flex-start;
 
   &__note {
-    font-size: 0.85rem;
+    font-size: 1rem;
 
     a {
       color: $cyan;

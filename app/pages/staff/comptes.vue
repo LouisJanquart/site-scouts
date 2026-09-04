@@ -152,7 +152,7 @@ useHead({ title: 'Comptes et rôles — 16e Fleurus' })
   }
 
   &__mail {
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.55);
   }
 
@@ -161,7 +161,7 @@ useHead({ title: 'Comptes et rôles — 16e Fleurus' })
     flex-direction: column;
     align-items: flex-end;
     gap: 0.15rem;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
   }
 
   &__alerte {
@@ -211,6 +211,6 @@ useHead({ title: 'Comptes et rôles — 16e Fleurus' })
 
 .doux {
   color: rgba($blanc, 0.62);
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 </style>

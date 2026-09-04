@@ -86,13 +86,13 @@ useHead({ title: 'Photos — 16e Fleurus' })
 
   &__titre {
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: $blanc;
   }
 
   &__texte {
     margin-block-start: 0.35rem;
-    font-size: 0.85rem;
+    font-size: 1rem;
     line-height: 1.6;
   }
 }
@@ -104,14 +104,14 @@ useHead({ title: 'Photos — 16e Fleurus' })
 
   &__titre {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
   &__liste {
     margin: 0.5rem 0 0;
     padding-inline-start: 1.1rem;
     list-style: decimal;
-    font-size: 0.82rem;
+    font-size: 1rem;
     line-height: 1.7;
     color: rgba(#f0a32e, 0.72);
   }
@@ -150,13 +150,13 @@ useHead({ title: 'Photos — 16e Fleurus' })
   }
 
   &__titre {
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 500;
   }
 
   &__meta {
     margin-block-start: 0.15rem;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.58);
   }
 }

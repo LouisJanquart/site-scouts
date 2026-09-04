@@ -63,14 +63,13 @@ const sectionCourante = computed(() => {
     @include console {
       display: grid;
       // Deux colonnes, pas trois : le flanc gauche, puis la scène jusqu'au bord.
+      // Le flanc garde sa largeur : c'est la scène qui s'étire.
       grid-template-columns: 14.5rem minmax(0, 1fr);
       gap: $gouttiere-console;
       block-size: 100%;
     }
 
-    @media (min-width: $bp-large) {
-      grid-template-columns: 17rem minmax(0, 1fr);
-    }
+
 
     // Hors accueil : une seule colonne, la page prend toute la largeur.
     &--seule {
@@ -153,7 +152,8 @@ const sectionCourante = computed(() => {
       position: absolute;
       inset-block-start: 0;
       inset-inline-end: 0;
-      inline-size: 24.4%;
+      inline-size: 16rem; // 256 px, comme l'entaille qui l'accueille
+      block-size: 4rem; // 64 px
       z-index: 21;
     }
   }
@@ -163,9 +163,11 @@ const sectionCourante = computed(() => {
   &__actus {
     @include console {
       position: absolute;
-      inset-block: 17.9% 16.1%;
+      // Largeur fixe, alignée sur la barre d'outils. Les décalages haut et bas
+      // sont ceux de la maquette ; c'est la hauteur qui suit l'écran.
+      inset-block: 10rem 9rem;
       inset-inline-end: 0;
-      inline-size: 24.4%;
+      inline-size: 16rem; // 256 px
       z-index: 15;
     }
   }

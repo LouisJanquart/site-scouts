@@ -116,12 +116,12 @@ useHead({ title: 'RGPD — 16e Fleurus' })
     align-items: center;
     gap: 0.6rem;
     flex-wrap: wrap;
-    font-size: 0.88rem;
+    font-size: 1rem;
   }
 
   &__objet {
     margin-block-start: 0.3rem;
-    font-size: 0.83rem;
+    font-size: 1rem;
     font-style: italic;
     color: rgba($blanc, 0.7);
   }
@@ -131,7 +131,7 @@ useHead({ title: 'RGPD — 16e Fleurus' })
   padding: 0.1rem 0.5rem;
   border-radius: $r-pilule;
   background: rgba($blanc, 0.08);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: rgba($blanc, 0.7);
 }
 
@@ -154,7 +154,7 @@ useHead({ title: 'RGPD — 16e Fleurus' })
     display: grid;
     grid-template-columns: 9.5rem 1fr;
     gap: 0.75rem;
-    font-size: 0.8rem;
+    font-size: 1rem;
     padding-block: 0.28rem;
     border-block-end: 1px solid rgba($blanc, 0.05);
 
@@ -165,7 +165,7 @@ useHead({ title: 'RGPD — 16e Fleurus' })
   }
 
   &__quand {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.5);
   }
 }
@@ -173,13 +173,13 @@ useHead({ title: 'RGPD — 16e Fleurus' })
 .regles {
   margin: 0;
   padding-inline-start: 1.1rem;
-  font-size: 0.85rem;
+  font-size: 1rem;
   line-height: 1.7;
   color: rgba($blanc, 0.72);
 }
 
 .petit {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
 }
 .doux {
   color: rgba($blanc, 0.5);

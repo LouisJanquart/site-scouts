@@ -213,7 +213,7 @@ defineExpose({ discordant })
   }
 
   dt {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: rgba($blanc, 0.5);
@@ -221,7 +221,7 @@ defineExpose({ discordant })
 
   dd {
     margin: 0;
-    font-size: 0.88rem;
+    font-size: 1rem;
     line-height: 1.5;
   }
 
@@ -242,7 +242,7 @@ defineExpose({ discordant })
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
-    font-size: 0.84rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.74);
   }
 
@@ -254,7 +254,7 @@ defineExpose({ discordant })
     display: flex;
     align-items: center;
     gap: 0.35rem;
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -284,12 +284,12 @@ defineExpose({ discordant })
     padding: 0.5rem 0.75rem;
     background: rgba($blanc, 0.03);
     border-radius: $r-champ;
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.78);
   }
 
   &__montant {
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 500;
     color: $cyan;
     white-space: nowrap;
@@ -297,7 +297,7 @@ defineExpose({ discordant })
 }
 
 .note {
-  font-size: 0.78rem;
+  font-size: 1rem;
   line-height: 1.55;
   color: rgba($blanc, 0.55);
 

@@ -212,7 +212,7 @@ function nEnOuvrirQuUn(lequel: 'menu' | 'recherche' | 'compte') {
     &--connecte {
       font-family: $police-titre;
       font-weight: 800;
-      font-size: 0.8rem;
+      font-size: 1rem;
       letter-spacing: 0.02em;
     }
   }
@@ -243,12 +243,12 @@ function nEnOuvrirQuUn(lequel: 'menu' | 'recherche' | 'compte') {
 
   &__nom {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: $blanc;
   }
 
   &__email {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.5);
     overflow-wrap: anywhere;
   }
@@ -272,7 +272,7 @@ function nEnOuvrirQuUn(lequel: 'menu' | 'recherche' | 'compte') {
     gap: 0.65rem;
     padding: 0.55rem 0.7rem;
     border-radius: $r-champ;
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.7);
     transition:
       background $vite $courbe,

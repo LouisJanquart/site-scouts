@@ -83,7 +83,7 @@ useHead({ title: 'Les événements — 16e Fleurus' })
   background: rgba($blanc, 0.04);
   border: 1px solid rgba($blanc, 0.09);
   border-radius: $r-champ;
-  font-size: 0.82rem;
+  font-size: 1rem;
   color: rgba($blanc, 0.66);
   max-inline-size: 46rem;
 }
@@ -143,7 +143,7 @@ useHead({ title: 'Les événements — 16e Fleurus' })
   }
 
   &__mois {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     // Pas d'opacité ici : elle ferait passer la teinte de section sous le
@@ -159,13 +159,13 @@ useHead({ title: 'Les événements — 16e Fleurus' })
   }
 
   &__resume {
-    font-size: 0.85rem;
+    font-size: 1rem;
     line-height: 1.5;
     color: rgba($blanc, 0.68);
   }
 
   &__meta {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.6);
   }
 

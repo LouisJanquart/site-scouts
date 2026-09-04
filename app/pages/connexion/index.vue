@@ -133,7 +133,7 @@ useHead({ title: 'Se connecter — 16e Fleurus' })
 }
 
 .lien-doux {
-  font-size: 0.82rem;
+  font-size: 1rem;
   color: $cyan;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -149,7 +149,7 @@ useHead({ title: 'Se connecter — 16e Fleurus' })
 
   &__titre {
     margin: 0 0 0.4rem;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #f0a32e;
@@ -157,7 +157,7 @@ useHead({ title: 'Se connecter — 16e Fleurus' })
 
   &__note {
     margin: 0 0 0.9rem;
-    font-size: 0.8rem;
+    font-size: 1rem;
     line-height: 1.55;
     color: rgba($blanc, 0.62);
   }
@@ -197,13 +197,13 @@ useHead({ title: 'Se connecter — 16e Fleurus' })
   &__nom {
     display: block;
     font-weight: 600;
-    font-size: 0.88rem;
+    font-size: 1rem;
     color: $blanc;
   }
 
   &__quoi {
     display: block;
-    font-size: 0.76rem;
+    font-size: 0.75rem;
     line-height: 1.4;
     color: rgba($blanc, 0.6);
   }
@@ -211,14 +211,14 @@ useHead({ title: 'Se connecter — 16e Fleurus' })
   &__id {
     display: block;
     margin-block-start: 0.25rem;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.42);
   }
 }
 
 .apres {
   margin-block-start: 2rem;
-  font-size: 0.85rem;
+  font-size: 1rem;
   line-height: 1.6;
   color: rgba($blanc, 0.62);
   max-inline-size: 32rem;

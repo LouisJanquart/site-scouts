@@ -121,12 +121,12 @@ useHead({ title: 'Simulateur de paiement — 16e Fleurus' })
 
   &__titre {
     font-weight: 600;
-    font-size: 0.92rem;
+    font-size: 1rem;
   }
 
   &__texte {
     margin-block-start: 0.3rem;
-    font-size: 0.84rem;
+    font-size: 1rem;
     line-height: 1.6;
     color: rgba($blanc, 0.72);
   }
@@ -168,7 +168,7 @@ useHead({ title: 'Simulateur de paiement — 16e Fleurus' })
 
   b {
     display: block;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 600;
     color: $blanc;
   }
@@ -176,7 +176,7 @@ useHead({ title: 'Simulateur de paiement — 16e Fleurus' })
   small {
     display: block;
     margin-block-start: 0.2rem;
-    font-size: 0.79rem;
+    font-size: 1rem;
     line-height: 1.55;
     color: rgba($blanc, 0.62);
   }

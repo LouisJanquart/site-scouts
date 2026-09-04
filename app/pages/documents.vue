@@ -76,12 +76,12 @@ useHead({ title: 'Documents — 16e Fleurus' })
 
   &__titre {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
   &__texte {
     margin-block-start: 0.3rem;
-    font-size: 0.82rem;
+    font-size: 1rem;
     line-height: 1.6;
     color: rgba(#f0a32e, 0.7);
   }
@@ -121,7 +121,7 @@ useHead({ title: 'Documents — 16e Fleurus' })
     padding: 0.15rem 0.45rem;
     background: rgba($blanc, 0.06);
     border-radius: 4px;
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: rgba($blanc, 0.72);
@@ -136,12 +136,12 @@ useHead({ title: 'Documents — 16e Fleurus' })
   }
 
   &__titre {
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 500;
   }
 
   &__desc {
-    font-size: 0.8rem;
+    font-size: 1rem;
     line-height: 1.55;
     color: rgba($blanc, 0.62);
   }
@@ -153,6 +153,6 @@ useHead({ title: 'Documents — 16e Fleurus' })
 }
 
 .note {
-  font-size: 0.82rem;
+  font-size: 1rem;
 }
 </style>

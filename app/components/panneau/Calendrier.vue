@@ -225,7 +225,7 @@ const prochainEvenement = computed(
   }
 
   &__mois {
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 500;
     color: $cyan;
     text-transform: lowercase;
@@ -244,7 +244,7 @@ const prochainEvenement = computed(
     span {
       text-align: center;
       font-family: $police-mono;
-      font-size: 0.6rem;
+      font-size: 0.75rem;
       color: rgba($blanc, 0.55);
     }
   }
@@ -256,7 +256,7 @@ const prochainEvenement = computed(
     place-items: center;
     border-radius: 50%;
     font-family: $police-mono;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.55);
     cursor: default;
 
@@ -337,7 +337,7 @@ const prochainEvenement = computed(
   }
 
   &__texte {
-    font-size: 0.8rem;
+    font-size: 1rem;
     line-height: 1.55;
     color: rgba($blanc, 0.62);
   }
@@ -349,7 +349,7 @@ const prochainEvenement = computed(
   }
 
   &__date {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     // Ni opacité ni blanc atténué : sur l'aplat rouge, la moindre transparence
     // fait passer sous le seuil. La date se distingue par sa taille.
     color: $blanc;

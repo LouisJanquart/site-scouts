@@ -140,7 +140,7 @@ useHead({ title: 'À propos — 16e Fleurus' })
 
   &__quoi {
     margin-block-start: 0.2rem;
-    font-size: 0.78rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.62);
     line-height: 1.4;
   }

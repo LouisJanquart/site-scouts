@@ -127,21 +127,21 @@ useHead({ title: 'Mon compte — 16e Fleurus' })
   }
 
   dt {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: rgba($blanc, 0.5);
   }
   dd {
     margin: 0;
-    font-size: 0.88rem;
+    font-size: 1rem;
     display: flex;
     gap: 0.3rem;
     flex-wrap: wrap;
   }
 }
 .petit {
-  font-size: 0.78rem;
+  font-size: 1rem;
   line-height: 1.55;
   a {
     color: $cyan;

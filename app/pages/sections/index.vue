@@ -101,19 +101,19 @@ useHead({ title: 'Les sections — 16e Fleurus' })
   }
 
   &__ages {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--section-teinte);
   }
 
   &__resume {
     flex: 1;
-    font-size: 0.82rem;
+    font-size: 1rem;
     line-height: 1.5;
     color: rgba($blanc, 0.66);
   }
 
   &__pied {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.58);
   }
 }

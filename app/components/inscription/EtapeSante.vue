@@ -153,7 +153,7 @@ function ajouterTraitement() {
 
 <style lang="scss" scoped>
 .etiquette-liste {
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -174,7 +174,7 @@ function ajouterTraitement() {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   color: rgba($blanc, 0.6);
   @include focus-visible;
   &:hover {

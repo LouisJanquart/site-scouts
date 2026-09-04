@@ -178,7 +178,7 @@ function fermer() {
     background: none;
     border: 0;
     color: $blanc;
-    font-size: 0.9rem;
+    font-size: 1rem;
     outline: none;
 
     &::placeholder {
@@ -232,12 +232,12 @@ function fermer() {
   }
 
   &__titre {
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: 500;
   }
 
   &__detail {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.62);
     white-space: nowrap;
     overflow: hidden;
@@ -245,7 +245,7 @@ function fermer() {
   }
 
   &__categorie {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: rgba($blanc, 0.55);
@@ -254,7 +254,7 @@ function fermer() {
 
   &__vide {
     padding: 1rem 0.9rem;
-    font-size: 0.85rem;
+    font-size: 1rem;
   }
 }
 </style>

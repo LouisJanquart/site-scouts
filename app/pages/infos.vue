@@ -73,7 +73,7 @@ useHead({ title: 'Infos pratiques — 16e Fleurus' })
 }
 
 .petit {
-  font-size: 0.85rem;
+  font-size: 1rem;
   max-inline-size: 44rem;
 }
 
@@ -96,7 +96,7 @@ useHead({ title: 'Infos pratiques — 16e Fleurus' })
 
   &__periode {
     margin-block-start: 0.35rem;
-    font-size: 0.78rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.62);
     line-height: 1.5;
   }
@@ -126,13 +126,13 @@ useHead({ title: 'Infos pratiques — 16e Fleurus' })
 
   &__nom {
     flex: 1;
-    font-size: 0.88rem;
+    font-size: 1rem;
     font-weight: 500;
     color: $blanc;
   }
 
   &__age {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -151,7 +151,7 @@ useHead({ title: 'Infos pratiques — 16e Fleurus' })
     align-items: center;
     gap: 0.6rem;
     padding: 0.9rem 0.25rem;
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
     list-style: none;
@@ -179,7 +179,7 @@ useHead({ title: 'Infos pratiques — 16e Fleurus' })
 
   &__reponse {
     padding: 0 0.25rem 1rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
     line-height: 1.7;
     color: rgba($blanc, 0.68);
   }

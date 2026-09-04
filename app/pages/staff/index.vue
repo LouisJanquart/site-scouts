@@ -180,7 +180,7 @@ useHead({ title: 'Back office — 16e Fleurus' })
   border-radius: $r-pilule;
   background: rgba($blanc, 0.05);
   color: rgba($blanc, 0.66);
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 500;
   @include focus-visible;
   &:hover {
@@ -214,7 +214,7 @@ useHead({ title: 'Back office — 16e Fleurus' })
   }
 
   &__nom {
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     line-height: 1.4;
     color: rgba($blanc, 0.6);
   }
@@ -238,7 +238,7 @@ useHead({ title: 'Back office — 16e Fleurus' })
 .tableau {
   inline-size: 100%;
   border-collapse: collapse;
-  font-size: 0.8rem;
+  font-size: 1rem;
 
   th,
   td {
@@ -249,7 +249,7 @@ useHead({ title: 'Back office — 16e Fleurus' })
   }
 
   thead th {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--section-teinte);
@@ -269,7 +269,7 @@ useHead({ title: 'Back office — 16e Fleurus' })
 .pastille {
   padding: 0.1rem 0.5rem;
   border-radius: $r-pilule;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   background: rgba($blanc, 0.08);
   color: rgba($blanc, 0.7);
 

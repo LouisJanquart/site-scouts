@@ -327,7 +327,7 @@ useHead({ title: 'Inscrire un enfant — 16e Fleurus' })
   }
 
   &__virement {
-    font-size: 0.82rem;
+    font-size: 1rem;
     line-height: 1.6;
     color: rgba($blanc, 0.62);
   }

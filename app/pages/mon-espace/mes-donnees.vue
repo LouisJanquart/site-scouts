@@ -167,7 +167,7 @@ useHead({ title: 'Mes données — 16e Fleurus' })
     display: grid;
     grid-template-columns: 9.5rem 1fr;
     gap: 0.75rem;
-    font-size: 0.82rem;
+    font-size: 1rem;
     line-height: 1.5;
     padding-block: 0.3rem;
     border-block-end: 1px solid rgba($blanc, 0.05);
@@ -179,7 +179,7 @@ useHead({ title: 'Mes données — 16e Fleurus' })
   }
 
   &__quand {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.5);
   }
 }

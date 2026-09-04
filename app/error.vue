@@ -52,7 +52,7 @@ useHead({ title: `${props.error?.statusCode ?? 404} — 16e Fleurus` })
   }
 
   &__code {
-    font-size: 0.8rem;
+    font-size: 1rem;
     letter-spacing: 0.1em;
     color: $rouge-texte;
   }

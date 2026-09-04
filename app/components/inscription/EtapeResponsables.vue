@@ -212,7 +212,7 @@ function ajouterContact() {
   }
 
   &__titre {
-    font-size: 0.82rem;
+    font-size: 1rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -223,7 +223,7 @@ function ajouterContact() {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.6);
     @include focus-visible;
     &:hover {

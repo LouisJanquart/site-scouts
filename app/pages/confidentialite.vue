@@ -188,7 +188,7 @@ const maj = '3 septembre 2026'
 <style lang="scss" scoped>
 .texte {
   max-inline-size: 46rem;
-  font-size: 0.92rem;
+  font-size: 1rem;
   line-height: 1.75;
   color: rgba($blanc, 0.8);
 
@@ -227,7 +227,7 @@ const maj = '3 septembre 2026'
 }
 
 .maj {
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   color: rgba($blanc, 0.5);
 }
 
@@ -235,7 +235,7 @@ const maj = '3 septembre 2026'
   inline-size: 100%;
   border-collapse: collapse;
   margin-block-end: 1rem;
-  font-size: 0.83rem;
+  font-size: 1rem;
 
   th,
   td {
@@ -246,7 +246,7 @@ const maj = '3 septembre 2026'
   }
 
   thead th {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: $cyan;
@@ -262,7 +262,7 @@ const maj = '3 septembre 2026'
     margin-block-end: 0.35rem;
     background: rgba($blanc, 0.03);
     border-radius: $r-champ;
-    font-size: 0.85rem;
+    font-size: 1rem;
   }
 }
 
@@ -272,7 +272,7 @@ const maj = '3 septembre 2026'
   border-radius: $r-pilule;
   background: rgba($rouge, 0.16);
   color: $rouge-texte;
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -281,7 +281,7 @@ const maj = '3 septembre 2026'
   display: block;
   margin-block-start: 0.2rem;
   color: rgba($blanc, 0.65);
-  font-size: 0.82rem;
+  font-size: 1rem;
 }
 
 .avertissement {
@@ -289,6 +289,6 @@ const maj = '3 septembre 2026'
   background: rgba($cyan, 0.06);
   border-inline-start: 2px solid rgba($cyan, 0.4);
   border-radius: $r-champ;
-  font-size: 0.87rem;
+  font-size: 1rem;
 }
 </style>

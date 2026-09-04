@@ -214,7 +214,7 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
     color: $cyan;
   }
   &__nom {
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.6);
   }
   &--alerte &__valeur {
@@ -232,7 +232,7 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
 .tableau {
   inline-size: 100%;
   border-collapse: collapse;
-  font-size: 0.8rem;
+  font-size: 1rem;
 
   th,
   td {
@@ -243,7 +243,7 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
   }
 
   thead th {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--section-teinte);
@@ -262,7 +262,7 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
 
   summary {
     cursor: pointer;
-    font-size: 0.86rem;
+    font-size: 1rem;
     font-weight: 600;
     @include focus-visible;
   }
@@ -290,7 +290,7 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
       padding: 0.35rem 0.6rem;
       background: rgba($blanc, 0.03);
       border-radius: 6px;
-      font-size: 0.82rem;
+      font-size: 1rem;
     }
 
     .mono {
@@ -307,7 +307,7 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
 }
 
 .motif {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: rgba($blanc, 0.66);
 
   &--social {
@@ -323,7 +323,7 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
   border-radius: $r-pilule;
   background: rgba($cyan, 0.14);
   color: $cyan;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 600;
   @include focus-visible;
   &:hover {

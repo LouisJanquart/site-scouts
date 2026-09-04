@@ -264,7 +264,7 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
   max-inline-size: 44rem;
 
   &__titre {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
@@ -278,7 +278,7 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
 
   &__event {
     margin-block-start: 0.15rem;
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.7);
   }
 }
@@ -295,13 +295,13 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
 
   &__titre {
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: $blanc;
   }
 
   &__texte {
     margin-block-start: 0.35rem;
-    font-size: 0.85rem;
+    font-size: 1rem;
     line-height: 1.6;
   }
 
@@ -361,13 +361,13 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
 
   &__quoi {
     margin-block-start: 0.25rem;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.8);
   }
 
   &__horaire {
     margin-block-start: 0.35rem;
-    font-size: 0.78rem;
+    font-size: 1rem;
   }
 }
 
@@ -384,11 +384,11 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
 
     dt {
       @include surtitre;
-      font-size: 0.6rem;
+      font-size: 0.75rem;
     }
     dd {
       margin: 0.25rem 0 0;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 500;
     }
   }
@@ -418,7 +418,7 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
     background: color-mix(in srgb, var(--section-teinte) 20%, transparent);
     color: var(--section-teinte);
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 1rem;
   }
 
   &__texte {
@@ -429,12 +429,12 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
   }
 
   &__prenom {
-    font-size: 0.88rem;
+    font-size: 1rem;
     font-weight: 500;
   }
 
   &__totem {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.6);
   }
 }
@@ -445,7 +445,7 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
   gap: 0.5rem;
   margin-block-start: 0.5rem;
   color: var(--section-teinte);
-  font-size: 0.9rem;
+  font-size: 1rem;
 
   a {
     text-decoration: underline;
@@ -459,7 +459,7 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
   align-items: center;
   gap: 0.5rem;
   margin-block-start: 0.5rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: rgba($blanc, 0.6);
 }
 
@@ -500,12 +500,12 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
   }
 
   &__nom {
-    font-size: 0.82rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.7);
   }
 
   &__n {
-    font-size: 0.78rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.6);
   }
 }
@@ -540,13 +540,13 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
   }
 
   &__code {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: rgba($blanc, 0.58);
   }
 
   &__libelle {
-    font-size: 0.85rem;
+    font-size: 1rem;
   }
 
   &__event {
@@ -572,7 +572,7 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
     padding: 0.4rem 0.8rem;
     background: rgba($blanc, 0.04);
     border-radius: $r-pilule;
-    font-size: 0.82rem;
+    font-size: 1rem;
     color: var(--section-teinte);
     transition: background $vite $courbe;
 

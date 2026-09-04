@@ -81,14 +81,14 @@ const liste = computed(() => actus.value.slice(0, 4))
   }
 
   &__titre {
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 600;
     line-height: 1.35;
     transition: color $vite $courbe;
   }
 
   &__date {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.6);
   }
 }

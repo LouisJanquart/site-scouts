@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { cheminEncart, cheminPhoto } from '#shared/forme-accueil'
 import { sections } from '~/data/sections'
 import { unite } from '~/data/unite'
 
@@ -25,6 +26,25 @@ import { unite } from '~/data/unite'
 //
 // Enfin, c'est l'encart, et pas le calendrier de gauche, qui décrit le jour
 // choisi.
+
+// La silhouette est recalculée à chaque changement de taille : elle est en
+// pixels, pas en proportions. Voir shared/forme-accueil.ts.
+const panneau = ref<HTMLElement | null>(null)
+const taille = ref({ l: 1048, h: 896 })
+let observateur: ResizeObserver | null = null
+
+onMounted(() => {
+  if (!panneau.value) return
+  observateur = new ResizeObserver(([e]) => {
+    const r = e!.contentRect
+    if (r.width > 0 && r.height > 0) taille.value = { l: r.width, h: r.height }
+  })
+  observateur.observe(panneau.value)
+})
+onBeforeUnmount(() => observateur?.disconnect())
+
+const cheminDeLaPhoto = computed(() => cheminPhoto(taille.value.l, taille.value.h))
+const cheminDeLEncart = computed(() => cheminEncart(taille.value.l, taille.value.h))
 
 const jour = useJourAffiche()
 const selection = useJourSelectionne()
@@ -59,29 +79,20 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
 </script>
 
 <template>
-  <div class="accueil">
+  <div ref="panneau" class="accueil">
     <!-- Les deux découpes, en coordonnées relatives au panneau : elles suivent
          sa taille sans qu'on ait à les recalculer. -->
     <svg class="accueil__defs" aria-hidden="true" focusable="false">
       <defs>
-        <!-- La photo. Deux morsures dans le rectangle :
-             - en haut à droite, une entaille rectangulaire aux angles arrondis,
-               qui dégage la barre d'outils (le fond de page passe derrière) ;
-             - en bas à gauche, l'encoche de l'encart : une pente douce (une
-               unité de descente pour deux et demie d'avancée) depuis le bord
-               gauche, un joint arrondi, puis une pente raide jusqu'au bas. -->
-        <clipPath id="forme-photo" clipPathUnits="objectBoundingBox">
-          <path
-            d="M0,0.0672 A0.0574,0.0672 0 0 1 0.0574,0 L0.6804,0 A0.0437,0.0511 0 0 1 0.7241,0.0511 L0.7241,0.0555 A0.0437,0.0511 0 0 0 0.7678,0.1066 L0.9401,0.1066 A0.0599,0.0701 0 0 1 1,0.1766 L1,0.9328 A0.0574,0.0672 0 0 1 0.9426,1 L0.4832,1 A0.0499,0.0584 0 0 1 0.4363,0.9615 L0.3347,0.6331 A0.0375,0.0438 0 0 0 0.3133,0.6073 L0.0252,0.4730 A0.0400,0.0467 0 0 1 0,0.4296 Z"
-          />
+        <!-- Les deux découpes, en PIXELS et non en proportions : l'entaille de
+             la barre d'outils et l'encoche de l'encart logent des blocs de
+             taille fixe, elles ne doivent donc pas s'étirer avec le panneau.
+             Les tracés sont recalculés à chaque changement de taille. -->
+        <clipPath id="forme-photo" clipPathUnits="userSpaceOnUse">
+          <path :d="cheminDeLaPhoto" />
         </clipPath>
-
-        <!-- L'encart : la même encoche, rentrée d'une gouttière sur ses deux
-             pentes, et à fleur de la photo sur le bord gauche et le bas. -->
-        <clipPath id="forme-encart" clipPathUnits="objectBoundingBox">
-          <path
-            d="M0,0.5985 A0.0578,0.0676 0 0 1 0.0791,0.5357 L0.2866,0.6321 A0.0424,0.0496 0 0 1 0.3110,0.6618 L0.3853,0.9107 A0.0574,0.0672 0 0 1 0.3311,1 L0.0574,1 A0.0574,0.0672 0 0 1 0,0.9328 Z"
-          />
+        <clipPath id="forme-encart" clipPathUnits="userSpaceOnUse">
+          <path :d="cheminDeLEncart" />
         </clipPath>
       </defs>
     </svg>
@@ -318,7 +329,7 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     margin-block-start: 1rem;
     padding-inline-start: 0.25rem;
     font-family: $police-mono;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: rgba($blanc, 0.62);
@@ -331,22 +342,17 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
   // ------------------------------------------------------------------------
   &__encart {
     position: absolute;
-    // Le sommet de l'encart et son bord droit sont ceux du découpage : la boîte
-    // du texte épouse la plaque, elle ne la déborde pas.
-    inset-block: 49.9% 0;
+    // Taille fixe, calée en bas à gauche, exactement comme la maquette : 409×420
+    // avec 32 px de réserve. La forme ne s'étire pas, le texte non plus.
+    inset-block-end: 0;
     inset-inline-start: 0;
-    inline-size: 41.2%;
-    // Le texte doit rester à l'intérieur des deux pentes. Les réserves sont en
-    // pourcentage — donc mesurées, comme les pentes, sur la largeur du panneau —
-    // pour que le texte occupe toujours la même place dans la forme.
-    padding: 8.5% 11.2% 2.9% 3.25%;
+    inline-size: 25.5625rem; // 409 px
+    block-size: 26.25rem; // 420 px
+    padding: 2rem;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    gap: 0.9rem;
-    // Le titre se règle sur la largeur de l'encart, pas sur celle de l'écran :
-    // il tient donc toujours entre les deux pentes.
-    container-type: inline-size;
+    justify-content: space-between;
+    gap: 2rem;
 
     @include jusqua($bp-console) {
       position: static;
@@ -360,7 +366,8 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
   &__jour {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 2rem;
+    align-items: flex-start;
   }
 
   &__meteo {
@@ -368,10 +375,9 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     align-items: center;
     gap: 0.5rem;
     color: $cyan;
-    margin-block-end: 0.4rem;
-    // La hauteur est réservée même sans prévision : le titre reste alors sous
-    // la pente du bord supérieur au lieu de venir mordre dedans.
-    min-block-size: 2.125rem;
+    // 48 px dans la maquette, et la place reste prise même sans prévision :
+    // c'est elle qui tient le titre à l'écart de la pente du bord supérieur.
+    min-block-size: 3rem;
   }
 
   &__temp {
@@ -389,7 +395,7 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     border-radius: $r-pilule;
     background: rgba($blanc, 0.09);
     color: rgba($blanc, 0.72);
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     font-weight: 500;
 
     @include focus-visible;
@@ -404,8 +410,10 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     // Un jour de la semaine ne se coupe pas : plutôt le réduire que le briser.
     overflow-wrap: normal;
 
+    // 48 px dans la maquette. L'encart ayant une taille fixe, le titre aussi.
     @include console {
-      font-size: min(2.5rem, 19cqi);
+      font-size: 3rem;
+      line-height: 1.05;
     }
   }
 
@@ -414,7 +422,7 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     align-items: center;
     gap: 0.5rem;
     font-family: $police-mono;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: rgba($blanc, 0.68);
   }
 
@@ -422,7 +430,7 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     padding: 0.05rem 0.4rem;
     border-radius: $r-pilule;
     background: rgba($blanc, 0.1);
-    font-size: 0.62rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: rgba($blanc, 0.6);
@@ -437,7 +445,7 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     align-items: center;
     gap: 0.4rem;
     margin-block-start: 0.5rem;
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: 600;
     color: $rouge-texte;
   }
@@ -479,12 +487,12 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
   }
 
   &__section-nom {
-    font-size: 0.78rem;
+    font-size: 1rem;
     font-weight: 600;
   }
 
   &__section-quoi {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.62);
     white-space: nowrap;
     overflow: hidden;
@@ -492,7 +500,7 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
   }
 
   &__reserve {
-    font-size: 0.76rem;
+    font-size: 0.75rem;
     line-height: 1.5;
     color: rgba($blanc, 0.55);
     max-inline-size: 20rem;
@@ -500,12 +508,12 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
 
   &__apropos {
     position: absolute;
-    inset-block-end: 1.25rem;
-    inset-inline-end: 1.25rem;
+    inset-block-end: 4rem;
+    inset-inline-end: 4rem;
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 600;
     color: $blanc;
 

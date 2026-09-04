@@ -72,19 +72,19 @@ useHead({ title: 'Les actus — 16e Fleurus' })
   }
 
   &__chapo {
-    font-size: 0.9rem;
+    font-size: 1rem;
     line-height: 1.55;
     color: rgba($blanc, 0.68);
     max-inline-size: 48rem;
   }
 
   &__date {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: rgba($blanc, 0.58);
   }
 }
 
 .note {
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 </style>

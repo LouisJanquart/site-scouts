@@ -62,7 +62,7 @@ useHead({ title: 'Mot de passe oublié — 16e Fleurus' })
   max-inline-size: 26rem;
 }
 .chapo {
-  font-size: 0.88rem;
+  font-size: 1rem;
   line-height: 1.6;
   color: rgba($blanc, 0.68);
 }

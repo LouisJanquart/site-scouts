@@ -53,7 +53,7 @@ const emit = defineEmits<{ aller: [n: number] }>()
     gap: 0.45rem;
     padding: 0.35rem 0.7rem 0.35rem 0.35rem;
     border-radius: $r-pilule;
-    font-size: 0.76rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: rgba($blanc, 0.45);
     transition: background $vite $courbe, color $vite $courbe;
@@ -77,7 +77,7 @@ const emit = defineEmits<{ aller: [n: number] }>()
     border-radius: 50%;
     background: rgba($blanc, 0.08);
     font-family: $police-mono;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
   }
 
   &__item--faite &__bouton {
