@@ -48,9 +48,18 @@ const liste = computed(() => actus.value.slice(0, 4))
 
 <style lang="scss" scoped>
 .actus {
-  // Pas de « block-size: 100% » ici : en mise en page « console » le panneau est
-  // posé sur la photo et c'est le gabarit qui lui donne sa hauteur, par ses
-  // bords haut et bas. Une hauteur imposée le ferait déborder sous la page.
+  // Relevé sur Desktop-7 : le panneau des actus est en gris 2, pas en noir, il
+  // est posé SUR la photo et il est à fleur de son bord droit — d'où deux coins
+  // arrondis seulement, les deux de gauche. Les deux autres n'existent pas :
+  // ils sont sur l'arête du panneau.
+  @include console {
+    background: $ardoise;
+    border-start-start-radius: $r-panneau;
+    border-end-start-radius: $r-panneau;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+    padding: 2rem;
+  }
 
   &__liste {
     gap: 0;

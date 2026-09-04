@@ -26,6 +26,21 @@ export const ENCART = { largeur: 409, hauteur: 420 }
 /** L'entaille du coin supérieur droit, où se loge la barre d'outils (256×64). */
 export const ENTAILLE = { largeur: 256 + GOUTTIERE, hauteur: 64 + GOUTTIERE, rayon: 48 }
 
+/**
+ * En dessous de cette taille, la forme se casse.
+ *
+ * Les deux coins sont fixes ; entre eux, ce sont des morceaux droits qui
+ * s'étirent. Chacun doit garder au moins un rayon de long (64 px), sinon deux
+ * arrondis voisins se mangent et le coin n'est plus rond. D'où :
+ *
+ *   largeur  = coin (64) + morceau (64) + entaille (288 + son coin de 48)
+ *   hauteur  = coin (64) + morceau (64) + ce que l'encoche prend en hauteur
+ *
+ * La mise en page impose la même limite au panneau, pour que l'élément et le
+ * découpage restent d'accord.
+ */
+export const TAILLE_MINI = { largeur: 464, hauteur: 656 }
+
 // Les deux pentes de l'encart, telles que Figma les exporte : « x = m·y + c ».
 // La douce en haut (deux et demie d'avancée pour une de descente), la raide à
 // droite (une avancée pour presque trois de descente).
@@ -34,7 +49,7 @@ const PENTE_DROITE = (405.041 - 329.935) / (333.567 - 125.189)
 
 /** Le tracé de l'encart, tel qu'exporté par Figma, posé en bas à gauche. */
 export function cheminEncart(_largeur: number, hauteur: number): string {
-  const y = hauteur - ENCART.hauteur
+  const y = Math.max(hauteur, TAILLE_MINI.hauteur) - ENCART.hauteur
   const p = (a: number, b: number) => `${a.toFixed(2)},${(b + y).toFixed(2)}`
   return (
     `M${p(405.041, 333.567)}` +
@@ -109,5 +124,7 @@ function arrondir(sommets: Sommet[]): string {
 
 /** Le tracé de la photo pour un panneau de L × H pixels. */
 export function cheminPhoto(L: number, H: number): string {
-  return arrondir(sommetsPhoto(L, H))
+  return arrondir(
+    sommetsPhoto(Math.max(L, TAILLE_MINI.largeur), Math.max(H, TAILLE_MINI.hauteur)),
+  )
 }

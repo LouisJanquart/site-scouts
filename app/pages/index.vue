@@ -198,6 +198,10 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     background: none;
     border-radius: 0;
     overflow: visible;
+    // En dessous, les morceaux droits entre les deux coins fixes tombent sous
+    // 4 rem et les arrondis se mangent entre eux. Voir shared/forme-accueil.ts.
+    min-inline-size: 29rem; // 464 px
+    min-block-size: 41rem; // 656 px
   }
 
   // En dessous de la mise en page « console », l'accueil redevient une pile
@@ -247,14 +251,12 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
   &__voile {
     position: absolute;
     inset: 0;
-    // Dans la maquette, la photo reste franche et lumineuse jusqu'au bord : le
-    // fond de page est noir, et c'est le contraste entre la photo et ce noir qui
-    // fait lire la découpe et la gouttière. Un voile lourd les efface toutes
-    // les deux. On se contente donc d'assombrir là où il y a du texte : sous le
-    // logotype, en haut à gauche.
-    background:
-      radial-gradient(95% 75% at 22% 26%, rgba($noir-profond, 0.72) 0%, transparent 72%),
-      linear-gradient(to top, rgba($noir-profond, 0.34) 0%, transparent 34%);
+    // La maquette n'a AUCUN voile : la photo est franche du haut jusqu'en bas,
+    // et le logotype se pose dessus tel quel. Le halo sombre qu'on avait mis
+    // sous lui faisait une grosse tache grise en haut à gauche, visible sur
+    // n'importe quelle photo. Il ne reste qu'un fondu en bas, pour que « À
+    // propos » et les réseaux gardent leur contraste sur une photo claire.
+    background: linear-gradient(to top, rgba($noir-profond, 0.38) 0%, transparent 28%);
   }
 
   // La plaque de l'encart : elle couvre tout le panneau, donc elle partage le
@@ -277,9 +279,16 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     position: absolute;
     inset-block-start: clamp(4.5rem, 12vh, 8rem);
     inset-inline-start: clamp(1.5rem, 5vw, 4rem);
-    // Archivo étirée à 125 % de large : « SCOUTS » demande une bonne moitié de
-    // panneau. Trop serré, le logotype se coupe en deux.
     max-inline-size: min(40rem, 74%);
+
+    // Position et taille fixes, relevées sur Desktop-7 : le logotype est posé
+    // à 112 du bord gauche et 226 du haut, et « SCOUTS » y occupe 418 px de
+    // large. Comme les autres blocs, il ne s'étire pas avec le panneau.
+    @include console {
+      inset-block-start: 14.125rem; // 226 px
+      inset-inline-start: 7rem; // 112 px
+      max-inline-size: none;
+    }
 
     @include jusqua($bp-console) {
       position: static;
@@ -306,8 +315,9 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     white-space: nowrap;
     font-size: clamp(3rem, 8.5vw, 6.5rem);
 
+    // 418 px de large dans la maquette : avec Archivo étirée, c'est 4,8 rem.
     @include console {
-      font-size: min(6.5rem, 10cqi);
+      font-size: 4.8rem;
     }
     color: $rouge;
     text-shadow: 0 4px 40px rgba($rouge, 0.35);
@@ -318,7 +328,7 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     font-size: clamp(2.1rem, 6vw, 4.6rem);
 
     @include console {
-      font-size: min(4.6rem, 7.1cqi);
+      font-size: 3.25rem;
     }
     color: $blanc;
     padding-inline-start: clamp(1rem, 4vw, 3rem);

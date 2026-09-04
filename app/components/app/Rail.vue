@@ -50,42 +50,48 @@ const surAccueil = computed(() => route.path === '/')
 .rail {
   display: flex;
 
+  // Relevé sur Desktop-7 : fond gris 2 plein, rayon 64, 54 px de réserve de
+  // chaque côté, 96 de haut, et les entrées réparties d'un bord à l'autre.
+  // C'était une pilule noire translucide, ce qui ne ressemblait à rien de la
+  // maquette — le rail est un bloc du bento, pas une barre flottante.
   &__liste {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 0.25rem;
     margin: 0;
-    padding: 0.4rem;
-    background: rgba($noir, 0.82);
-    backdrop-filter: blur(18px) saturate(1.4);
-    border: 1px solid rgba($blanc, 0.06);
-    border-radius: $r-pilule;
+    padding-inline: 3.375rem; // 54 px
+    background: $ardoise;
+    border-radius: $r-panneau;
     overflow-x: auto;
     scrollbar-width: none;
     max-inline-size: 100%;
+
+    @include console {
+      block-size: 6rem; // 96 px
+      padding-block: 0;
+      overflow: visible;
+    }
 
     &::-webkit-scrollbar {
       display: none;
     }
   }
 
+  // Pas de séparateur dans la maquette : les entrées respirent d'elles-mêmes.
   &__separateur {
-    flex: 0 0 auto;
-    inline-size: 1px;
-    block-size: 2rem;
-    background: rgba($blanc, 0.12);
-    margin-inline: 0.2rem;
+    display: none;
   }
 
   &__lien {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.15rem;
+    gap: 0.25rem; // 4 px
     inline-size: 4.1rem;
     padding: 0.5rem 0.25rem 0.45rem;
-    border-radius: $r-pilule;
-    color: rgba($blanc, 0.62);
+    border-radius: $r-champ;
+    color: $blanc;
     transition:
       color $vite $courbe,
       background $vite $courbe;
@@ -97,9 +103,16 @@ const surAccueil = computed(() => route.path === '/')
       background: rgba($blanc, 0.06);
     }
 
+    // Le rail est maintenant en gris 2 : une étiquette teintée dessus ne passe
+    // plus les 4,5:1. C'est donc la pastille qui s'assombrit et l'icône qui
+    // porte la couleur, le mot restant blanc.
     &--actif {
-      color: var(--section-teinte);
-      background: rgba($blanc, 0.07);
+      color: $blanc;
+      background: rgba($noir-profond, 0.5);
+
+      .rail__icone {
+        color: var(--section-teinte);
+      }
     }
 
     // Le retour à l'accueil porte la couleur de l'unité, pas celle de la
@@ -112,8 +125,12 @@ const surAccueil = computed(() => route.path === '/')
       }
 
       &.rail__lien--actif {
-        color: $rouge-texte;
-        background: rgba($rouge, 0.14);
+        color: $blanc;
+        background: rgba($noir-profond, 0.55);
+
+        .rail__icone {
+          color: $rouge-texte;
+        }
       }
     }
   }

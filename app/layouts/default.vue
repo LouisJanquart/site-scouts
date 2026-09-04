@@ -143,10 +143,14 @@ const sectionCourante = computed(() => {
   &__rail {
     @include console {
       position: absolute;
+      // 32 du haut et de la gauche du panneau, comme la maquette. La largeur
+      // reste souple : la maquette a huit sections, le site en a neuf avec
+      // « Accueil ».
       inset-block-start: 2rem;
-      // Le rail se pose SUR la photo, à gauche de l'entaille du coin supérieur
-      // droit : on lui interdit d'aller y mordre.
-      inset-inline: 2rem max(13.5rem, 30.5%);
+      inset-inline-start: 2rem;
+      inline-size: fit-content;
+      min-inline-size: 43.5rem; // 696 px, la largeur de la maquette
+      max-inline-size: calc(100% - 22rem); // on ne mord pas dans l'entaille
       z-index: 20;
       justify-content: flex-start;
     }
@@ -176,11 +180,13 @@ const sectionCourante = computed(() => {
   &__actus {
     @include console {
       position: absolute;
-      // Largeur fixe, alignée sur la barre d'outils. Les décalages haut et bas
-      // sont ceux de la maquette ; c'est la hauteur qui suit l'écran.
-      inset-block: 10rem 9rem;
+      // Taille fixe, comme les autres blocs du bento : 256×592, posé à 160 du
+      // haut et à fleur du bord droit du panneau.
+      inset-block-start: 10rem; // 160 px
       inset-inline-end: 0;
       inline-size: 16rem; // 256 px
+      block-size: 37rem; // 592 px
+      max-block-size: calc(100% - 12rem);
       z-index: 15;
     }
   }
