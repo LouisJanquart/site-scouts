@@ -109,7 +109,7 @@ export const inscriptions = pgTable(
     // tardive. Affiché à la famille et au trésorier — un montant sans raison
     // est un montant qu'on conteste.
     motifTarif: text('motif_tarif'),
-    // L'animé est un animateur breveté (cas des Pios et de la Route).
+    // L'animé est un animateur breveté (cas des Horizons et de la Route).
     brevete: boolean('brevete').notNull().default(false),
     deposeeLe: timestamp('deposee_le', { withTimezone: true }),
     valideeLe: timestamp('validee_le', { withTimezone: true }),

@@ -8,7 +8,7 @@ const corps = z.object({
 })
 
 // Pointer un paiement à la main : le virement arrivé sur le compte, l'enveloppe
-// remise le dimanche. C'est le geste le plus courant du trésorier, il doit être
+// remise le samedi. C'est le geste le plus courant du trésorier, il doit être
 // d'un seul clic.
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')!

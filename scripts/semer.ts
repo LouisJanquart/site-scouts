@@ -203,7 +203,7 @@ async function semerDesFamillesFictives() {
     {
       nom: 'Renard', parent: ['Céline', 'celine.renard@example.be', 'mere'],
       note: 'une Pio animatrice brevetée : cinq euros de moins',
-      enfants: [{ prenom: 'Léa', naissance: '2009-03-18', section: 'pios', genre: 'f', brevete: true }],
+      enfants: [{ prenom: 'Léa', naissance: '2009-03-18', section: 'horizons', genre: 'f', brevete: true }],
     },
     {
       nom: 'Moreau', parent: ['Julien', 'julien.moreau@example.be', 'pere'],
@@ -227,7 +227,7 @@ async function semerDesFamillesFictives() {
     },
     {
       nom: 'Habran', parent: ['Véronique', 'veronique.habran@example.be', 'mere'],
-      enfants: [{ prenom: 'Emma', naissance: '2009-10-11', section: 'pios', genre: 'f' }],
+      enfants: [{ prenom: 'Emma', naissance: '2009-10-11', section: 'horizons', genre: 'f' }],
     },
     {
       nom: 'Toussaint', parent: ['Sarah', 'sarah.toussaint@example.be', 'mere'],

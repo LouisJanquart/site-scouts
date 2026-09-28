@@ -1,6 +1,12 @@
 // Les huit entrées du rail de navigation, dans l'ordre des maquettes Figma.
-// Les noms sont ceux du fichier Figma (Louveteaux, Pios) et non ceux du
-// classeur de planning (Loups, Horizons) : le mapping se fait ici.
+// Les noms sont ceux du classeur de planning et de la fédération. Deux écarts
+// avec le fichier Figma, qui dit « Loups » et « Pios » : la meute s'appelle
+// Louveteaux, et la section des 16-18 s'appelle Horizons. « Pios » reste le
+// surnom oral, d'où la redirection de /sections/pios dans nuxt.config.ts.
+//
+// Les réunions ont lieu le SAMEDI après-midi. Le site a dit « dimanche »
+// jusqu'au 28/09/2026 : c'était une erreur, les mails aux parents et la page
+// Facebook de l'unité disent samedi.
 //
 // Pourquoi des noms scouts dans une unité guide
 // ---------------------------------------------
@@ -103,15 +109,15 @@ export const sections: Section[] = [
     animee: true,
   },
   {
-    slug: 'pios',
-    nom: 'Pios',
-    cleplanning: 'pios',
+    slug: 'horizons',
+    nom: 'Horizons',
+    cleplanning: 'horizons',
     ages: '16 à 18 ans',
     genre: 'mixte',
     icone: 'montagne',
     resume: 'Le moment où l’on passe de l’autre côté : on organise autant qu’on participe.',
     description:
-      "Les Pios montent leurs propres projets : le bar de l'unité, des animations pour les plus jeunes, des réunions thunes pour financer un camp qui se construit à plusieurs. C'est la section charnière avant la Route ou l'entrée dans un staff.",
+      "Les Horizons montent leurs propres projets : le bar de l'unité, des animations pour les plus jeunes, des réunions thunes pour financer un camp qui se construit à plusieurs. C'est la section charnière avant la Route ou l'entrée dans un staff.",
     photo: '/images/foret-lumiere.jpg',
     animee: true,
   },

@@ -24,7 +24,7 @@ export const documents: Document[] = [
   {
     titre: 'Fiche médicale',
     description:
-      "À remplir une fois par an, avant le premier camp. Elle passe par Desk, l'outil de la fédération, et non par ce site.",
+      "À remplir une fois par an, avant le premier camp, dans l'espace famille de ce site. Elle est relue par le staff de la section et revue avant chaque camp.",
     categorie: 'inscription',
     pour: 'parents',
     format: 'lien',

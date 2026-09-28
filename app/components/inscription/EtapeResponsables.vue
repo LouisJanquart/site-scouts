@@ -102,7 +102,7 @@ function ajouterContact() {
             type="tel"
             inputmode="tel"
             obligatoire
-            aide="Le numéro sur lequel on vous joint un dimanche après-midi."
+            aide="Le numéro sur lequel on vous joint un samedi après-midi."
             :erreur="champs[`responsables.${i}.telephone`]"
           />
         </div>

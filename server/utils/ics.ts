@@ -4,7 +4,7 @@ import { sections } from '../../app/data/sections'
 
 // Deux niveaux de flux, comme partout ailleurs sur ce site :
 //
-//   privé   — le programme complet de la section, dimanche par dimanche, avec
+//   privé   — le programme complet de la section, samedi par samedi, avec
 //             les remarques du classeur. Réservé aux familles, servi contre une
 //             clé personnelle.
 //   public  — seulement les rendez-vous ouverts au dehors. Une famille qui

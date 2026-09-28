@@ -42,7 +42,7 @@ export interface ContenuServi {
   /**
    * Le planning. Complet pour une famille ; réduit aux dates et aux horaires
    * pour un visiteur, qui a le droit de savoir quand l'unité se réunit mais
-   * pas ce que chaque section fait ce dimanche-là.
+   * pas ce que chaque section fait ce samedi-là.
    */
   planning: JourPlanning[]
   evenements: ReturnType<typeof evenementsVisibles>
@@ -79,7 +79,7 @@ export function contenuPour(event: H3Event): ContenuServi {
     saison,
     // Le planning des sections est réservé aux familles. Un visiteur reçoit
     // quand même le squelette — les dates et les horaires — parce que « la
-    // prochaine réunion est le dimanche 6 septembre de 14 h à 17 h 30 » est
+    // prochaine réunion est le samedi 12 septembre de 14 h à 17 h 30 » est
     // précisément ce qu'une famille qui découvre l'unité vient chercher. Ce
     // qu'il ne reçoit pas : le programme de chaque section, les remarques
     // internes du classeur, les tours de rangement, et les intitulés

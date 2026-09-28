@@ -73,7 +73,7 @@ le serveur :
 | --- | --- |
 | Galerie photos | Décision du staff d'unité sur le droit à l'image, et stockage protégé. Le consentement, lui, est déjà recueilli et exploitable. |
 | Dépôt de documents | Suppose un stockage de fichiers. Le socle est là, il manque le seau. |
-| Synchronisation avec Desk | La fédération a son propre outil. À décider : recopier ou brancher. |
+| Synchronisation avec SCRIBe | Les Guides ont leur propre base, à mettre à jour pour le 15 novembre. À décider : recopier à la main ou exporter. |
 | Deuxième facteur pour le staff | Un CU voit toutes les fiches santé de l'unité. À terme, ce compte-là mérite mieux qu'un mot de passe. |
 
 ## Architecture
@@ -144,10 +144,12 @@ un fichier public ?* Si oui, c'est `server/donnees/`.
 **Les données des personnes** sont dans PostgreSQL. Elles changent tous les
 jours, elles sont privées, et elles doivent pouvoir être effacées.
 
-- `planning.ts` — les 96 dates de la saison, transcrites du classeur
+- `planning.ts` — les 32 samedis de la saison, transcrits du classeur
   « [HE16] Planning Annuel Réunions » partagé par le staff d'unité.
 - `sections.ts` — les huit entrées du rail, avec le mapping vers les noms du
-  classeur (`Loups` → `louveteaux`, `Horizons` → `pios`).
+  classeur (`Loups` → `louveteaux`). Depuis le 28/09/2026, la section des 16-18
+  s'appelle `horizons` partout, comme dans le classeur ; `/sections/pios`
+  redirige.
 - `staff.ts` — prénoms et totems seulement. Lire la note en tête du fichier.
 - `evenements.ts`, `actus.ts`, `documents.ts`, `unite.ts` — contenu rédigé,
   à relire.
@@ -158,10 +160,12 @@ Le classeur reste la source de vérité. Pour reporter une saison :
 
 ```bash
 # Exporter l'onglet de la saison en CSV depuis Google Sheets, puis :
-node scripts/importer-planning.mjs chemin/vers/planning.csv
+node scripts/importer-planning.mjs chemin/vers/planning.csv 2026
 ```
 
-Le script réécrit `app/data/planning.ts`. À terme, le site devrait lire
+Le script réécrit `server/donnees/planning.ts` (le planning est réservé, il
+ne repasse pas par `app/data/`). Il s'arrête à la fin de la première saison de
+l'export et prévient si une date ne tombe pas un samedi. À terme, le site devrait lire
 directement les flux iCal que le classeur génère déjà, ce qui supprimerait
 cette étape.
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Réécrit app/data/planning.ts à partir d'un export CSV du classeur
+// Réécrit server/donnees/planning.ts à partir d'un export CSV du classeur
 // « [HE16] Planning Annuel Réunions — toutes sections ».
 //
 // Comment obtenir le CSV :
@@ -12,6 +12,16 @@
 // L'année de départ vaut par défaut celle du mois d'août à l'ouverture de la
 // saison. Le script en déduit le passage à l'année suivante au changement de
 // janvier.
+//
+// Deux garde-fous, ajoutés le 28/09/2026 après une importation ratée :
+//   - l'export du classeur contient plusieurs saisons empilées. Le script
+//     s'arrête à la fin de la première : sans ça, les saisons suivantes se
+//     retrouvaient datées de 2028 et 2029.
+//   - les réunions ont lieu le SAMEDI. Toute date qui tombe un autre jour est
+//     signalée : c'est le signe que l'année de départ est fausse.
+//
+// Le fichier produit est lu par le serveur seulement. Il ne doit pas revenir
+// dans app/data/ : le planning des sections n'est pas public.
 
 import { readFileSync, writeFileSync } from 'node:fs'
 
@@ -24,7 +34,7 @@ if (!fichier) {
 
 // Les sept colonnes de section du classeur, dans l'ordre, avec le nom utilisé
 // côté site (voir app/data/sections.ts).
-const SECTIONS = ['nutons', 'lutins', 'louveteaux', 'guides', 'scouts', 'pios', 'route']
+const SECTIONS = ['nutons', 'lutins', 'louveteaux', 'guides', 'scouts', 'horizons', 'route']
 
 // Correspondance libellé → type, calquée sur les codes du classeur.
 const TYPES = [
@@ -113,6 +123,15 @@ for (const l of lignes.slice(iEntete + 1)) {
 
   const jour = Number(m[1])
   const mois = Number(m[2])
+
+  // Une saison va d'août à mai. Un mois d'août ou plus tard après un mois de
+  // printemps, c'est l'onglet de la saison suivante qui commence : on arrête.
+  if (mois >= 8 && moisPrecedent <= 6 && jours.length) {
+    console.warn(
+      `Le CSV contient une autre saison à partir du ${jour}/${mois} : elle n'a pas été lue. Relancez avec son année de départ pour l'importer.`,
+    )
+    break
+  }
   if (mois < moisPrecedent) annee++
   moisPrecedent = mois
 
@@ -144,39 +163,35 @@ if (!jours.length) {
   process.exit(1)
 }
 
+// Les réunions ont lieu le samedi. Si les dates tombent ailleurs, c'est
+// l'année de départ qui est fausse : le calendrier glisse d'un jour par an.
+const horsSamedi = jours.filter((j) => new Date(`${j.date}T12:00:00Z`).getUTCDay() !== 6)
+if (horsSamedi.length) {
+  console.warn(
+    `${horsSamedi.length} date(s) ne tombent pas un samedi, à commencer par ${horsSamedi[0].date}.`,
+  )
+  console.warn("Vérifiez l'année passée en argument avant de vous servir du fichier.")
+}
+
 const premiere = jours[0].date.slice(0, 4)
 const derniere = jours.at(-1).date.slice(0, 4)
 const saison = premiere === derniere ? premiere : `${premiere}-${derniere}`
 
 const entete_ts = `// Planning de la saison ${saison}, transcrit depuis le classeur
 // « [HE16] Planning Annuel Réunions — toutes sections » partagé par
-// scout.fleu@gmail.com. Source unique de vérité : le classeur.
+// scout.fleu@gmail.com. Source unique de vérité : le classeur. Les réunions
+// ont lieu le samedi après-midi.
 //
-// Ce fichier est généré. Ne pas l'éditer à la main :
-//   node scripts/importer-planning.mjs <export.csv>
+// Ce fichier est généré et RÉSERVÉ : il reste dans server/donnees/ et sort par
+// /api/contenu, filtré selon le compte. Ne pas l'éditer à la main :
+//   node scripts/importer-planning.mjs <export.csv> [annee-de-depart]
 
-export type TypeReunion =
-  | 'normale'
-  | 'speciale'
-  | 'hike'
-  | 'grande-sortie'
-  | 'relache'
-  | 'unite'
-  | 'bar'
-
-export interface JourPlanning {
-  date: string
-  horaire: 'ete' | 'hiver' | null
-  remarque: string | null
-  evenement: string | null
-  occupation: string | null
-  rangement: string | null
-  sections: Record<string, { libelle: string; type: TypeReunion | null }>
-}
+export type { TypeReunion, JourPlanning } from '../../shared/planning'
+import type { JourPlanning } from '../../shared/planning'
 
 export const saison = '${saison}'
 
 export const planning: JourPlanning[] = `
 
-writeFileSync('app/data/planning.ts', entete_ts + JSON.stringify(jours, null, 2) + '\n')
-console.log(`${jours.length} dates écrites dans app/data/planning.ts (saison ${saison})`)
+writeFileSync('server/donnees/planning.ts', entete_ts + JSON.stringify(jours, null, 2) + '\n')
+console.log(`${jours.length} dates écrites dans server/donnees/planning.ts (saison ${saison})`)

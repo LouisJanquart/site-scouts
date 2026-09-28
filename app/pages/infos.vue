@@ -21,7 +21,7 @@ useHead({ title: 'Infos pratiques — 16e Fleurus' })
         </div>
       </div>
       <p class="doux petit">
-        Les réunions ont lieu le dimanche après-midi. Hikes, grandes sorties et réunions spéciales
+        Les réunions ont lieu le samedi après-midi. Hikes, grandes sorties et réunions spéciales
         ont leurs propres horaires, annoncés par chaque section.
       </p>
     </section>

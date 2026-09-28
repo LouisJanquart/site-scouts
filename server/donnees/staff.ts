@@ -34,7 +34,7 @@ export const adressesDeSection: Record<string, string> = {
   'louveteaux': 'akela.fleurus@gmail.com',
   'guides': 'staffguidesfleurus@gmail.com',
   'scouts': 'scouts.fleurus@gmail.com',
-  'pios': 'horizons16.fleurus@gmail.com',
+  'horizons': 'horizons16.fleurus@gmail.com',
   'route': 'route.fleurus@gmail.com',
   'staff': 'scout.fleu@gmail.com',
 }
@@ -93,11 +93,11 @@ export const chefs: Chef[] = [
   { prenom: 'Maël', totem: 'Springbok', section: 'scouts' },
   { prenom: 'Teerohn', totem: 'Kangal', section: 'scouts' },
 
-  // Pios
-  { prenom: 'Camille', totem: 'Tenkile', section: 'pios', chefDeStaff: true },
-  { prenom: 'Simon', totem: 'Jaco', section: 'pios' },
-  { prenom: 'Clarisse', totem: 'Pajero', section: 'pios' },
-  { prenom: 'Justin', totem: 'Oryctérope', section: 'pios' },
+  // Horizons
+  { prenom: 'Camille', totem: 'Tenkile', section: 'horizons', chefDeStaff: true },
+  { prenom: 'Simon', totem: 'Jaco', section: 'horizons' },
+  { prenom: 'Clarisse', totem: 'Pajero', section: 'horizons' },
+  { prenom: 'Justin', totem: 'Oryctérope', section: 'horizons' },
 
   // Route
   { prenom: 'Alexis', totem: 'Saki', section: 'route', chefDeStaff: true },

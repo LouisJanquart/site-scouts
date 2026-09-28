@@ -85,14 +85,14 @@ describe('barème de la fédération', () => {
   })
 
   it('un animateur breveté a cinq euros de moins', () => {
-    const [l] = calculerCotisations([enfant('a', 'pios', { brevete: true })], saison)
+    const [l] = calculerCotisations([enfant('a', 'horizons', { brevete: true })], saison)
     expect(l!.montantCentimes).toBe(5750 - 500)
     expect(l!.reductionBrevet).toBe(true)
   })
 
   it('la réduction brevet ne creuse pas le tarif social', () => {
     const [l] = calculerCotisations(
-      [enfant('a', 'pios', { brevete: true, tarifSocial: true })],
+      [enfant('a', 'horizons', { brevete: true, tarifSocial: true })],
       saison,
     )
     expect(l!.montantCentimes).toBe(500)

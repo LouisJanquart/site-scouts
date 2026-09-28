@@ -12,6 +12,7 @@ export const unite = {
   fondation: 1968,
   emailUnite: 'scout.fleu@gmail.com',
   devise: 'Depuis 1968',
+  adresse: 'Chaussée de Charleroi 151b, 6220 Fleurus',
 }
 
 export const horaires = [
@@ -39,17 +40,17 @@ export const infosPratiques: InfoPratique[] = [
   {
     question: 'Quand ont lieu les réunions ?',
     reponse:
-      "Le dimanche après-midi, de septembre à mai. En horaire d'été de 14h à 17h30, en horaire d'hiver de 14h à 17h. Les hikes, grandes sorties et réunions spéciales ont des horaires propres, annoncés par chaque section.",
+      "Le samedi après-midi, de septembre à mai. En horaire d'été de 14h à 17h30, en horaire d'hiver de 14h à 17h. Les hikes, grandes sorties et réunions spéciales ont des horaires propres, annoncés par chaque section.",
   },
   {
     question: 'Où se trouve le local ?',
-    reponse: "L'adresse du local reste à compléter par le staff d'unité.",
-    aCompleter: true,
+    reponse:
+      "Chaussée de Charleroi 151b, à 6220 Fleurus. Les chefs sont au local le samedi de 14h à 14h20 et de 16h50 à 17h15, pour déposer les enfants et poser une question de vive voix.",
   },
   {
     question: 'Comment inscrire son enfant ?',
     reponse:
-      "Le plus simple est de venir aux portes ouvertes, début septembre : on y rencontre le staff de la section concernée et on repart avec les informations. L'inscription administrative et la cotisation passent ensuite par Desk, l'outil de la fédération, et non par ce site.",
+      "Le plus simple est de venir aux portes ouvertes, début septembre : on y rencontre le staff de la section concernée et on repart avec les informations. L'inscription et la cotisation se font ensuite sur ce site. L'unité reporte les membres dans SCRIBe, la base des Guides, avant le 15 novembre.",
   },
   {
     question: 'Combien coûte une année ?',

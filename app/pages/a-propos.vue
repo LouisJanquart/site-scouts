@@ -17,7 +17,7 @@ useHead({ title: 'À propos — 16e Fleurus' })
   <AppPage
     :titre="`Une unité de ${new Date().getFullYear() - unite.fondation} ans`"
     surtitre="À propos"
-    :chapo="`${unite.nomComplet}. Six sections animées, une route, un staff d’unité, et des réunions tous les dimanches de septembre à mai.`"
+    :chapo="`${unite.nomComplet}. Six sections animées, une route, un staff d’unité, et des réunions tous les samedis de septembre à mai.`"
   >
     <template #entete>
       <div class="blason">
@@ -56,7 +56,7 @@ useHead({ title: 'À propos — 16e Fleurus' })
           et un staff d’unité coordonne l’ensemble.
         </p>
         <p>
-          Les réunions ont lieu le dimanche après-midi, de la rentrée de septembre à la mi-mai. À
+          Les réunions ont lieu le samedi après-midi, de la rentrée de septembre à la mi-mai. À
           cela s’ajoutent les hikes, les grandes sorties, les weekends, et le camp d’été en
           juillet.
         </p>
@@ -82,8 +82,8 @@ useHead({ title: 'À propos — 16e Fleurus' })
           en ligne réelle.
         </p>
         <p>
-          Plusieurs informations manquent encore : l’adresse du local, le montant de la cotisation,
-          le détail de l’uniforme, les adresses des réseaux sociaux. Elles sont signalées comme
+          Plusieurs informations manquent encore : le montant exact de la cotisation, le détail de
+          l’uniforme, les adresses des réseaux sociaux. Elles sont signalées comme
           telles plutôt qu’inventées.
         </p>
       </div>

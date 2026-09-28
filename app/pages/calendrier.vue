@@ -2,7 +2,7 @@
 import { sections } from '~/data/sections'
 import { typesReunion } from '~/composables/usePlanning'
 
-// Le classeur de planning rendu lisible : une ligne par dimanche, une colonne
+// Le classeur de planning rendu lisible : une ligne par samedi, une colonne
 // par section, plus les flux iCal auxquels on peut s'abonner.
 
 // Toutes les sections qui ont une colonne dans le classeur, Route comprise.
@@ -83,8 +83,8 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
     surtitre="Calendrier"
     :chapo="
       voitLeCalendrier
-        ? 'Le planning de l’unité, tel qu’il est tenu par le staff d’unité. Une ligne par dimanche, une colonne par section.'
-        : 'Les réunions ont lieu le dimanche après-midi, de septembre à mai.'
+        ? 'Le planning de l’unité, tel qu’il est tenu par le staff d’unité. Une ligne par samedi, une colonne par section.'
+        : 'Les réunions ont lieu le samedi après-midi, de septembre à mai.'
     "
   >
     <template #entete>
@@ -122,7 +122,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
       <div>
         <p class="verrou__titre">Réservé aux familles de l’unité</p>
         <p class="verrou__texte">
-          Le planning des sections, dimanche par dimanche, n’est pas public. Les rendez-vous
+          Le planning des sections, samedi par samedi, n’est pas public. Les rendez-vous
           ouverts à tout le monde, eux, sont sur la
           <NuxtLink to="/events">page des événements</NuxtLink>, et les horaires de réunion sont
           dans les <NuxtLink to="/infos">infos pratiques</NuxtLink>.

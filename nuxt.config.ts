@@ -102,6 +102,10 @@ export default defineNuxtConfig({
     '/images/**': {
       headers: { 'Cache-Control': 'public, max-age=31536000, immutable' },
     },
+    // La section des 16-18 s'appelle Horizons, comme dans le classeur et chez
+    // la fédération. « Pios » reste le surnom oral : les liens déjà partagés
+    // et les habitudes de frappe doivent continuer de tomber juste.
+    '/sections/pios': { redirect: { to: '/sections/horizons', statusCode: 301 } },
     '/inscription/**': { prerender: false, ssr: false },
     '/connexion/**': { prerender: false, ssr: false },
     '/connexion': { prerender: false, ssr: false },

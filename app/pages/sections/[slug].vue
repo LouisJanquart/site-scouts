@@ -225,7 +225,7 @@ useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
         <div>
           <p class="reserve__titre">Le reste est réservé aux familles</p>
           <p class="reserve__texte">
-            Le programme de chaque dimanche, le staff de la section et son adresse de contact ne
+            Le programme de chaque samedi, le staff de la section et son adresse de contact ne
             sont pas publics. Pour découvrir la section, le plus simple est de venir aux portes
             ouvertes de septembre.
           </p>

@@ -23,7 +23,7 @@ useHead({ title: 'Les événements — 16e Fleurus' })
   <AppPage
     titre="Les rendez-vous de l’année"
     surtitre="Événements"
-    chapo="Portes ouvertes, souper dias, marche Adeps, cavalcade. Les dates qui concernent toute l’unité, en plus des réunions du dimanche."
+    chapo="Portes ouvertes, souper dias, marche Adeps, cavalcade. Les dates qui concernent toute l’unité, en plus des réunions du samedi."
   >
     <p v-if="!voitLesEvenementsInternes" class="reserve">
       <UiIcone nom="cadenas" :taille="16" />

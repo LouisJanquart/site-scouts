@@ -28,7 +28,7 @@ export const bornesSections: BornesSection[] = [
   { slug: 'louveteaux', nom: 'Louveteaux', ageMin: 8, ageMax: 11, genre: 'garcons', ouverte: true },
   { slug: 'guides', nom: 'Guides', ageMin: 11, ageMax: 16, genre: 'filles', ouverte: true },
   { slug: 'scouts', nom: 'Scouts', ageMin: 11, ageMax: 16, genre: 'garcons', ouverte: true },
-  { slug: 'pios', nom: 'Pios', ageMin: 16, ageMax: 18, genre: 'mixte', ouverte: true },
+  { slug: 'horizons', nom: 'Horizons', ageMin: 16, ageMax: 18, genre: 'mixte', ouverte: true },
   { slug: 'route', nom: 'Route', ageMin: 18, ageMax: 25, genre: 'mixte', ouverte: false },
 ]
 

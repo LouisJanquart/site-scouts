@@ -169,7 +169,7 @@ const prochainEvenement = computed(
       <UiIcone nom="tente" :taille="26" class="invitation__icone" />
       <p class="invitation__titre">Envie de nous rejoindre ?</p>
       <p class="invitation__texte">
-        Réunions le dimanche après-midi, de septembre à mai.
+        Réunions le samedi après-midi, de septembre à mai.
       </p>
       <NuxtLink
         v-if="prochainEvenement"

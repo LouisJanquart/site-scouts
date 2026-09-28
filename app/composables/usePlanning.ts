@@ -97,7 +97,7 @@ export function usePlanning() {
     return planningDeSection(slug).find((j) => j.date >= aujourdhui.value) ?? null
   }
 
-  /** Les dimanches où l'unité se réunit, sans le détail des sections. */
+  /** Les samedis où l'unité se réunit, sans le détail des sections. */
   const joursDeReunion = computed(() => planning.value)
 
   function prochainDimanche() {

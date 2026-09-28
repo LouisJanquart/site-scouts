@@ -61,7 +61,7 @@ export function useRole() {
   const voitLesDocumentsStaff = computed(() => role.value === 'chef')
 
   // Le calendrier des sections est réservé aux familles. Un visiteur voit que
-  // l'unité se réunit le dimanche et à quelle heure, pas ce que chaque section
+  // l'unité se réunit le samedi et à quelle heure, pas ce que chaque section
   // fait chaque semaine.
   const voitLeCalendrier = computed(() => role.value !== 'visiteur')
   const voitLeStaff = computed(() => role.value !== 'visiteur')

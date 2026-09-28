@@ -33,7 +33,7 @@ export const evenements: Evenement[] = [
     resume:
       'La première réunion de la saison, ouverte à tout le monde. On vient voir, on repart inscrit ou pas.',
     description:
-      "Le dimanche des portes ouvertes est le seul moment de l'année où l'on peut débarquer sans prévenir. Toutes les sections sont sur place, les chefs répondent aux questions des parents, et les enfants passent l'après-midi avec la section de leur âge. Le staff d'unité tient un CU dans la foulée.",
+      "Le samedi des portes ouvertes est le seul moment de l'année où l'on peut débarquer sans prévenir. Toutes les sections sont sur place, les chefs répondent aux questions des parents, et les enfants passent l'après-midi avec la section de leur âge. Le staff d'unité tient un CU dans la foulée.",
     public: 'tous',
     inscription: false,
     photo: '/images/camp-prairie.jpg',
@@ -46,7 +46,7 @@ export const evenements: Evenement[] = [
     lieu: 'À préciser par le staff d’unité',
     section: null,
     resume:
-      'Le dimanche où chacun change de section. Réunion d’unité pour tout le monde, bar tenu par la Route.',
+      'Le jour où chacun change de section. Réunion d’unité pour tout le monde, bar tenu par la Route.',
     description:
       "Les passages marquent le vrai début de l'année scoute : les plus grands de chaque section montent d'un cran. C'est une réunion d'unité, toutes sections mélangées, avec un bar tenu par la Route pour les parents qui accompagnent.",
     public: 'parents',
@@ -74,7 +74,7 @@ export const evenements: Evenement[] = [
     section: null,
     resume: 'Dernière réunion avant les vacances d’hiver, en réunion spéciale dans plusieurs sections.',
     description:
-      "La Saint-Nicolas clôt le premier quadrimestre. Plusieurs sections passent en réunion spéciale, les Pios préparent les bonbons. C'est la dernière réunion avant la coupure de Noël, les réunions reprennent début février.",
+      "La Saint-Nicolas clôt le premier quadrimestre. Plusieurs sections passent en réunion spéciale, les Horizons préparent les bonbons. C'est la dernière réunion avant la coupure de Noël, les réunions reprennent début février.",
     public: 'animes',
   },
   {
@@ -121,7 +121,7 @@ export const evenements: Evenement[] = [
     section: null,
     resume: 'La cavalcade de Fleurus, précédée de trois soumonces en mars.',
     description:
-      "La cavalcade est le rendez-vous de la ville, et l'unité y participe chaque année. Les soumonces des 7, 21 mars et du 8 mars la précèdent. Les réunions du dimanche sont adaptées en conséquence.",
+      "La cavalcade est le rendez-vous de la ville, et l'unité y participe chaque année. Les soumonces des 7, 21 mars et du 8 mars la précèdent. Les réunions du samedi sont adaptées en conséquence.",
     public: 'tous',
   },
   {
@@ -132,7 +132,7 @@ export const evenements: Evenement[] = [
     section: null,
     resume: 'Toutes les sections en relâche, l’unité se retrouve au complet.',
     description:
-      "Le temps d'unité rassemble toutes les sections sur une même journée. Toutes les sections sont en relâche ce dimanche-là : il n'y a pas de réunion classique.",
+      "Le temps d'unité rassemble toutes les sections sur une même journée. Toutes les sections sont en relâche ce samedi-là : il n'y a pas de réunion classique.",
     public: 'parents',
   },
   {
@@ -272,9 +272,9 @@ export const evenements: Evenement[] = [
     heure: '09:00 – 17:00',
     lieu: 'Croix-Rouge, Charleroi',
     section: null,
-    resume: 'Journée de brevet pour les chefs et les Pios volontaires.',
+    resume: 'Journée de brevet pour les chefs et les Horizons volontaires.',
     description:
-      "Formation d'une journée, prise en charge par l'unité. Elle est exigée pour au moins un chef par section en camp, et les Pios qui la suivent repartent avec un brevet valable en dehors du scoutisme. Inscription obligatoire, les places sont limitées à douze.",
+      "Formation d'une journée, prise en charge par l'unité. Elle est exigée pour au moins un chef par section en camp, et les Horizons qui la suivent repartent avec un brevet valable en dehors du scoutisme. Inscription obligatoire, les places sont limitées à douze.",
     public: 'chefs',
     inscription: true,
   },
@@ -287,21 +287,21 @@ export const evenements: Evenement[] = [
     section: null,
     resume: 'Le gros rendez-vous financier du printemps.',
     description:
-      "Bolognaise ou végétarienne, dessert compris. Les Pios servent en salle, la Route tient le bar, les Scouts et les Guides font la plonge. Les réservations se prennent à l'avance ; sans réservation on peut venir, mais il n'y a pas de garantie d'assiette après 20h.",
+      "Bolognaise ou végétarienne, dessert compris. Les Horizons servent en salle, la Route tient le bar, les Scouts et les Guides font la plonge. Les réservations se prennent à l'avance ; sans réservation on peut venir, mais il n'y a pas de garantie d'assiette après 20h.",
     public: 'tous',
     inscription: true,
   },
   {
-    slug: 'hike-pios-2027',
-    titre: 'Hike de printemps des Pios',
+    slug: 'hike-horizons-2027',
+    titre: 'Hike de printemps des Horizons',
     date: '2027-04-24',
     dateFin: '2027-04-25',
     heure: 'Départ samedi 8h00',
     lieu: 'Vallée de l’Ourthe',
-    section: 'pios',
-    resume: 'Deux jours en autonomie complète, itinéraire choisi par les Pios eux-mêmes.',
+    section: 'horizons',
+    resume: 'Deux jours en autonomie complète, itinéraire choisi par les Horizons eux-mêmes.',
     description:
-      "Les Pios préparent l'itinéraire, le budget et les repas ; les chefs suivent à distance et ne sont là qu'en cas de pépin. C'est la répétition générale du camp, où l'autonomie est la règle. Départ 8h du local, retour dimanche en fin d'après-midi.",
+      "Les Horizons préparent l'itinéraire, le budget et les repas ; les chefs suivent à distance et ne sont là qu'en cas de pépin. C'est la répétition générale du camp, où l'autonomie est la règle. Départ 8h du local, retour dimanche en fin d'après-midi.",
     public: 'parents',
     inscription: true,
   },
@@ -386,15 +386,15 @@ export const evenements: Evenement[] = [
     photo: '/images/camp-prairie-large.jpg',
   },
   {
-    slug: 'camp-pios-2027',
-    titre: 'Camp des Pios',
+    slug: 'camp-horizons-2027',
+    titre: 'Camp des Horizons',
     date: '2027-08-01',
     dateFin: '2027-08-14',
     lieu: 'Destination annoncée en juin',
-    section: 'pios',
-    resume: 'Le camp itinérant, préparé par les Pios de bout en bout.',
+    section: 'horizons',
+    resume: 'Le camp itinérant, préparé par les Horizons de bout en bout.',
     description:
-      "Quinze jours en itinérance, avec un projet de service quelque part au milieu. La destination est choisie par les Pios en février et annoncée à la réunion parents de juin. Budget, itinéraire et intendance sont entièrement de leur ressort.",
+      "Quinze jours en itinérance, avec un projet de service quelque part au milieu. La destination est choisie par les Horizons en février et annoncée à la réunion parents de juin. Budget, itinéraire et intendance sont entièrement de leur ressort.",
     public: 'parents',
     inscription: true,
   },

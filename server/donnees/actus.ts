@@ -17,7 +17,7 @@ export const actus: Actu[] = [
     slug: 'rentree-2026',
     titre: 'La saison 2026-2027 commence le 6 septembre',
     date: '2026-09-02',
-    sections: ['nutons', 'lutins', 'louveteaux', 'guides', 'scouts', 'pios', 'route'],
+    sections: ['nutons', 'lutins', 'louveteaux', 'guides', 'scouts', 'horizons', 'route'],
     chapo:
       'Portes ouvertes le dimanche 6 septembre de 14h à 17h30, puis réunion des passages la semaine suivante.',
     corps: [
@@ -50,7 +50,7 @@ export const actus: Actu[] = [
       'Réunion d’unité la journée, souper et projection le soir. La préparation commence deux semaines avant.',
     corps: [
       "Le souper dias est le premier gros événement de l'année. Les sections y projettent les photos de leur camp, et c'est une rentrée d'argent qui compte pour le matériel.",
-      "Les Pios sont sur la préparation, mais il faut du monde en cuisine, au bar et au rangement. Un tour de rôle sera proposé à la prochaine réunion route.",
+      "Les Horizons sont sur la préparation, mais il faut du monde en cuisine, au bar et au rangement. Un tour de rôle sera proposé à la prochaine réunion route.",
     ],
     public: 'chefs',
   },
@@ -190,7 +190,7 @@ export const actus: Actu[] = [
     corps: [
       "214 assiettes, contre 180 l'an dernier. La version végétarienne a représenté un tiers des commandes, ce qui change des années précédentes et sera pris en compte pour la prochaine fois.",
       "La recette part intégralement dans le matériel de camp : deux tentes à remplacer et une remorque à remettre en état.",
-      "Merci aux Pios pour le service, qui n'ont pas cassé une assiette.",
+      "Merci aux Horizons pour le service, qui n'ont pas cassé une assiette.",
     ],
     public: 'tous',
   },
@@ -198,7 +198,7 @@ export const actus: Actu[] = [
     slug: 'inscriptions-camps-2027',
     titre: 'Inscriptions de camp ouvertes jusqu’au 31 mai',
     date: '2027-04-18',
-    sections: ['nutons', 'lutins', 'louveteaux', 'guides', 'scouts', 'pios'],
+    sections: ['nutons', 'lutins', 'louveteaux', 'guides', 'scouts', 'horizons'],
     chapo: 'Un formulaire par enfant, un acompte, et la fiche santé à jour.',
     corps: [
       "Les inscriptions se font depuis l'espace des familles. Chaque camp a son prix, indiqué au moment de l'inscription, avec un acompte à verser dans les quinze jours.",
@@ -236,7 +236,7 @@ export const actus: Actu[] = [
     slug: 'passages-2027-annonce',
     titre: 'Qui passe où le 30 mai',
     date: '2027-05-18',
-    sections: ['nutons', 'lutins', 'louveteaux', 'guides', 'scouts', 'pios'],
+    sections: ['nutons', 'lutins', 'louveteaux', 'guides', 'scouts', 'horizons'],
     chapo: 'Les listes de passage sont affichées au local et envoyées par courriel.',
     corps: [
       "Le passage se fait sur l'âge, mais pas seulement : le staff regarde aussi où en est chacun. Un enfant peut rester une année de plus dans sa section si c'est mieux pour lui, et ça se discute avec les parents avant, jamais le jour même.",
@@ -265,7 +265,7 @@ export const actus: Actu[] = [
     chapo: 'Réfection du sol de la grande salle. Les réunions se font dehors.',
     corps: [
       "Le sol de la grande salle est refait du 12 au 25 avril. Le local reste inaccessible pendant toute la durée du chantier, y compris pour prendre du matériel.",
-      "Les réunions des deux dimanches concernés se tiennent au bois de Soleilmont, rendez-vous directement sur place. En cas de gros temps, l'annulation est décidée le samedi soir et annoncée sur le site.",
+      "Les réunions des deux samedis concernés se tiennent au bois de Soleilmont, rendez-vous directement sur place. En cas de gros temps, l'annulation est décidée la veille au soir et annoncée sur le site.",
     ],
     public: 'parents',
   },
