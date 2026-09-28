@@ -37,7 +37,7 @@ export default defineNuxtConfig({
         {
           name: 'description',
           content:
-            "Unité scoute et guide 16e Fleurus, Notre-Dame des Champs. Sept sections, des réunions tous les dimanches, des camps chaque été. Depuis 1968.",
+            "Unité scoute et guide 16e Fleurus, Notre-Dame des Champs. Sept sections, des réunions tous les samedis, des camps chaque été. Depuis 1968.",
         },
         { name: 'theme-color', content: '#10111A' },
 
@@ -50,7 +50,7 @@ export default defineNuxtConfig({
         {
           property: 'og:description',
           content:
-            'Six sections, des réunions tous les dimanches de septembre à mai, un camp chaque été. Notre-Dame des Champs, depuis 1968.',
+            'Six sections, des réunions tous les samedis de septembre à mai, un camp chaque été. Notre-Dame des Champs, depuis 1968.',
         },
         // URL absolue : Facebook et quelques autres refusent un chemin relatif.
         // À changer le jour où l'unité aura son propre nom de domaine.

@@ -26,7 +26,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'portes-ouvertes-2026',
     titre: 'Portes ouvertes',
-    date: '2026-09-06',
+    date: '2026-09-05',
     heure: '14:00 – 17:30',
     lieu: 'Local de l’unité, Fleurus',
     section: null,
@@ -41,7 +41,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'passages-2026',
     titre: 'Réunion des passages',
-    date: '2026-09-13',
+    date: '2026-09-12',
     heure: '14:00 – 17:30',
     lieu: 'À préciser par le staff d’unité',
     section: null,
@@ -55,7 +55,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'souper-dias-2026',
     titre: 'Souper dias',
-    date: '2026-10-11',
+    date: '2026-10-10',
     lieu: 'Local de l’unité, Fleurus',
     section: null,
     resume:
@@ -68,7 +68,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'saint-nicolas-2026',
     titre: 'Réunion Saint-Nicolas',
-    date: '2026-12-06',
+    date: '2026-12-05',
     heure: '14:00 – 17:00',
     lieu: 'Local de l’unité, Fleurus',
     section: null,
@@ -80,7 +80,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'veillee-noel-2026',
     titre: 'Veillée de Noël',
-    date: '2026-12-20',
+    date: '2026-12-19',
     lieu: 'Local de l’unité, Fleurus',
     section: 'route',
     resume: 'La veillée organisée par la Route, toutes sections réunies, en réunion spéciale.',
@@ -91,7 +91,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'carnaval-2027',
     titre: 'Carnaval',
-    date: '2027-02-14',
+    date: '2027-02-13',
     lieu: 'Fleurus',
     section: null,
     resume: 'Le carnaval de Fleurus, pendant le congé de détente.',
@@ -102,7 +102,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'marche-adeps-2027',
     titre: 'Marche Adeps',
-    date: '2027-03-08',
+    date: '2027-03-07',
     heure: '07:00 – 19:30',
     lieu: 'Fleurus, départ au local',
     section: 'route',
@@ -116,7 +116,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'cavalcade-2027',
     titre: 'Cavalcade de Pâques',
-    date: '2027-04-04',
+    date: '2027-04-03',
     lieu: 'Fleurus',
     section: null,
     resume: 'La cavalcade de Fleurus, précédée de trois soumonces en mars.',
@@ -127,7 +127,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'temps-unite-2027',
     titre: 'Temps d’unité',
-    date: '2027-04-11',
+    date: '2027-04-10',
     lieu: 'À préciser',
     section: null,
     resume: 'Toutes les sections en relâche, l’unité se retrouve au complet.',
@@ -138,7 +138,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'fun-fest-2027',
     titre: 'Fun Fest',
-    date: '2027-05-16',
+    date: '2027-05-15',
     lieu: 'Fleurus',
     section: null,
     resume: 'Dernier rendez-vous de la saison, juste après la fin des réunions.',
@@ -180,7 +180,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'reunion-nutons-halloween-2026',
     titre: 'Réunion déguisée des Nutons',
-    date: '2026-10-25',
+    date: '2026-10-24',
     heure: '14:00 – 17:00',
     lieu: 'Local de l’unité, Fleurus',
     section: 'nutons',
@@ -192,7 +192,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'operation-calendriers-2026',
     titre: 'Vente des calendriers',
-    date: '2026-11-08',
+    date: '2026-11-07',
     heure: '13:30 – 17:30',
     lieu: 'Rues de Fleurus, départ du local',
     section: null,
@@ -218,7 +218,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'marche-parrainage-lutins-2026',
     titre: 'Marche de parrainage des Lutins',
-    date: '2026-11-29',
+    date: '2026-11-28',
     heure: '14:00 – 17:00',
     lieu: 'Départ du local, boucle de 6 km',
     section: 'lutins',
@@ -243,7 +243,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'reunion-passages-blanche-2027',
     titre: 'Réunion « page blanche »',
-    date: '2027-01-10',
+    date: '2027-01-09',
     heure: '14:00 – 17:00',
     lieu: 'Local de l’unité, Fleurus',
     section: null,
@@ -268,7 +268,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'formation-secourisme-2027',
     titre: 'Formation premiers secours',
-    date: '2027-02-07',
+    date: '2027-02-06',
     heure: '09:00 – 17:00',
     lieu: 'Croix-Rouge, Charleroi',
     section: null,
@@ -281,7 +281,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'souper-spaghetti-2027',
     titre: 'Souper spaghetti',
-    date: '2027-03-21',
+    date: '2027-03-20',
     heure: '18:00 – 22:00',
     lieu: 'Salle paroissiale, Fleurus',
     section: null,
@@ -308,7 +308,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'journee-passages-2027',
     titre: 'Journée des passages',
-    date: '2027-05-30',
+    date: '2027-05-29',
     heure: '10:00 – 17:00',
     lieu: 'Local de l’unité, Fleurus',
     section: null,
@@ -320,7 +320,7 @@ export const evenements: Evenement[] = [
   {
     slug: 'reunion-parents-camp-2027',
     titre: 'Réunion parents avant les camps',
-    date: '2027-06-13',
+    date: '2027-06-12',
     heure: '10:30 – 12:00',
     lieu: 'Local de l’unité, Fleurus',
     section: null,

@@ -15,14 +15,14 @@ export interface Actu {
 export const actus: Actu[] = [
   {
     slug: 'rentree-2026',
-    titre: 'La saison 2026-2027 commence le 6 septembre',
+    titre: 'La saison 2026-2027 commence le 5 septembre',
     date: '2026-09-02',
     sections: ['nutons', 'lutins', 'louveteaux', 'guides', 'scouts', 'horizons', 'route'],
     chapo:
-      'Portes ouvertes le dimanche 6 septembre de 14h à 17h30, puis réunion des passages la semaine suivante.',
+      'Portes ouvertes le samedi 5 septembre de 14h à 17h30, puis réunion des passages la semaine suivante.',
     corps: [
-      "Le calendrier de l'année est bouclé. Il démarre par les portes ouvertes du 6 septembre, ouvertes à tout le monde et sans inscription préalable : c'est le moment pour venir voir à quoi ressemble une réunion avant de s'engager.",
-      "Le dimanche suivant, 13 septembre, aura lieu la réunion des passages. Toutes les sections sont concernées, et la Route tient le bar pour les parents qui restent.",
+      "Le calendrier de l'année est bouclé. Il démarre par les portes ouvertes du 5 septembre, ouvertes à tout le monde et sans inscription préalable : c'est le moment pour venir voir à quoi ressemble une réunion avant de s'engager.",
+      "Le samedi suivant, 12 septembre, aura lieu la réunion des passages. Toutes les sections sont concernées, et la Route tient le bar pour les parents qui restent.",
       "Jusqu'à la mi-octobre, les réunions se tiennent à l'horaire d'été, de 14h à 17h30. À partir du 25 octobre, on passe à l'horaire d'hiver, de 14h à 17h.",
     ],
     public: 'tous',
@@ -43,7 +43,7 @@ export const actus: Actu[] = [
   },
   {
     slug: 'souper-dias-appel',
-    titre: 'Souper dias le 11 octobre : on cherche des bras',
+    titre: 'Souper dias le 10 octobre : on cherche des bras',
     date: '2026-08-28',
     sections: ['route'],
     chapo:
@@ -234,7 +234,7 @@ export const actus: Actu[] = [
   },
   {
     slug: 'passages-2027-annonce',
-    titre: 'Qui passe où le 30 mai',
+    titre: 'Qui passe où le 29 mai',
     date: '2027-05-18',
     sections: ['nutons', 'lutins', 'louveteaux', 'guides', 'scouts', 'horizons'],
     chapo: 'Les listes de passage sont affichées au local et envoyées par courriel.',
