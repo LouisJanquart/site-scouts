@@ -56,8 +56,8 @@ useHead({ title: 'Documents — 16e Fleurus' })
     </section>
 
     <p class="doux note">
-      Vue « {{ definition.nom }} » : {{ liste.length }} document{{ liste.length > 1 ? 's' : '' }}
-      visible{{ liste.length > 1 ? 's' : '' }}. Changez de rôle en bas à gauche pour voir la
+      Vue « {{ definition.nom }} » : {{ documents.length }} document{{ documents.length > 1 ? 's' : '' }}
+      visible{{ documents.length > 1 ? 's' : '' }}. Changez de rôle en bas à gauche pour voir la
       différence.
     </p>
   </AppPage>
