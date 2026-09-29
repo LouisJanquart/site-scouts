@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { sections } from '~/data/sections'
+const { sections } = useSections()
 
 const { prochaineReunion } = usePlanning()
 const { chefsDeSection } = useContenu()

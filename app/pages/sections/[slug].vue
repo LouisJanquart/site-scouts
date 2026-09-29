@@ -6,9 +6,9 @@
 // l'autre — le bandeau, le nom, les onglets — et « NuxtPage » affiche l'onglet
 // en cours. Les adresses déjà partagées continuent de tomber sur la
 // présentation, qui est la page d'index de la section.
-import { sections } from '~/data/sections'
 
 const { slug, section } = useSectionCourante()
+const { sections } = useSections()
 
 if (!section.value) {
   throw createError({ statusCode: 404, statusMessage: 'Section inconnue', fatal: true })
@@ -30,7 +30,7 @@ function estActif(o: { to: string; exact?: boolean }) {
   return o.exact ? ici === o.to : ici.startsWith(o.to)
 }
 
-const autres = computed(() => sections.filter((s) => s.slug !== slug.value))
+const autres = computed(() => sections.value.filter((s) => s.slug !== slug.value))
 
 useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
 </script>

@@ -38,6 +38,11 @@ export default defineNuxtPlugin(() => {
     }
   }
 
-  if (import.meta.server) return remplir()
+  // Les sections suivent le même chemin : elles peuvent avoir été corrigées
+  // depuis le back office, et le fichier du paquet ne le sait pas.
+  const { charger: chargerLesSections } = useSections()
+
+  if (import.meta.server) return Promise.all([remplir(), chargerLesSections()])
   remplir()
+  chargerLesSections()
 })

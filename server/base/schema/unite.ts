@@ -143,6 +143,40 @@ export const contactsUrgence = pgTable(
   (t) => [index('contacts_urgence_anime_idx').on(t.animeId)],
 )
 
+// ---------------------------------------------------------------------------
+// Les sections, côté base.
+//
+// Pourquoi ici et plus seulement dans app/data/sections.ts : un staff doit
+// pouvoir corriger le résumé de sa section, ses âges ou sa photo sans attendre
+// un déploiement. Le fichier TypeScript reste la valeur par défaut — il donne
+// l'ordre du rail, les icônes et le texte d'origine ; la base ne porte QUE ce
+// que quelqu'un a modifié. Une ligne absente veut dire « rien n'a été touché »,
+// pas « cette section n'existe pas ».
+//
+// Conséquence utile : si la base est vide ou injoignable au moment du build, le
+// site se construit quand même avec les textes du fichier.
+// ---------------------------------------------------------------------------
+export const sections = pgTable(
+  'sections',
+  {
+    slug: text('slug').primaryKey(),
+    nom: text('nom'),
+    nomCourt: text('nom_court'),
+    ages: text('ages'),
+    resume: text('resume'),
+    description: text('description'),
+    photo: text('photo'),
+    // Une section qui n'anime plus ne disparaît pas du site : elle cesse
+    // simplement d'apparaître dans le rail et dans le formulaire d'inscription.
+    animee: boolean('animee'),
+    majLe: timestamp('maj_le', { withTimezone: true }).notNull().defaultNow(),
+    majPar: uuid('maj_par').references(() => personnes.id, { onDelete: 'set null' }),
+  },
+  (t) => [index('sections_maj_idx').on(t.majLe)],
+)
+
+export type SectionEnBase = typeof sections.$inferSelect
+
 export type Saison = typeof saisons.$inferSelect
 export type Anime = typeof animes.$inferSelect
 export type Inscription = typeof inscriptions.$inferSelect

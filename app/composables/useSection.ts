@@ -1,5 +1,3 @@
-import { parSlug } from '~/data/sections'
-
 // La section consultée, déduite de l'adresse.
 //
 // Les pages d'une section sont des routes imbriquées : « /sections/lutins »,
@@ -8,7 +6,8 @@ import { parSlug } from '~/data/sections'
 // que de la passer de main en main, chacun la relit ici.
 export function useSectionCourante() {
   const route = useRoute()
+  const { parSlug } = useSections()
   const slug = computed(() => String(route.params.slug))
-  const section = computed(() => parSlug[slug.value] ?? null)
+  const section = computed(() => parSlug.value[slug.value] ?? null)
   return { slug, section }
 }

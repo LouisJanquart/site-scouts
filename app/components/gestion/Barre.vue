@@ -9,6 +9,7 @@ const modules = computed(() =>
   [
     { to: '/gestion', texte: 'Tableau de bord', icone: 'bouclier', exact: true, pour: true },
     { to: '/gestion/dossiers', texte: 'Dossiers', icone: 'document', pour: true },
+    { to: '/gestion/sections', texte: 'Pages des sections', icone: 'crayon', pour: true },
     { to: '/gestion/argent', texte: 'Argent', icone: 'euro', pour: aLeRole('cu', 'tresorier') },
     { to: '/gestion/comptes', texte: 'Comptes et rôles', icone: 'groupe', pour: estCU.value },
     { to: '/gestion/rgpd', texte: 'RGPD', icone: 'cadenas', pour: estCU.value },

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { sections } from '~/data/sections'
+const { sections } = useSections()
 
 // La pilule de navigation, reprise du composant « side » des maquettes (six
 // positions à l'origine, huit ici pour inclure la Route et le staff d'unité).
