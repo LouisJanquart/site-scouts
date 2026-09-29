@@ -39,7 +39,7 @@ const entrees = computed(() => {
     connecte.value
       ? { to: '/mon-espace', nom: 'Mon espace', icone: 'profil' }
       : { to: '/connexion', nom: 'Se connecter', icone: 'cadenas' },
-    ...(estStaff.value ? [{ to: '/staff', nom: 'Back office', icone: 'bouclier' }] : []),
+    ...(estStaff.value ? [{ to: '/gestion', nom: 'Back office', icone: 'bouclier' }] : []),
   ]
 })
 
@@ -140,7 +140,7 @@ function nEnOuvrirQuUn(lequel: 'menu' | 'recherche' | 'compte') {
           </NuxtLink>
         </li>
         <li v-if="estStaff">
-          <NuxtLink class="menu__lien" to="/staff">
+          <NuxtLink class="menu__lien" to="/gestion">
             <UiIcone nom="lys" :taille="18" />
             Back office
           </NuxtLink>

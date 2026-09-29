@@ -6,6 +6,13 @@ definePageMeta({ middleware: 'staff' })
 const { data, pending, refresh } = await useFetch('/api/staff/inscriptions')
 const nomSection = (slug: string) => bornesSections.find((s) => s.slug === slug)?.nom ?? slug
 
+// La portée choisie dans la barre ne filtre que l'affichage : l'API a déjà
+// retiré ce que ce compte n'a pas le droit de voir.
+const { concerne } = usePortee()
+const inscriptions = computed(() =>
+  (data.value?.inscriptions ?? []).filter((i: any) => concerne(i.sectionSlug)),
+)
+
 const ouvert = ref<string | null>(null)
 const motif = ref('')
 const remarque = ref('')
@@ -43,11 +50,15 @@ useHead({ title: 'Dossiers à relire — 16e Fleurus' })
     titre="Dossiers à relire"
     surtitre="Staff"
     chapo="Les inscriptions déposées qui attendent une décision. Valider, c’est confirmer à la famille que la place est prise."
-    :retour="{ to: '/staff', texte: 'Back office' }"
+    :retour="{ to: '/gestion', texte: 'Back office' }"
   >
+    <template #entete>
+      <GestionBarre />
+    </template>
+
     <p v-if="pending" class="alerte alerte--info">Chargement…</p>
 
-    <div v-else-if="!data?.inscriptions.length" class="alerte alerte--bien">
+    <div v-else-if="!inscriptions.length" class="alerte alerte--bien">
       <UiIcone nom="check" :taille="18" /><span>Rien en attente. Tout est à jour.</span>
     </div>
 
@@ -57,7 +68,7 @@ useHead({ title: 'Dossiers à relire — 16e Fleurus' })
       </p>
 
       <article
-        v-for="i in data.inscriptions"
+        v-for="i in inscriptions"
         :key="i.id"
         class="dossier"
         :data-section="i.sectionSlug"
@@ -79,7 +90,7 @@ useHead({ title: 'Dossiers à relire — 16e Fleurus' })
         </p>
 
         <div class="dossier__actions">
-          <NuxtLink class="bouton bouton--fantome" :to="`/staff/anime/${i.animeId}`">
+          <NuxtLink class="bouton bouton--fantome" :to="`/gestion/anime/${i.animeId}`">
             Ouvrir le dossier
           </NuxtLink>
           <button

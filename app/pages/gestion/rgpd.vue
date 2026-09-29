@@ -20,8 +20,12 @@ useHead({ title: 'RGPD — 16e Fleurus' })
     titre="RGPD"
     surtitre="Staff d’unité"
     chapo="Les demandes des familles, et la trace de ce qui a été consulté. Le délai légal de réponse est d’un mois."
-    :retour="{ to: '/staff', texte: 'Back office' }"
+    :retour="{ to: '/gestion', texte: 'Back office' }"
   >
+    <template #entete>
+      <GestionBarre />
+    </template>
+
     <div class="pile">
       <section class="groupe">
         <h2 class="groupe__titre">Demandes en cours</h2>

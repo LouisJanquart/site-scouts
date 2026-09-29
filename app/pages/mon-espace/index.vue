@@ -28,7 +28,7 @@ useHead({ title: 'Mon espace — 16e Fleurus' })
   >
     <template #entete>
       <nav class="liens">
-        <NuxtLink v-if="estStaff" class="bouton bouton--fantome" to="/staff">
+        <NuxtLink v-if="estStaff" class="bouton bouton--fantome" to="/gestion">
           <UiIcone nom="bouclier" :taille="15" /> Back office
         </NuxtLink>
         <NuxtLink class="bouton bouton--fantome" to="/inscription">

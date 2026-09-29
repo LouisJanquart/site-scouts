@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import { bornesSections } from '#shared/orientation'
-
 definePageMeta({ middleware: 'staff' })
 
-const { moi, estCU, mesSections, aLeRole } = useCompte()
-const section = ref<string>('')
+const { moi, estCU } = useCompte()
+
+// La portée est partagée avec les autres modules : elle vit dans
+// « usePortee » et se lit dans l'adresse.
+const { portee, nomDeSection, nomPortee } = usePortee()
+
 const { data, pending } = await useFetch('/api/staff/animes', {
-  query: computed(() => ({ section: section.value || undefined })),
+  query: computed(() => ({ section: portee.value || undefined })),
 })
 
-const nomSection = (slug: string) => bornesSections.find((s) => s.slug === slug)?.nom ?? slug
-
-const sectionsFiltrables = computed(() =>
-  estCU.value ? bornesSections.map((s) => s.slug) : mesSections.value,
-)
+const nomSection = (slug: string) => nomDeSection(slug)
 
 // Les chiffres qui disent l'état de la section d'un coup d'œil.
 const resume = computed(() => {
@@ -38,48 +36,15 @@ useHead({ title: 'Back office — 16e Fleurus' })
     surtitre="Staff"
     :chapo="
       estCU
-        ? 'Vous voyez toute l’unité.'
-        : 'Vous voyez les animés de vos sections. Rien d’autre — c’est voulu.'
+        ? `Portée : ${nomPortee}. Le serveur refait le contrôle des droits à chaque requête.`
+        : `Portée : ${nomPortee}. Vous voyez les animés de vos sections, rien d’autre — c’est voulu.`
     "
   >
     <template #entete>
-      <nav class="liens">
-        <NuxtLink class="bouton bouton--fantome" to="/staff/inscriptions">
-          <UiIcone nom="document" :taille="15" /> Dossiers à relire
-        </NuxtLink>
-        <NuxtLink v-if="aLeRole('cu', 'tresorier')" class="bouton bouton--fantome" to="/staff/paiements">
-          <UiIcone nom="euro" :taille="15" /> Cotisations
-        </NuxtLink>
-        <NuxtLink v-if="estCU" class="bouton bouton--fantome" to="/staff/comptes">
-          <UiIcone nom="groupe" :taille="15" /> Comptes et rôles
-        </NuxtLink>
-        <NuxtLink v-if="estCU" class="bouton bouton--fantome" to="/staff/rgpd">
-          <UiIcone nom="cadenas" :taille="15" /> RGPD
-        </NuxtLink>
-        <NuxtLink class="bouton bouton--fantome" to="/mon-espace">
-          <UiIcone nom="profil" :taille="15" /> Mon espace
-        </NuxtLink>
-      </nav>
+      <GestionBarre />
     </template>
 
     <div class="pile">
-      <div v-if="sectionsFiltrables && sectionsFiltrables.length > 1" class="barre__filtres">
-        <button class="puce" :class="{ 'puce--actif': !section }" type="button" @click="section = ''">
-          Toutes
-        </button>
-        <button
-          v-for="s in sectionsFiltrables"
-          :key="s"
-          class="puce"
-          :class="{ 'puce--actif': section === s }"
-          :data-section="s"
-          type="button"
-          @click="section = s"
-        >
-          {{ nomSection(s) }}
-        </button>
-      </div>
-
       <div class="chiffres">
         <div class="chiffre">
           <span class="chiffre__valeur mono">{{ resume.total }}</span>
@@ -126,7 +91,7 @@ useHead({ title: 'Back office — 16e Fleurus' })
           <tbody>
             <tr v-for="a in data.animes" :key="a.inscriptionId" :data-section="a.sectionSlug">
               <th scope="row">
-                <NuxtLink :to="`/staff/anime/${a.animeId}`">{{ a.prenom }} {{ a.nom }}</NuxtLink>
+                <NuxtLink :to="`/gestion/anime/${a.animeId}`">{{ a.prenom }} {{ a.nom }}</NuxtLink>
                 <span v-if="a.totem" class="doux"> — {{ a.totem }}</span>
               </th>
               <td>{{ nomSection(a.sectionSlug) }}</td>
@@ -167,30 +132,6 @@ useHead({ title: 'Back office — 16e Fleurus' })
   flex-wrap: wrap;
   gap: 0.4rem;
   margin-block-start: 1.25rem;
-}
-
-.barre__filtres {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-}
-
-.puce {
-  padding: 0.35rem 0.75rem;
-  border-radius: $r-pilule;
-  background: rgba($blanc, 0.05);
-  color: rgba($blanc, 0.66);
-  font-size: 1rem;
-  font-weight: 500;
-  @include focus-visible;
-  &:hover {
-    background: rgba($blanc, 0.1);
-    color: $blanc;
-  }
-  &--actif {
-    background: color-mix(in srgb, var(--section-teinte) 20%, transparent);
-    color: var(--section-teinte);
-  }
 }
 
 .chiffres {

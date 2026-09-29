@@ -36,7 +36,7 @@ useHead({ title: () => `${dossier.value?.anime.prenom ?? 'Animé'} — Staff` })
   <AppPage
     :titre="dossier ? `${dossier.anime.prenom} ${dossier.anime.nom}` : 'Dossier'"
     surtitre="Staff"
-    :retour="{ to: '/staff', texte: 'Back office' }"
+    :retour="{ to: '/gestion', texte: 'Back office' }"
   >
     <p v-if="pending" class="alerte alerte--info">Chargement…</p>
 

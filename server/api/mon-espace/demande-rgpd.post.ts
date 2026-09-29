@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
   await envoyerCourriel({
     a: process.env.NUXT_EMAIL_RGPD ?? 'staffu.16efleurus@gmail.com',
     sujet: `Demande RGPD (${type}) — ${u.prenom} ${u.nom}`,
-    texte: `Une demande a été déposée depuis le site.\n\nType : ${type}\nDemandeur : ${u.prenom} ${u.nom} (${u.email})\nÉchéance légale : ${echeance.toLocaleDateString('fr-BE')}\n\n${objet ?? ''}\n\nÀ traiter dans le back office : ${urlDuSite()}/staff/rgpd`,
+    texte: `Une demande a été déposée depuis le site.\n\nType : ${type}\nDemandeur : ${u.prenom} ${u.nom} (${u.email})\nÉchéance légale : ${echeance.toLocaleDateString('fr-BE')}\n\n${objet ?? ''}\n\nÀ traiter dans le back office : ${urlDuSite()}/gestion/rgpd`,
   })
 
   await journaliser(event, 'creation', 'demande-rgpd', u.id, type)

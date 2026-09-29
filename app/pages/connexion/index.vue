@@ -49,7 +49,7 @@ async function connecter() {
   // Le contenu réservé dépend du compte : on le redemande avant de naviguer.
   await useContenu().rafraichir()
   const { estStaff } = useCompte()
-  await navigateTo(suite.value ?? (estStaff.value ? '/staff' : '/mon-espace'))
+  await navigateTo(suite.value ?? (estStaff.value ? '/gestion' : '/mon-espace'))
 }
 
 useHead({ title: 'Se connecter — 16e Fleurus' })

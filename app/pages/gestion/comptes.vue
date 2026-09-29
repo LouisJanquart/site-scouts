@@ -48,8 +48,12 @@ useHead({ title: 'Comptes et rôles — 16e Fleurus' })
     titre="Comptes et rôles"
     surtitre="Staff d’unité"
     chapo="Qui a accès à quoi. Retirer un rôle déconnecte la personne immédiatement."
-    :retour="{ to: '/staff', texte: 'Back office' }"
+    :retour="{ to: '/gestion', texte: 'Back office' }"
   >
+    <template #entete>
+      <GestionBarre />
+    </template>
+
     <div class="pile">
       <div class="alerte alerte--info">
         <UiIcone nom="info" :taille="18" />

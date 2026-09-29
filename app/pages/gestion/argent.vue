@@ -5,6 +5,20 @@ definePageMeta({ middleware: 'staff' })
 
 const { data, pending, refresh } = await useFetch('/api/staff/paiements')
 const nomSection = (slug: string) => bornesSections.find((s) => s.slug === slug)?.nom ?? slug
+
+// Comme ailleurs : filtre d'affichage, pas de droits.
+const { concerne, nomPortee } = usePortee()
+const lignes = computed(() => (data.value?.lignes ?? []).filter((l: any) => concerne(l.sectionSlug)))
+
+// Les totaux se recalculent sur ce qui est affiché : un total d'unité au-dessus
+// de six lignes de Lutins serait un piège.
+const total = computed(() => ({
+  du: lignes.value.reduce((n: number, l: any) => n + (l.duCentimes ?? 0), 0),
+  encaisse: lignes.value.reduce(
+    (n: number, l: any) => n + (l.statut === 'paye' ? (l.montantCentimes ?? 0) : 0),
+    0,
+  ),
+}))
 const souci = ref<string | null>(null)
 const enCours = ref<string | null>(null)
 
@@ -21,7 +35,7 @@ async function pointer(id: string, statut: 'paye' | 'ouvert', moyen?: 'virement'
   }
 }
 
-const reste = computed(() => (data.value?.total.du ?? 0) - (data.value?.total.encaisse ?? 0))
+const reste = computed(() => total.value.du - total.value.encaisse)
 
 const libellesMotif: Record<string, string> = {
   plein: 'tarif plein',
@@ -71,17 +85,21 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
   <AppPage
     titre="Cotisations"
     surtitre="Staff"
-    chapo="Le suivi de la caisse. Pointer un virement ou une enveloppe se fait d’un clic."
-    :retour="{ to: '/staff', texte: 'Back office' }"
+    :chapo="`Le suivi de la caisse, portée ${nomPortee}. Pointer un virement ou une enveloppe se fait d’un clic.`"
+    :retour="{ to: '/gestion', texte: 'Back office' }"
   >
+    <template #entete>
+      <GestionBarre />
+    </template>
+
     <div class="pile">
       <div v-if="data" class="chiffres">
         <div class="chiffre">
-          <span class="chiffre__valeur mono">{{ euros(data.total.du) }}</span>
+          <span class="chiffre__valeur mono">{{ euros(total.du) }}</span>
           <span class="chiffre__nom">appelé</span>
         </div>
         <div class="chiffre">
-          <span class="chiffre__valeur mono">{{ euros(data.total.encaisse) }}</span>
+          <span class="chiffre__valeur mono">{{ euros(total.encaisse) }}</span>
           <span class="chiffre__nom">encaissé</span>
         </div>
         <div class="chiffre" :class="{ 'chiffre--alerte': reste > 0 }">
@@ -135,7 +153,7 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(l, i) in data?.lignes ?? []" :key="i" :data-section="l.sectionSlug">
+            <tr v-for="(l, i) in lignes" :key="i" :data-section="l.sectionSlug">
               <th scope="row">{{ l.prenom }} {{ l.nom }}</th>
               <td>{{ nomSection(l.sectionSlug) }}</td>
               <td class="mono">{{ euros(l.duCentimes) }}</td>

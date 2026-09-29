@@ -109,11 +109,17 @@ export default defineNuxtConfig({
     // la fédération. « Pios » reste le surnom oral : les liens déjà partagés
     // et les habitudes de frappe doivent continuer de tomber juste.
     '/sections/pios': { redirect: { to: '/sections/horizons', statusCode: 301 } },
+    // Le back office s'appelle « gestion » depuis le 29/09/2026 : les liens
+    // déjà envoyés par courriel et les marque-pages doivent suivre.
+    '/staff': { redirect: { to: '/gestion', statusCode: 301 } },
+    '/staff/inscriptions': { redirect: { to: '/gestion/dossiers', statusCode: 301 } },
+    '/staff/paiements': { redirect: { to: '/gestion/argent', statusCode: 301 } },
+    '/staff/**': { redirect: { to: '/gestion/**', statusCode: 301 } },
     '/inscription/**': { prerender: false, ssr: false },
     '/connexion/**': { prerender: false, ssr: false },
     '/connexion': { prerender: false, ssr: false },
     '/mon-espace/**': { prerender: false, ssr: false, robots: false },
-    '/staff/**': { prerender: false, ssr: false, robots: false },
+    '/gestion/**': { prerender: false, ssr: false, robots: false },
     '/api/**': { prerender: false },
   },
 
@@ -146,7 +152,7 @@ export default defineNuxtConfig({
       crawlLinks: true,
       // Le robot d'exploration ne doit pas essayer de fabriquer les pages
       // privées : elles n'existent pas sans compte.
-      ignore: ['/inscription', '/connexion', '/mon-espace', '/staff', '/api'],
+      ignore: ['/inscription', '/connexion', '/mon-espace', '/gestion', '/staff', '/api'],
       failOnError: false,
       routes: [
         '/',
