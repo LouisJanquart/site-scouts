@@ -109,6 +109,10 @@ export default defineNuxtConfig({
     // la fédération. « Pios » reste le surnom oral : les liens déjà partagés
     // et les habitudes de frappe doivent continuer de tomber juste.
     '/sections/pios': { redirect: { to: '/sections/horizons', statusCode: 301 } },
+    // Netlify normalise vers la barre finale : sans cette seconde règle, seule
+    // la page prérendue avec son « meta refresh » faisait le travail, et curl
+    // comme les robots restaient sur /sections/pios/.
+    '/sections/pios/': { redirect: { to: '/sections/horizons', statusCode: 301 } },
     // Le back office s'appelle « gestion » depuis le 29/09/2026 : les liens
     // déjà envoyés par courriel et les marque-pages doivent suivre.
     '/staff': { redirect: { to: '/gestion', statusCode: 301 } },
