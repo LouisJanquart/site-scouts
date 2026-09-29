@@ -89,18 +89,21 @@ export default defineNuxtConfig({
   // silencieusement — et un « noindex » qu'on croit posé alors qu'il ne l'est
   // pas est pire que pas de noindex du tout. Dans routeRules, c'est Nitro qui
   // les pose, donc n'importe quel hébergeur les applique.
+  // Noms d'en-têtes en minuscules : Nitro les recopie tels quels dans le
+  // fichier « _headers » du déploiement, où il écrit les siens en minuscules.
+  // Mélanger les deux casses fait râler Netlify à chaque build.
   routeRules: {
     '/**': {
       headers: {
         // Déploiement de travail : rien ne s'indexe tant que le staff d'unité
         // n'a pas relu le contenu et tranché les questions de droit à l'image.
-        'X-Robots-Tag': 'noindex, nofollow',
-        'X-Content-Type-Options': 'nosniff',
-        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'x-robots-tag': 'noindex, nofollow',
+        'x-content-type-options': 'nosniff',
+        'referrer-policy': 'strict-origin-when-cross-origin',
       },
     },
     '/images/**': {
-      headers: { 'Cache-Control': 'public, max-age=31536000, immutable' },
+      headers: { 'cache-control': 'public, max-age=31536000, immutable' },
     },
     // La section des 16-18 s'appelle Horizons, comme dans le classeur et chez
     // la fédération. « Pios » reste le surnom oral : les liens déjà partagés
