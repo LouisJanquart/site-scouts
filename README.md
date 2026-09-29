@@ -195,11 +195,22 @@ Le site n'est plus statique : il lui faut un serveur Node et une base
 PostgreSQL. `docs/exploitation.md` compare trois hébergements possibles avec
 leurs prix, et donne la liste de contrôle à passer avant d'ouvrir aux familles.
 
-L'ancienne version statique est encore en ligne sur
-<https://16e-fleurus.netlify.app> (non indexée). La construction Netlify échoue
-depuis le début et ses journaux n'étaient pas lisibles depuis l'environnement
-de développement — première chose à regarder :
-<https://app.netlify.com/projects/16e-fleurus/deploys>.
+Le site est en ligne sur <https://16e-fleurus.netlify.app> (non indexé). La
+construction Netlify passe depuis le 4 septembre 2026 : le déploiement porte
+bien la fonction serveur de Nitro, et les pages publiques comme `/api/contenu`
+répondent.
+
+Les variables d'environnement ont été posées dans Netlify le 29 septembre
+2026 : `NUXT_BASE_URL` (la base Neon), `NUXT_CLE_SANTE`, `CRON_SECRET` en
+secrets, plus `NUXT_PUBLIC_URL_SITE`. Avant ça, toute connexion en ligne
+tombait en 500, faute de base. Les trois secrets ne se relisent pas par l'API :
+en cas de doute, c'est dans
+<https://app.netlify.com/projects/16e-fleurus/configuration/env>.
+
+Tant que les comptes de démonstration existent (`NUXT_DEMO_AUTORISEE=1`),
+n'importe qui connaissant l'adresse peut ouvrir le back office avec un mot de
+passe trivial, donc les fiches santé. C'est tenable avec des familles
+fictives, pas une minute de plus : `npm run base:semer -- --sans-demo`.
 
 Les en-têtes (noindex, type des flux iCal, cache des images) viennent de
 `public/_headers`.
