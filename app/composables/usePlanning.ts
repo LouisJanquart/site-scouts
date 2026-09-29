@@ -100,7 +100,7 @@ export function usePlanning() {
   /** Les samedis où l'unité se réunit, sans le détail des sections. */
   const joursDeReunion = computed(() => planning.value)
 
-  function prochainDimanche() {
+  function prochainSamedi() {
     return planning.value.find((j) => j.date >= aujourdhui.value) ?? null
   }
 
@@ -110,7 +110,7 @@ export function usePlanning() {
     joursDeReunion,
     planningDeSection,
     prochaineReunion,
-    prochainDimanche,
+    prochainSamedi,
     aujourdhui,
   }
 }
