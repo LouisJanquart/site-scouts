@@ -26,6 +26,11 @@ export default defineNuxtPlugin(() => {
     try {
       etat.value = await $fetch<ContenuReserve>('/api/contenu', {
         credentials: 'same-origin',
+        // Dans le navigateur, on ne veut pas de la réponse gardée en cache :
+        // celle d'un visiteur resservie après une connexion laissait le site
+        // en vue publique le temps que le cache expire. Le serveur, lui, pose
+        // « Vary: Cookie » pour les caches intermédiaires.
+        ...(import.meta.client ? { cache: 'no-store' as RequestCache } : {}),
       })
     } catch {
       // Serveur ou base injoignable : on garde ce qu'on a. Les pages publiques

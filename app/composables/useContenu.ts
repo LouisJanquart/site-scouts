@@ -52,8 +52,11 @@ export function useContenu() {
   /** À appeler après une connexion ou une déconnexion. */
   async function rafraichir() {
     try {
+      // « no-store » explicite : on vient de changer de compte, la réponse
+      // gardée en cache pour le compte d'avant ne vaut plus rien.
       contenu.value = await $fetch<ContenuReserve>('/api/contenu', {
         credentials: 'same-origin',
+        cache: 'no-store',
       })
     } catch {
       /* on garde ce qu'on a */

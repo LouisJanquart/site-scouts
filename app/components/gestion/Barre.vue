@@ -16,6 +16,14 @@ const modules = computed(() =>
 )
 
 const route = useRoute()
+
+// La portée voyage avec le lien : passer d'un module à l'autre ne doit pas la
+// perdre, et une adresse copiée doit rouvrir la même vue chez quelqu'un
+// d'autre.
+function lien(to: string) {
+  return portee.value ? { path: to, query: { section: portee.value } } : to
+}
+
 function estActif(m: { to: string; exact?: boolean }) {
   const ici = route.path.replace(/\/$/, '')
   return m.exact ? ici === m.to : ici.startsWith(m.to)
@@ -31,7 +39,7 @@ function estActif(m: { to: string; exact?: boolean }) {
         class="modules__lien"
         :class="{ 'modules__lien--actif': estActif(m) }"
         :aria-current="estActif(m) ? 'page' : undefined"
-        :to="m.to"
+        :to="lien(m.to)"
       >
         <UiIcone :nom="m.icone" :taille="15" />
         {{ m.texte }}
