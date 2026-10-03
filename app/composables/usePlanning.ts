@@ -35,6 +35,18 @@ export function formaterDate(iso: string, avecJour = false): string {
   return avecJour ? `${JOURS[d.getDay()]} ${base}` : base
 }
 
+/** « samedi 3 octobre » → « Samedi 3 octobre » : la majuscule au début
+ *  seulement, pas à chaque mot comme le faisait text-transform: capitalize. */
+export function majuscule(texte: string): string {
+  return texte ? texte.charAt(0).toUpperCase() + texte.slice(1) : texte
+}
+
+/** « RU : Souper Dia » → « Souper Dia » : le code du classeur est déjà
+ *  porté par la couleur et la forme de la case, inutile de le lire deux fois. */
+export function sansCode(libelle: string): string {
+  return libelle.replace(/^[A-Z]{1,3}\s*:\s*/, '')
+}
+
 export function formaterDateCourte(iso: string): string {
   const d = new Date(iso + 'T12:00:00')
   return `${d.getDate()} ${MOIS_COURT[d.getMonth()]}`

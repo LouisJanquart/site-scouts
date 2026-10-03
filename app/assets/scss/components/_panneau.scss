@@ -51,7 +51,10 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding-inline: 0.5rem;
+  // Pas de marge sur les côtés : le lien s'aligne sur le bord du texte au
+  // lieu d'être décalé de 8 px. La hauteur garde une cible de 44 px.
+  min-block-size: 2.75rem;
+  inline-size: fit-content;
   color: $cyan;
   font-size: 1rem;
   font-weight: 500;
@@ -67,7 +70,7 @@
   }
 
   &--droite {
-    inline-size: 100%;
-    justify-content: flex-end;
+    align-self: flex-end;
+    margin-inline-start: auto;
   }
 }

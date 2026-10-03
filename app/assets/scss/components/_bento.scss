@@ -1,0 +1,100 @@
+@use '../abstracts' as *;
+
+// ---------------------------------------------------------------------------
+// La grille du bento : douze colonnes, des blocs qui en prennent 4, 5, 7, 8
+// ou 12. Assez d'écart vertical pour loger l'étiquette d'un bloc à cheval sur
+// son bord. Sous la tablette, tout s'empile.
+// ---------------------------------------------------------------------------
+
+.bento {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: $esp-5;
+  row-gap: $esp-blocs;
+  align-items: start;
+
+  @include depuis($bp-tablette) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+
+    > .bento__4 { grid-column: span 4; }
+    > .bento__5 { grid-column: span 5; }
+    > .bento__6 { grid-column: span 6; }
+    > .bento__7 { grid-column: span 7; }
+    > .bento__8 { grid-column: span 8; }
+    > .bento__12, > :not([class*='bento__']) { grid-column: 1 / -1; }
+  }
+
+  // Deux blocs voisins de même hauteur : sans ça, le plus court laisse un trou
+  // sous lui et les bords bas ne tombent plus sur la même ligne.
+  &--etire {
+    align-items: stretch;
+  }
+}
+
+// Une grille de tuiles, façon inventaire.
+.inventaire {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: $esp-1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &--large {
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  }
+}
+
+// L'encadré « réservé aux familles », le même partout. L'icône reste en haut,
+// à côté de la première ligne, au lieu de flotter au milieu d'un paragraphe.
+.reserve {
+  display: flex;
+  align-items: flex-start;
+  gap: $esp-2;
+  padding: $esp-3 $esp-4;
+  background: rgba($blanc, 0.04);
+  border: 1px solid rgba($blanc, 0.09);
+  border-radius: $r-carte;
+  color: rgba($blanc, 0.68);
+
+  > svg {
+    flex: none;
+    margin-block-start: 0.15rem;
+  }
+
+  &__titre {
+    font-weight: 600;
+    font-size: 1rem;
+    color: $blanc;
+  }
+
+  &__texte {
+    margin-block-start: 0.35rem;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  &__lien {
+    margin-block-start: $esp-1;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Les tableaux qui défilent à l'horizontale (calendrier, argent, dossiers).
+//
+// « position: relative » : sans lui, le texte réservé aux lecteurs d'écran
+// d'un en-tête (.lecteur-seul, en position absolue) sortait du cadre et
+// faisait déborder toute la page de 359 px sur téléphone.
+//
+// Les ombres sur les bords disent qu'il y a une suite : elles n'apparaissent
+// que du côté où il reste à défiler (technique des fonds « local »).
+// ---------------------------------------------------------------------------
+.tableau-cadre {
+  position: relative;
+  overflow-x: auto;
+  background:
+    linear-gradient(90deg, $noir 30%, rgba($noir, 0)) left / 2.5rem 100% no-repeat local,
+    linear-gradient(270deg, $noir 30%, rgba($noir, 0)) right / 2.5rem 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgba(#000, 0.55), transparent) left / 1rem 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, rgba(#000, 0.55), transparent) right / 1rem 100% no-repeat scroll;
+}

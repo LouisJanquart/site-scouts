@@ -9,7 +9,11 @@ $noir-profond: #08090f; // le sol de la page, sous les panneaux
 $noir: #10111a; // black 2 — les panneaux
 $ardoise: #302e41; // grey 2 — les cartes posées sur les panneaux
 $ardoise-clair: #3d3b52; // survol
-$ardoise-sourd: #23222f; // séparateurs et champs
+$ardoise-sourd: #23222f; // séparateurs et champs, et le « puits » creusé dans un bloc
+// Le bloc du bento intérieur : un cran au-dessus du panneau, un cran en
+// dessous des cartes. C'est ce troisième niveau qui permet d'emboîter
+// panneau → bloc → tuile sans que deux niveaux voisins se confondent.
+$bloc: #191a26;
 
 // Traits
 $blanc: #ffffff;
@@ -47,6 +51,20 @@ $r-panneau: 4rem;
 $r-carte: 2rem;
 $r-champ: 1rem;
 $r-pilule: 100px;
+// Le bloc et la tuile, entre la carte et le champ : 40 et 20 px.
+$r-bloc: 2.5rem;
+$r-tuile: 1.25rem;
+
+// L'espacement, en une seule échelle (multiples de 8 px). Avant elle, chaque
+// page inventait les siens : .85rem ici, .6rem là, 2.5rem ailleurs.
+$esp-1: 0.5rem; // 8
+$esp-2: 0.75rem; // 12
+$esp-3: 1rem; // 16
+$esp-4: 1.5rem; // 24
+$esp-5: 2rem; // 32
+$esp-6: 3rem; // 48
+// Entre deux blocs à étiquette : de quoi loger l'étiquette (44 px) à cheval.
+$esp-blocs: 3.5rem; // 56
 
 // Rythme
 $gouttiere: 1rem;

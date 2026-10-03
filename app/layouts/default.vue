@@ -133,9 +133,12 @@ const sectionCourante = computed(() => {
     // Hors accueil, le rail flotte au-dessus du contenu : sans réserve en haut,
     // il recouvre le surtitre de la page. L'accueil, lui, n'en veut pas — c'est
     // la photo qui passe sous le rail, c'est le principe.
+    // Le rail y est calé dans le coin, à fleur du bord : 96 px de haut, plus
+    // une gouttière. Avant, il était posé à 32 px du bord et mordait de 8 px
+    // sur le haut du panneau, sans s'aligner ni sur lui ni sur son contenu.
     @include console {
       .coque__grille--seule & {
-        padding-block-start: 7.5rem;
+        padding-block-start: calc(6rem + #{$gouttiere-console});
       }
     }
   }
@@ -153,6 +156,13 @@ const sectionCourante = computed(() => {
       max-inline-size: calc(100% - 22rem); // on ne mord pas dans l'entaille
       z-index: 20;
       justify-content: flex-start;
+
+      // Hors accueil, pas de photo sous le rail : il se range dans le coin,
+      // aligné sur le bord des blocs en dessous.
+      .coque__grille--seule & {
+        inset-block-start: 0;
+        inset-inline-start: 0;
+      }
     }
 
     @media (min-width: $bp-large) {

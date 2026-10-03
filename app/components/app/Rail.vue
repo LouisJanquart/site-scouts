@@ -60,16 +60,26 @@ const surAccueil = computed(() => route.path === '/')
     justify-content: space-between;
     gap: 0.25rem;
     margin: 0;
-    padding-inline: 3.375rem; // 54 px
+    // 54 px de réserve sur grand écran, comme la maquette. Sur téléphone, ces
+    // 54 px ne faisaient que pousser « Accueil » vers le milieu.
+    padding: 0.4rem;
     background: $ardoise;
     border-radius: $r-panneau;
     overflow-x: auto;
     scrollbar-width: none;
     max-inline-size: 100%;
 
+    @include jusqua($bp-console) {
+      // Le rail défile à l'horizontale : un fondu sur le bord droit dit qu'il
+      // y a une suite, au lieu de couper « Guides » net.
+      mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
+      padding-inline-end: 2.5rem;
+    }
+
     @include console {
       block-size: 6rem; // 96 px
       padding-block: 0;
+      padding-inline: 3.375rem; // 54 px
       overflow: visible;
     }
 
@@ -98,9 +108,11 @@ const surAccueil = computed(() => route.path === '/')
 
     @include focus-visible;
 
-    &:hover {
-      color: $blanc;
-      background: rgba($blanc, 0.06);
+    @media (hover: hover) {
+      &:hover {
+        color: $blanc;
+        background: rgba($blanc, 0.06);
+      }
     }
 
     // Le rail est maintenant en gris 2 : une étiquette teintée dessus ne passe
@@ -115,13 +127,12 @@ const surAccueil = computed(() => route.path === '/')
       }
     }
 
-    // Le retour à l'accueil porte la couleur de l'unité, pas celle de la
-    // section consultée : il doit se distinguer du reste du rail.
+    // Le retour à l'accueil porte la couleur de l'unité par son icône
+    // seulement. Le mot en rouge se lisait comme l'onglet actif : sur la page
+    // des Lutins, on croyait voir deux onglets allumés.
     &--accueil {
-      color: $rouge-texte;
-
-      &:hover {
-        color: $blanc;
+      .rail__icone {
+        color: $rouge-texte;
       }
 
       &.rail__lien--actif {
