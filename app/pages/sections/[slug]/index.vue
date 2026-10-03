@@ -1,113 +1,210 @@
 <script setup lang="ts">
 // La présentation d'une section : ce qu'un parent qui découvre vient chercher.
-// La prochaine réunion d'abord, la section ensuite, le staff en dernier.
+// Le prochain samedi d'abord, la section ensuite, le staff et les rendez-vous
+// après.
+//
+// En bento depuis le 03/10/2026 : chaque thème est un bloc à étiquette, posé
+// sur le sol de la page, et les blocs voisins s'alignent sur la même ligne.
+import { typesReunion } from '~/composables/usePlanning'
+
 const { slug, section } = useSectionCourante()
-const { prochaineReunion, prochainSamedi } = usePlanning()
+const { prochaineReunion, prochainSamedi, planningDeSection, aujourdhui } = usePlanning()
 const { role, voitLeCalendrier, voitLeStaff } = useRole()
-const { chefsDeSection, adressesDeSection } = useContenu()
+const { chefsDeSection, adressesDeSection, evenements } = useContenu()
 
 const staff = computed(() => chefsDeSection(slug.value))
+const chefDeStaff = computed(() => staff.value.find((c) => c.chefDeStaff) ?? null)
+const equipe = computed(() => staff.value.filter((c) => c !== chefDeStaff.value))
 // L'adresse de fonction de la section : servie aux familles, jamais aux
 // visiteurs.
 const adresse = computed(() => adressesDeSection.value[slug.value] ?? null)
+
+// Le prochain samedi : celui de la section pour une famille, celui de l'unité
+// (date et horaire seulement) pour un visiteur.
 const prochaine = computed(() => prochaineReunion(slug.value))
+const samedi = computed(() => prochaine.value ?? prochainSamedi())
+const ensuite = computed(() =>
+  voitLeCalendrier.value
+    ? planningDeSection(slug.value)
+        .filter((j) => j.date > (samedi.value?.date ?? aujourdhui.value))
+        .slice(0, 4)
+    : [],
+)
+
+const rendezVous = computed(() =>
+  evenements.value.filter(
+    (e: any) => e.section === slug.value && (e.dateFin ?? e.date) >= aujourdhui.value,
+  ),
+)
+
+function horaire(h: string | null | undefined) {
+  return h === 'hiver' ? '14:00 – 17:00' : '14:00 – 17:30'
+}
+
+const composition = computed(() =>
+  section.value?.genre === 'mixte'
+    ? 'Mixte'
+    : section.value?.genre === 'filles'
+      ? 'Filles'
+      : section.value?.genre === 'garcons'
+        ? 'Garçons'
+        : null,
+)
+
+function initiale(c: { totem: string | null; prenom: string }) {
+  return (c.totem || c.prenom).charAt(0)
+}
 </script>
 
 <template>
-  <template v-if="section">
-    <section v-if="prochaine" class="bloc">
-      <h2 class="surtitre">Prochaine réunion</h2>
-      <div class="prochaine">
-        <p class="prochaine__date titre titre--moyen">{{ formaterDate(prochaine.date, true) }}</p>
-        <p v-if="voitLeCalendrier" class="prochaine__quoi">{{ prochaine.libelle }}</p>
-        <p v-else class="prochaine__quoi">Réunion au local</p>
-        <p class="prochaine__horaire mono doux">
-          {{ prochaine.horaire === 'hiver' ? '14h00 – 17h00' : '14h00 – 17h30' }}
-          <template v-if="voitLeCalendrier && prochaine.remarque">
-            · {{ prochaine.remarque }}
-          </template>
-        </p>
+  <div v-if="section" class="bento bento--etire">
+    <!-- Le prochain samedi : un ticket, puis la suite en liste -->
+    <UiBloc class="bento__5" etiquette="Prochaine réunion" ton="cyan">
+      <div v-if="samedi" class="ticket">
+        <span class="ticket__date" aria-hidden="true">
+          <span class="mono">{{ nomJour(samedi.date).slice(0, 3) }}</span>
+          <span class="ticket__jour">{{ samedi.date.slice(8) }}</span>
+          <span class="mono">{{ formaterDateCourte(samedi.date).split(' ')[1] }}</span>
+        </span>
+        <span class="ticket__texte">
+          <span class="lecteur-seul">{{ formaterDate(samedi.date, true) }}</span>
+          <span class="ticket__quoi">
+            {{ voitLeCalendrier && prochaine ? prochaine.libelle : 'Réunion au local' }}
+          </span>
+          <span class="ticket__horaire mono">{{ horaire(samedi.horaire) }}</span>
+          <span v-if="voitLeCalendrier && prochaine?.remarque" class="ticket__note">
+            {{ prochaine.remarque }}
+          </span>
+        </span>
       </div>
-      <NuxtLink class="lien-fleche" :to="`/sections/${slug}/agenda`">
-        Tout l’agenda de la section
-        <UiIcone nom="chevrons-droite" :taille="14" />
-      </NuxtLink>
-    </section>
+      <p v-else class="doux">Plus de réunion prévue cette saison.</p>
 
-    <section class="bloc">
-      <h2 class="surtitre">La section</h2>
+      <UiPuits v-if="ensuite.length" as="ol" class="ensuite" aria-label="Les samedis suivants">
+        <li
+          v-for="j in ensuite"
+          :key="j.date"
+          class="ensuite__ligne"
+          :class="{
+            'ensuite__ligne--relache': j.type === 'relache',
+            'ensuite__ligne--fort': j.type === 'hike' || j.type === 'grande-sortie',
+          }"
+        >
+          <span class="ensuite__quoi">{{ j.type ? typesReunion[j.type].nom : j.libelle }}</span>
+          <span class="ensuite__date mono">{{ formaterDateCourte(j.date) }}</span>
+        </li>
+      </UiPuits>
+
+      <template #pied>
+        <NuxtLink class="lien-fleche" :to="`/sections/${slug}/agenda`">
+          {{ voitLeCalendrier ? 'Tout l’agenda' : 'Les dates de réunion' }}
+          <UiIcone nom="chevrons-droite" :taille="14" />
+        </NuxtLink>
+      </template>
+    </UiBloc>
+
+    <!-- La section elle-même -->
+    <UiBloc class="bento__7" etiquette="La section">
       <div class="prose">
         <p>{{ section.description }}</p>
       </div>
-      <dl class="fiche">
-        <div v-if="section.ages" class="fiche__ligne">
-          <dt>Âges</dt>
-          <dd>{{ section.ages }}</dd>
-        </div>
-        <div v-if="section.genre" class="fiche__ligne">
-          <dt>Composition</dt>
-          <dd>
-            {{
-              section.genre === 'mixte' ? 'Mixte' : section.genre === 'filles' ? 'Filles' : 'Garçons'
-            }}
-          </dd>
-        </div>
-        <div v-if="voitLeStaff" class="fiche__ligne">
-          <dt>Staff</dt>
-          <dd>{{ staff.length }} animateur{{ staff.length > 1 ? 's' : '' }}</dd>
-        </div>
-      </dl>
-    </section>
-
-    <!-- Le staff : ce qui est affiché dépend du rôle. -->
-    <section v-if="voitLeStaff" class="bloc">
-      <h2 class="surtitre">Le staff</h2>
-      <ul class="staff">
-        <li v-for="c in staff" :key="c.prenom + c.totem">
-          <div class="staff__carte">
-            <span class="staff__pastille">{{ c.prenom.charAt(0) }}</span>
-            <span class="staff__texte">
-              <span class="staff__prenom">{{ c.prenom }}</span>
-              <span v-if="c.totem" class="staff__totem mono">{{ c.totem }}</span>
-            </span>
-            <span v-if="c.chefDeStaff" class="etiquette">Chef de staff</span>
-            <span v-else-if="c.note" class="etiquette etiquette--sourde">{{ c.note }}</span>
-          </div>
+      <ul class="inventaire fiche">
+        <li v-if="section.ages">
+          <UiTuile libelle="Âges" :sous="section.ages" icone="profil" />
+        </li>
+        <li v-if="composition">
+          <UiTuile libelle="Composition" :sous="composition" icone="groupe" />
+        </li>
+        <li v-if="voitLeStaff">
+          <UiTuile
+            libelle="Staff"
+            :sous="`${staff.length} animateur${staff.length > 1 ? 's' : ''}`"
+            icone="main"
+          />
+        </li>
+        <li>
+          <UiTuile libelle="Réunions" sous="le samedi" icone="calendrier" />
         </li>
       </ul>
+    </UiBloc>
+
+    <!-- Le staff : une carte vedette pour le chef de staff, des tuiles pour
+         les autres. Réservé aux familles. -->
+    <UiBloc
+      v-if="voitLeStaff"
+      class="bento__12"
+      :etiquette="`Le staff · ${staff.length} chef${staff.length > 1 ? 's' : ''}`"
+    >
+      <div class="staff">
+        <div v-if="chefDeStaff" class="staff__vedette">
+          <span class="staff__role mono">Chef de staff</span>
+          <UiIcone :nom="section.icone" :taille="140" class="staff__filigrane" />
+          <span class="staff__totem">{{ chefDeStaff.totem ?? chefDeStaff.prenom }}</span>
+          <span v-if="chefDeStaff.totem" class="staff__prenom">{{ chefDeStaff.prenom }}</span>
+        </div>
+        <UiPuits as="ul" class="staff__equipe">
+          <li v-for="c in equipe" :key="c.prenom + c.totem" class="staff__carte">
+            <span class="staff__pastille" aria-hidden="true">{{ initiale(c) }}</span>
+            <span class="staff__noms">
+              <span class="staff__nom">{{ c.totem ?? c.prenom }}</span>
+              <span v-if="c.totem || c.note" class="staff__detail">
+                {{ [c.totem ? c.prenom : null, c.note].filter(Boolean).join(' · ') }}
+              </span>
+            </span>
+          </li>
+        </UiPuits>
+      </div>
 
       <div v-if="adresse" class="contact">
-        <UiIcone nom="mail" :taille="18" />
-        <a :href="`mailto:${adresse}`">{{ adresse }}</a>
+        <span>Une question pour le staff ?</span>
+        <a class="contact__lien mono" :href="`mailto:${adresse}`">
+          <UiIcone nom="mail" :taille="16" />
+          {{ adresse }}
+        </a>
       </div>
-      <p v-else class="verrou">
-        <UiIcone nom="cadenas" :taille="16" />
-        L’adresse de la section est réservée aux familles de l’unité.
-      </p>
 
       <p v-if="role === 'chef'" class="note-chantier">
         Les noms de famille, numéros et adresses personnelles des {{ staff.length }} chefs ne sont
         toujours pas dans le site. Le mécanisme d’accès existe désormais, mais il ne vaut pas
         consentement : il faudra le demander aux personnes concernées, une par une.
       </p>
-    </section>
+    </UiBloc>
 
-    <!-- Ce qu'un visiteur a le droit de savoir : quand la section se réunit. -->
-    <section v-if="!voitLeCalendrier" class="bloc">
-      <div v-if="!prochaine && prochainSamedi()" class="prochaine">
-        <p class="prochaine__date titre titre--moyen">
-          {{ formaterDate(prochainSamedi()!.date, true) }}
-        </p>
-        <p class="prochaine__quoi">Réunion au local</p>
-        <p class="prochaine__horaire mono doux">
-          {{ prochainSamedi()!.horaire === 'hiver' ? '14h00 – 17h00' : '14h00 – 17h30' }}
-        </p>
-      </div>
+    <!-- Les rendez-vous propres à la section, en paquet -->
+    <UiBloc
+      v-if="rendezVous.length"
+      :class="voitLeCalendrier ? 'bento__12' : 'bento__7'"
+      etiquette="Rendez-vous"
+      ton="section"
+    >
+      <UiPaquet
+        :dessous="
+          rendezVous.slice(1, 4).map((e: any) => ({
+            titre: e.titre,
+            detail: formaterDateCourte(e.date),
+            to: `/events/${e.slug}`,
+          }))
+        "
+      >
+        <UiCarteEvent :e="rendezVous[0]" />
+      </UiPaquet>
+      <template #pied>
+        <NuxtLink class="lien-fleche" :to="`/sections/${slug}/rendez-vous`">
+          Tous les rendez-vous de la section
+          <UiIcone nom="chevrons-droite" :taille="14" />
+        </NuxtLink>
+      </template>
+    </UiBloc>
 
+    <!-- Ce qu'un visiteur n'a pas le droit de voir, dit franchement -->
+    <UiBloc
+      v-if="!voitLeCalendrier"
+      :class="rendezVous.length ? 'bento__5' : 'bento__12'"
+      etiquette="Réservé aux familles"
+    >
       <div class="reserve">
         <UiIcone nom="cadenas" :taille="20" />
         <div>
-          <p class="reserve__titre">Le reste est réservé aux familles</p>
+          <p class="reserve__titre">Le reste se voit une fois connecté</p>
           <p class="reserve__texte">
             Le programme de chaque samedi, le staff de la section et son adresse de contact ne sont
             pas publics. Pour découvrir la section, le plus simple est de venir aux portes ouvertes
@@ -119,165 +216,258 @@ const prochaine = computed(() => prochaineReunion(slug.value))
           </NuxtLink>
         </div>
       </div>
-    </section>
-  </template>
+    </UiBloc>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-.bloc {
+// Le ticket du prochain samedi : une souche à gauche, le détail à droite.
+.ticket {
   display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.prochaine {
-  padding: 1.1rem 1.25rem;
+  align-items: stretch;
   background: $ardoise;
   border-radius: $r-carte;
-  border-inline-start: 3px solid var(--section-teinte);
+  overflow: hidden;
 
   &__date {
-    text-transform: capitalize;
-  }
-
-  &__quoi {
-    margin-block-start: 0.25rem;
-    font-size: 1rem;
-    color: rgba($blanc, 0.8);
-  }
-
-  &__horaire {
-    margin-block-start: 0.35rem;
-    font-size: 1rem;
-  }
-}
-
-.fiche {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-  gap: 0.75rem;
-  margin: 0.5rem 0 0;
-
-  &__ligne {
-    padding: 0.75rem 0.9rem;
-    background: rgba($blanc, 0.03);
-    border-radius: $r-champ;
-
-    dt {
-      @include surtitre;
-      font-size: 0.75rem;
-    }
-    dd {
-      margin: 0.25rem 0 0;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-  }
-}
-
-.staff {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
-  gap: 0.5rem;
-  margin: 0;
-
-  &__carte {
+    flex: none;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.55rem 0.7rem;
-    background: rgba($blanc, 0.035);
-    border-radius: $r-champ;
+    justify-content: center;
+    inline-size: 5.5rem;
+    padding: $esp-3 $esp-1;
+    background: var(--section-teinte, #{$cyan});
+    color: $noir;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
-  &__pastille {
-    display: grid;
-    place-items: center;
-    inline-size: 2rem;
-    block-size: 2rem;
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--section-teinte) 20%, transparent);
-    color: var(--section-teinte);
-    font-weight: 700;
-    font-size: 1rem;
+  &__jour {
+    font-family: $police-titre;
+    font-variation-settings: 'wdth' 125;
+    font-weight: 800;
+    font-size: 3rem;
+    line-height: 1;
+    letter-spacing: 0;
   }
 
   &__texte {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    justify-content: center;
+    gap: 0.3rem;
     min-inline-size: 0;
+    padding: $esp-3 $esp-4;
   }
 
-  &__prenom {
-    font-size: 1rem;
-    font-weight: 500;
+  &__quoi {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  &__horaire {
+    font-size: 0.875rem;
+    color: rgba($blanc, 0.75);
+  }
+
+  &__note {
+    font-size: 0.875rem;
+    color: rgba($blanc, 0.65);
+  }
+}
+
+.ensuite {
+  &__ligne {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: $esp-2;
+    padding: $esp-2 $esp-3;
+    background: $ardoise;
+    border-radius: $r-tuile;
+    font-size: 0.95rem;
+
+    // Une relâche n'est pas un samedi comme les autres : elle est en creux.
+    &--relache {
+      background: transparent;
+      border: 2px dashed rgba($blanc, 0.16);
+      color: rgba($blanc, 0.6);
+    }
+
+    // Un hike ou une grande sortie sort du rang : c'est ce qu'on retient.
+    &--fort {
+      background: var(--section-teinte, #{$cyan});
+      color: $noir;
+      font-weight: 600;
+
+      .ensuite__date {
+        color: $noir;
+      }
+    }
+  }
+
+  &__date {
+    flex: none;
+    font-size: 0.8rem;
+    color: rgba($blanc, 0.65);
+  }
+}
+
+.fiche {
+  flex: 1;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  grid-auto-rows: minmax(7rem, 1fr);
+}
+
+.staff {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: $esp-3;
+
+  @include depuis($bp-poche) {
+    grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  }
+
+  &__vedette {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.2rem;
+    min-block-size: 11rem;
+    padding: $esp-4 $esp-3 $esp-3;
+    background: var(--section-teinte, #{$cyan});
+    color: $noir;
+    border-radius: $r-carte;
+    overflow: hidden;
+  }
+
+  &__role {
+    position: absolute;
+    inset-block-start: $esp-3;
+    inset-inline-start: $esp-3;
+    padding: 0.2rem 0.6rem;
+    background: $noir;
+    color: var(--section-teinte, #{$cyan});
+    border-radius: $r-pilule;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  // En filigrane dans le coin haut droit, assez haut pour ne jamais passer
+  // derrière le totem, en bas.
+  &__filigrane {
+    position: absolute;
+    inset-block-start: -1.25rem;
+    inset-inline-end: -1.75rem;
+    inline-size: 7rem;
+    block-size: 7rem;
+    opacity: 0.18;
   }
 
   &__totem {
-    font-size: 0.75rem;
-    color: rgba($blanc, 0.6);
+    position: relative;
+    font-family: $police-titre;
+    font-variation-settings: 'wdth' 125;
+    font-weight: 800;
+    font-size: 1.9rem;
+    line-height: 1;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
+
+  &__prenom {
+    position: relative;
+    font-weight: 500;
+  }
+
+  &__equipe {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: $esp-1;
+    align-content: start;
+  }
+
+  &__carte {
+    display: flex;
+    align-items: center;
+    gap: $esp-2;
+    min-inline-size: 0;
+    padding: $esp-2;
+    background: $ardoise;
+    border-radius: $r-tuile;
+  }
+
+  &__pastille {
+    flex: none;
+    display: grid;
+    place-items: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    border-radius: 50%;
+    background: $ardoise-sourd;
+    color: var(--section-teinte, #{$cyan});
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+
+  &__noms {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+  }
+
+  &__nom {
+    font-size: 0.95rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__detail {
+    font-size: 0.8rem;
+    color: rgba($blanc, 0.65);
   }
 }
 
 .contact {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
-  margin-block-start: 0.5rem;
-  color: var(--section-teinte);
-  font-size: 1rem;
+  justify-content: space-between;
+  gap: $esp-2;
+  padding: $esp-1 $esp-1 $esp-1 $esp-4;
+  background: $ardoise-sourd;
+  border-radius: $r-carte;
+  font-size: 0.95rem;
+  color: rgba($blanc, 0.75);
 
-  a {
-    text-decoration: underline;
-    text-underline-offset: 3px;
+  &__lien {
+    display: inline-flex;
+    align-items: center;
+    gap: $esp-1;
+    padding: $esp-2 $esp-3;
+    background: $ardoise;
+    border-radius: $r-pilule;
+    color: var(--section-teinte, #{$cyan});
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+
+    @include focus-visible;
   }
-}
-
-.verrou {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-block-start: 0.5rem;
-  font-size: 1rem;
-  color: rgba($blanc, 0.6);
 }
 
 .note-chantier {
-  display: block;
-  padding: 0.75rem 0.9rem;
+  padding: $esp-2 $esp-3;
   background: rgba(#f0a32e, 0.08);
   border: 1px solid rgba(#f0a32e, 0.2);
   border-radius: $r-champ;
-  color: rgba(#f0a32e, 0.85);
+  color: rgba(#f0a32e, 0.9);
   line-height: 1.55;
-}
-
-.reserve {
-  display: flex;
-  gap: 0.85rem;
-  padding: 1.1rem 1.25rem;
-  background: rgba($blanc, 0.04);
-  border: 1px solid rgba($blanc, 0.09);
-  border-radius: $r-carte;
-  color: rgba($blanc, 0.66);
-  max-inline-size: 44rem;
-
-  &__titre {
-    font-weight: 600;
-    font-size: 1rem;
-    color: $blanc;
-  }
-
-  &__texte {
-    margin-block-start: 0.35rem;
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-
-  &__lien {
-    padding-inline: 0;
-    margin-block-start: 0.6rem;
-  }
 }
 </style>

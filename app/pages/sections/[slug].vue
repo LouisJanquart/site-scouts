@@ -3,9 +3,12 @@
 //
 // Une section n'est pas une page mais un petit site : présentation, agenda,
 // actus, rendez-vous. Ce fichier tient ce qui ne change pas d'un onglet à
-// l'autre — le bandeau, le nom, les onglets — et « NuxtPage » affiche l'onglet
-// en cours. Les adresses déjà partagées continuent de tomber sur la
-// présentation, qui est la page d'index de la section.
+// l'autre — le bloc d'en-tête, le nom, les onglets — et « NuxtPage » affiche
+// l'onglet en cours.
+//
+// Mise en page bento (03/10/2026) : l'en-tête est un bloc à part entière, la
+// photo y est encastrée, le nom de la section déborde sur son bord bas et la
+// pastille de la section est posée à cheval sur le coin.
 
 const { slug, section } = useSectionCourante()
 const { sections } = useSections()
@@ -32,144 +35,105 @@ function estActif(o: { to: string; exact?: boolean }) {
 
 const autres = computed(() => sections.value.filter((s) => s.slug !== slug.value))
 
+const etiquette = computed(() => {
+  const s = section.value
+  if (!s) return ''
+  const genre = s.genre === 'filles' ? 'filles' : s.genre === 'garcons' ? 'garçons' : s.genre === 'mixte' ? 'mixte' : ''
+  return [s.ages, genre].filter(Boolean).join(' · ') || 'Section'
+})
+
 useHead(() => ({ title: `${section.value?.nom} — 16e Fleurus` }))
 </script>
 
 <template>
-  <AppPage
-    v-if="section"
-    :titre="section.nom"
-    :surtitre="section.ages ?? 'Section'"
-    :chapo="section.resume"
-    :retour="{ to: '/sections', texte: 'Toutes les sections' }"
-  >
-    <template #entete>
-      <div class="bandeau">
-        <img :src="section.photo" alt="" class="bandeau__photo" />
-        <div class="bandeau__voile" />
-        <UiIcone :nom="section.icone" :taille="52" class="bandeau__icone" />
-      </div>
-
-      <nav class="onglets" aria-label="Les pages de la section">
-        <NuxtLink
-          v-for="o in onglets"
-          :key="o.to"
-          class="onglets__lien"
-          :class="{ 'onglets__lien--actif': estActif(o) }"
-          :to="o.to"
-          :aria-current="estActif(o) ? 'page' : undefined"
-        >
-          {{ o.texte }}
-        </NuxtLink>
-      </nav>
+  <AppPage v-if="section" :titre="section.nom" bento>
+    <template #hero>
+      <UiTete
+        :titre="section.nom"
+        :etiquette="etiquette"
+        :photo="section.photo"
+        :icone="section.icone"
+        :retour="{ to: '/sections', texte: 'Toutes les sections' }"
+      >
+        <p v-if="section.resume" class="resume">{{ section.resume }}</p>
+        <nav class="onglets" aria-label="Les pages de la section">
+          <NuxtLink
+            v-for="o in onglets"
+            :key="o.to"
+            class="onglets__lien"
+            :class="{ 'onglets__lien--actif': estActif(o) }"
+            :to="o.to"
+            :aria-current="estActif(o) ? 'page' : undefined"
+          >
+            {{ o.texte }}
+          </NuxtLink>
+        </nav>
+      </UiTete>
     </template>
 
     <NuxtPage />
 
-    <section class="bloc">
-      <h2 class="surtitre">Les autres sections</h2>
-      <ul class="autres">
+    <UiBloc etiquette="Les autres sections">
+      <ul class="inventaire">
         <li v-for="s in autres" :key="s.slug" :data-section="s.slug">
-          <NuxtLink class="autres__lien" :to="`/sections/${s.slug}`">
-            <UiIcone :nom="s.icone" :taille="18" />
-            {{ s.nom }}
-          </NuxtLink>
+          <UiTuile :to="`/sections/${s.slug}`" :icone="s.icone" :libelle="s.nom" :sous="s.ages" />
         </li>
       </ul>
-    </section>
+    </UiBloc>
   </AppPage>
 </template>
 
 <style lang="scss" scoped>
-.bandeau {
-  position: relative;
-  block-size: 11rem;
-  margin-block: 1.25rem 0.5rem;
-  border-radius: $r-carte;
-  overflow: hidden;
-
-  &__photo {
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    filter: contrast(1.2) saturate(0.7) brightness(0.5);
-  }
-
-  &__voile {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      100deg,
-      color-mix(in srgb, var(--section-teinte) 28%, transparent),
-      transparent 60%
-    );
-  }
-
-  &__icone {
-    position: absolute;
-    inset-block-end: 1.25rem;
-    inset-inline-start: 1.25rem;
-    color: var(--section-teinte);
-  }
+.resume {
+  flex: 1 1 22rem;
+  max-inline-size: 36rem;
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba($blanc, 0.76);
 }
 
+// Les onglets, rangés dans un puits. Sur téléphone, deux par ligne : avant,
+// « Rendez-vous » partait seul sur une deuxième ligne.
 .onglets {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.3rem;
-  margin-block-start: 0.75rem;
-  padding-block-end: 0.25rem;
+  padding: 0.3rem;
+  background: $ardoise-sourd;
+  border-radius: $r-tuile;
+  inline-size: 100%;
+
+  @include depuis($bp-poche) {
+    display: flex;
+    inline-size: auto;
+    border-radius: $r-pilule;
+  }
 
   &__lien {
-    padding: 0.5rem 0.9rem;
+    padding: 0.7rem 1.1rem;
     border-radius: $r-pilule;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 500;
-    color: rgba($blanc, 0.62);
+    text-align: center;
+    white-space: nowrap;
+    color: rgba($blanc, 0.7);
     transition:
       background $vite $courbe,
       color $vite $courbe;
 
     @include focus-visible;
 
-    &:hover {
-      background: rgba($blanc, 0.06);
-      color: $blanc;
+    @media (hover: hover) {
+      &:hover {
+        color: $blanc;
+      }
     }
 
     &--actif {
-      background: color-mix(in srgb, var(--section-teinte) 16%, transparent);
+      background: $ardoise;
       color: var(--section-teinte);
-    }
-  }
-}
-
-.bloc {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.autres {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin: 0;
-
-  &__lien {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.4rem 0.8rem;
-    background: rgba($blanc, 0.04);
-    border-radius: $r-pilule;
-    font-size: 1rem;
-    color: var(--section-teinte);
-    transition: background $vite $courbe;
-
-    @include focus-visible;
-    &:hover {
-      background: rgba($blanc, 0.09);
+      font-weight: 600;
     }
   }
 }

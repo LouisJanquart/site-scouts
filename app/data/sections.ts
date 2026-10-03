@@ -136,7 +136,7 @@ export const sections: Section[] = [
   },
   {
     slug: 'staff',
-    nom: "Staff d'U",
+    nom: 'Staff d’unité',
     nomCourt: 'Staff',
     cleplanning: null,
     ages: null,
