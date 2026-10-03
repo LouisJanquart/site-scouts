@@ -151,8 +151,13 @@ jours, elles sont privées, et elles doivent pouvoir être effacées.
   s'appelle `horizons` partout, comme dans le classeur ; `/sections/pios`
   redirige.
 - `staff.ts` — prénoms et totems seulement. Lire la note en tête du fichier.
-- `evenements.ts`, `actus.ts`, `documents.ts`, `unite.ts` — contenu rédigé,
-  à relire.
+- `documents.ts`, `unite.ts` — contenu rédigé, à relire.
+- `evenements.ts`, `actus.ts` — **ne servent plus en ligne** depuis le
+  02/10/2026. Les actus et les événements vivent en base (tables `actus` et
+  `evenements`) et se publient depuis `/gestion/actus` et `/gestion/events` :
+  un chef pour sa section, le staff d'unité pour tout. Les deux fichiers n'ont
+  servi qu'à remplir la base une première fois (`npm run base:publications`,
+  sans effet si on le relance) et gardent les règles de visibilité.
 
 ### Mettre à jour le planning
 

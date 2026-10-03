@@ -2,13 +2,18 @@
 // La barre du back office : les modules à gauche, la portée à droite.
 // Elle est la même sur tous les modules, c'est ce qui en fait un back office
 // plutôt qu'une collection de pages.
-const { estCU, aLeRole } = useCompte()
+const { estCU, aLeRole, mesSections } = useCompte()
+// Un trésorier sans section n'a rien à publier : on ne lui montre pas les
+// modules qu'il ne pourrait que lire.
+const estPublieur = computed(() => estCU.value || mesSections.value.length > 0)
 const { portee, sectionsPossibles, nomDeSection, choisir } = usePortee()
 
 const modules = computed(() =>
   [
     { to: '/gestion', texte: 'Tableau de bord', icone: 'bouclier', exact: true, pour: true },
     { to: '/gestion/dossiers', texte: 'Dossiers', icone: 'document', pour: true },
+    { to: '/gestion/actus', texte: 'Actus', icone: 'cloche', pour: estPublieur.value },
+    { to: '/gestion/events', texte: 'Événements', icone: 'calendrier', pour: estPublieur.value },
     { to: '/gestion/sections', texte: 'Pages des sections', icone: 'crayon', pour: true },
     { to: '/gestion/argent', texte: 'Argent', icone: 'euro', pour: aLeRole('cu', 'tresorier') },
     { to: '/gestion/comptes', texte: 'Comptes et rôles', icone: 'groupe', pour: estCU.value },

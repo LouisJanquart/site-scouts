@@ -30,7 +30,7 @@ useHead(() => ({ title: `${actu.value?.titre} — 16e Fleurus` }))
       <p v-for="(p, i) in actu.corps" :key="i">{{ p }}</p>
     </div>
 
-    <p class="brouillon">
+    <p v-if="actu.aRelire" class="brouillon">
       <UiIcone nom="info" :taille="16" />
       Texte rédigé à partir du planning et des comptes rendus de réunion. À relire par le staff
       d’unité avant publication.

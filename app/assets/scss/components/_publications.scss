@@ -1,0 +1,154 @@
+@use '../abstracts' as *;
+
+// ---------------------------------------------------------------------------
+// Les listes de publications du back office : actus et événements.
+//
+// Global plutôt que scopé parce que deux pages (gestion/actus et
+// gestion/events) et leurs formulaires partagent exactement la même mise en
+// page. Tout est rangé sous .publications et .formulaire-publication pour ne
+// rien toucher ailleurs.
+// ---------------------------------------------------------------------------
+
+.publications {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .entete-liste {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .liste {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .carte {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 1rem 1.15rem;
+    background: $ardoise;
+    border-radius: $r-carte;
+    border-inline-start: 3px solid var(--section-teinte, rgba($blanc, 0.2));
+
+    &__tete {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    &__titre {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-inline-size: 0;
+    }
+
+    &__date {
+      font-size: 0.75rem;
+    }
+
+    &__nom {
+      font-weight: 600;
+      font-size: 1rem;
+      color: $blanc;
+    }
+
+    &__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+    }
+
+    &__chapo {
+      font-size: 1rem;
+      line-height: 1.55;
+      color: rgba($blanc, 0.72);
+    }
+  }
+
+  .etiquette--enligne {
+    color: #86efac;
+  }
+
+  .etiquette--relire {
+    color: $cyan;
+  }
+
+  .petit {
+    font-size: 0.75rem;
+  }
+}
+
+.formulaire-publication {
+  margin-block-start: 0.25rem;
+
+  fieldset.champ {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .puces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .puce {
+    padding: 0.35rem 0.75rem;
+    border-radius: $r-pilule;
+    background: rgba($blanc, 0.05);
+    color: rgba($blanc, 0.66);
+    font-size: 1rem;
+    font-weight: 500;
+    @include focus-visible;
+
+    &:hover {
+      background: rgba($blanc, 0.1);
+      color: $blanc;
+    }
+
+    &--actif {
+      background: color-mix(in srgb, var(--section-teinte, #{$cyan}) 20%, transparent);
+      color: var(--section-teinte, #{$cyan});
+    }
+  }
+}
+
+.publications,
+.formulaire-publication {
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .bouton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .bouton--danger {
+    color: $rouge-texte;
+  }
+}
+
+.publications .lien-discret {
+  color: $cyan;
+  font-size: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
