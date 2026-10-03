@@ -2,14 +2,15 @@ import { sections } from '../../app/data/sections'
 import { evenementsVisibles } from '../donnees/evenements'
 import { actusVisibles } from '../donnees/actus'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
+  const [evenements, actus] = await Promise.all([evenementsPublies(), actusPubliees()])
   const base = 'https://16efleurus.netlify.app'
   const urls = [
     '/', '/sections', '/events', '/actus', '/calendrier',
     '/infos', '/documents', '/photos', '/a-propos',
     ...sections.map((s) => `/sections/${s.slug}`),
-    ...evenementsVisibles('visiteur').map((e) => `/events/${e.slug}`),
-    ...actusVisibles('visiteur').map((a) => `/actus/${a.slug}`),
+    ...evenementsVisibles('visiteur', evenements).map((e) => `/events/${e.slug}`),
+    ...actusVisibles('visiteur', actus).map((a) => `/actus/${a.slug}`),
   ]
   setHeader(event, 'content-type', 'application/xml; charset=utf-8')
   return `<?xml version="1.0" encoding="UTF-8"?>

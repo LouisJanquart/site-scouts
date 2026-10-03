@@ -3,8 +3,8 @@
 // Une seule route plutôt que six : les pages en ont besoin par grappes — le
 // tableau de bord veut le planning, les événements et les actus d'un coup — et
 // une requête vaut mieux que six sur une connexion mobile un samedi soir.
-export default defineEventHandler((event) => {
-  const contenu = contenuPour(event)
+export default defineEventHandler(async (event) => {
+  const contenu = await contenuPour(event)
 
   // Un visiteur reçoit toujours la même réponse : elle peut être mise en cache
   // par le navigateur. Une réponse qui dépend du compte, jamais.

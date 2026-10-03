@@ -10,6 +10,8 @@ export interface Actu {
   chapo: string
   corps: string[]
   public: 'tous' | 'parents' | 'animes' | 'chefs'
+  /** Importé du fichier et pas encore relu par un staff. */
+  aRelire?: boolean
 }
 
 export const actus: Actu[] = [
@@ -283,10 +285,13 @@ export const actus: Actu[] = [
   },
 ]
 
-export function actusVisibles(role: string): Actu[] {
+// Depuis le 02/10/2026, les actus vivent en base : ce fichier n'a servi qu'à
+// la remplir (scripts/importer-publications.ts). La règle de visibilité, elle,
+// reste ici et s'applique à la liste qu'on lui donne.
+export function actusVisibles(role: string, liste: Actu[] = actus): Actu[] {
   const ordre: Record<string, number> = { tous: 0, parents: 1, animes: 1, chefs: 2 }
   const niveau = role === 'chef' ? 2 : role === 'visiteur' ? 0 : 1
-  return actus
+  return liste
     .filter((a) => ordre[a.public] <= niveau)
     .sort((a, b) => b.date.localeCompare(a.date))
 }

@@ -41,14 +41,15 @@ function plier(ligne: string) {
 }
 
 /** Les dates des rendez-vous ouverts au dehors, indexées par date. */
-function rendezVousPublics(): Map<string, string> {
-  return new Map(evenementsVisibles('visiteur').map((e) => [e.date, e.titre]))
+async function rendezVousPublics(): Promise<Map<string, string>> {
+  const publies = await evenementsPublies()
+  return new Map(evenementsVisibles('visiteur', publies).map((e) => [e.date, e.titre]))
 }
 
-export function fluxSection(slug: string, complet = false): string | null {
+export async function fluxSection(slug: string, complet = false): Promise<string | null> {
   const section = sections.find((s) => s.slug === slug)
   if (!section) return null
-  const publics = complet ? null : rendezVousPublics()
+  const publics = complet ? null : await rendezVousPublics()
 
   const lignes: string[] = [
     'BEGIN:VCALENDAR',
@@ -98,8 +99,8 @@ export function fluxSection(slug: string, complet = false): string | null {
   return lignes.join('\r\n')
 }
 
-export function fluxUnite(complet = false): string {
-  const publics = complet ? null : rendezVousPublics()
+export async function fluxUnite(complet = false): Promise<string> {
+  const publics = complet ? null : await rendezVousPublics()
   const lignes: string[] = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',

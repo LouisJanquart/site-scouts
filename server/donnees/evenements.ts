@@ -20,6 +20,8 @@ export interface Evenement {
   public: PublicCible
   inscription?: boolean
   photo?: string
+  /** Importé du fichier et pas encore relu par un staff. */
+  aRelire?: boolean
 }
 
 export const evenements: Evenement[] = [
@@ -421,11 +423,14 @@ function niveau(role: string): number {
 }
 
 /** Les événements qu'un rôle a le droit de voir. */
-export function evenementsVisibles(role: string): Evenement[] {
-  return evenements.filter((e) => RANG[e.public] <= niveau(role))
+// Depuis le 02/10/2026, les événements vivent en base : ce fichier n'a servi
+// qu'à la remplir. Les règles ci-dessous s'appliquent à la liste qu'on leur
+// donne.
+export function evenementsVisibles(role: string, liste: Evenement[] = evenements): Evenement[] {
+  return liste.filter((e) => RANG[e.public] <= niveau(role))
 }
 
 /** L'événement public qui tombe ce jour-là, s'il y en a un. */
-export function evenementPublicDuJour(date: string): Evenement | null {
-  return evenements.find((e) => e.date === date && e.public === 'tous') ?? null
+export function evenementPublicDuJour(date: string, liste: Evenement[] = evenements): Evenement | null {
+  return liste.find((e) => e.date === date && e.public === 'tous') ?? null
 }

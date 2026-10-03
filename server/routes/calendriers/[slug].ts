@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
     autorise = false
   }
 
-  const contenu = slug === 'unite' ? fluxUnite(autorise) : fluxSection(slug, autorise)
+  const contenu = slug === 'unite' ? await fluxUnite(autorise) : await fluxSection(slug, autorise)
   if (!contenu) {
     throw createError({ statusCode: 404, statusMessage: `Calendrier inconnu : ${slug}` })
   }

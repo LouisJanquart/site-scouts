@@ -1,8 +1,8 @@
 import type { H3Event } from 'h3'
 import { chefs, adressesDeSection, type Chef } from '../donnees/staff'
 import { planning, saison, type JourPlanning } from '../donnees/planning'
-import { evenements, evenementsVisibles, evenementPublicDuJour } from '../donnees/evenements'
-import { actus, actusVisibles } from '../donnees/actus'
+import { evenementsVisibles, evenementPublicDuJour, type Evenement } from '../donnees/evenements'
+import { actusVisibles } from '../donnees/actus'
 import { documents, documentsPour, categories } from '../donnees/documents'
 
 // ---------------------------------------------------------------------------
@@ -57,12 +57,12 @@ export interface ContenuServi {
 }
 
 /** Le squelette du planning : les dates, les horaires, rien d'autre. */
-function planningPublic(): JourPlanning[] {
+function planningPublic(evenements: Evenement[]): JourPlanning[] {
   return planning.map((j) => ({
     date: j.date,
     horaire: j.horaire,
     // Seuls les rendez-vous ouverts au dehors gardent leur nom.
-    evenement: evenementPublicDuJour(j.date)?.titre ?? null,
+    evenement: evenementPublicDuJour(j.date, evenements)?.titre ?? null,
     remarque: null,
     occupation: null,
     rangement: null,
@@ -70,9 +70,11 @@ function planningPublic(): JourPlanning[] {
   }))
 }
 
-export function contenuPour(event: H3Event): ContenuServi {
+export async function contenuPour(event: H3Event): Promise<ContenuServi> {
   const role = roleDAffichage(event)
   const famille = role !== 'visiteur'
+  // Les actus et les événements viennent de la base depuis le 02/10/2026.
+  const [evenements, actus] = await Promise.all([evenementsPublies(), actusPubliees()])
 
   return {
     role,
@@ -84,9 +86,9 @@ export function contenuPour(event: H3Event): ContenuServi {
     // qu'il ne reçoit pas : le programme de chaque section, les remarques
     // internes du classeur, les tours de rangement, et les intitulés
     // d'événements réservés.
-    planning: famille ? planning : planningPublic(),
-    evenements: evenementsVisibles(role),
-    actus: actusVisibles(role),
+    planning: famille ? planning : planningPublic(evenements),
+    evenements: evenementsVisibles(role, evenements),
+    actus: actusVisibles(role, actus),
     documents: documentsPour(role),
     categoriesDocuments: categories,
     // Le staff s'affiche aux familles ; un visiteur n'a droit qu'au décompte,
