@@ -13,7 +13,8 @@
     "base:studio": "drizzle-kit studio",
     "base:semer": "tsx scripts/semer.ts",
     "test": "vitest run",
-    "base:balayer": "tsx scripts/balayer.ts"
+    "base:balayer": "tsx scripts/balayer.ts",
+    "base:publications": "tsx scripts/importer-publications.ts"
   },
   "dependencies": {
     "@mollie/api-client": "^4.6.0",
