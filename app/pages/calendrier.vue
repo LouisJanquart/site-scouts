@@ -133,7 +133,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
     <template v-else>
     <section class="bloc">
       <div class="tableau-cadre" tabindex="0" role="group" aria-label="Tableau du planning, défilement horizontal">
-        <table class="tableau">
+        <table class="tableau" :style="{ minInlineSize: `${8.5 + colonnes.length * 9.5}rem` }">
           <caption class="lecteur-seul">
             Planning des réunions de la saison {{ saison }}, par section
           </caption>
@@ -183,7 +183,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
                         : '—'
                     }}</span
                   >
-                  <span class="tableau__libelle">{{ j.sections[s.cleplanning]!.libelle }}</span>
+                  <span class="tableau__libelle">{{ sansCode(j.sections[s.cleplanning]!.libelle) }}</span>
                 </template>
                 <span v-else class="tableau__rien">·</span>
               </td>
@@ -211,7 +211,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
         <UiIcone nom="cadenas" :taille="18" />
         <span>
           Ces adresses contiennent <strong>votre clé personnelle</strong>. Une application
-          d’agenda ne peut pas se connecter avec un mot de passe : c’est la clé dans l’adresse qui
+          d’agenda ne peut pas se connecter avec un mot de passe : c’est la clé dans l’adresse qui
           fait office de laissez-passer. Qui l’a, lit votre calendrier — ne la publiez nulle part.
           Si vous l’avez transmise par erreur, changez-la ci-dessous.
         </span>
@@ -236,7 +236,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
 
       <p v-if="cleRenouvelee" class="alerte alerte--bien" role="status">
         <UiIcone nom="check" :taille="18" />
-        <span>Nouvelle clé en place. Les anciens abonnements ne fonctionnent plus : recopiez les
+        <span>Nouvelle clé en place. Les anciens abonnements ne fonctionnent plus : recopiez les
           adresses dans votre agenda.</span>
       </p>
       <div>
@@ -255,7 +255,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
     <section class="bloc">
       <p class="source">
         <UiIcone nom="info" :taille="16" />
-        Ces dates sont une copie du classeur « Planning Annuel Réunions » tenu par le staff
+        Ces dates sont une copie du classeur « Planning Annuel Réunions » tenu par le staff
         d’unité. Tant que le site n’ira pas lire ce classeur directement, toute modification devra
         être reportée ici à la main.
       </p>
@@ -354,12 +354,14 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
 .tableau-cadre {
   overflow-x: auto;
   border-radius: $r-carte;
-  background: rgba($blanc, 0.02);
   @include defilement-discret;
 }
 
 .tableau {
   inline-size: 100%;
+  // Des colonnes égales : « Réunion normale » tenait sur une ligne chez les
+  // Nutons et sur deux chez les Lutins, selon la longueur des autres cases.
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 1rem;
 
@@ -385,6 +387,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
   }
 
   &__date {
+    inline-size: 8.5rem;
     min-inline-size: 8rem;
     font-weight: 400;
 

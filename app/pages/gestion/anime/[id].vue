@@ -45,7 +45,7 @@ useHead({ title: () => `${dossier.value?.anime.prenom ?? 'Animé'} — Staff` })
         <UiIcone nom="cadenas" :taille="18" />
         <span>
           Votre consultation de ce dossier vient d’être enregistrée. La famille peut la voir. Ce
-          n’est pas une surveillance : c’est la contrepartie du droit que vous avez de l’ouvrir.
+          n’est pas une surveillance : c’est la contrepartie du droit que vous avez de l’ouvrir.
         </span>
       </div>
 

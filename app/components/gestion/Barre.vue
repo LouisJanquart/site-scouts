@@ -83,38 +83,49 @@ function estActif(m: { to: string; exact?: boolean }) {
 .barre {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  margin-block-start: 0.75rem;
+  gap: $esp-3;
+  margin-block-start: $esp-2;
 }
 
+// Les modules, rangés dans un puits comme les onglets d'une section.
 .modules {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem;
+  align-self: flex-start;
+  max-inline-size: 100%;
+  padding: 0.3rem;
+  background: $ardoise-sourd;
+  border-radius: $r-tuile;
 
   &__lien {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.5rem 0.9rem;
+    min-block-size: 2.75rem;
+    padding: 0.5rem 0.95rem;
     border-radius: $r-pilule;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 500;
-    color: rgba($blanc, 0.62);
+    color: rgba($blanc, 0.7);
     transition:
       background $vite $courbe,
       color $vite $courbe;
 
     @include focus-visible;
 
-    &:hover {
-      background: rgba($blanc, 0.06);
-      color: $blanc;
+    // Le survol seulement là où il existe : au doigt, il restait collé et on
+    // croyait voir deux modules actifs à la fois.
+    @media (hover: hover) {
+      &:hover {
+        color: $blanc;
+      }
     }
 
     &--actif {
-      background: rgba($blanc, 0.09);
-      color: $blanc;
+      background: $ardoise;
+      color: $cyan;
+      font-weight: 600;
     }
   }
 }
@@ -123,12 +134,12 @@ function estActif(m: { to: string; exact?: boolean }) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: $esp-1 $esp-2;
 
   &__nom {
     @include surtitre;
     font-size: 0.75rem;
-    color: rgba($blanc, 0.5);
+    color: rgba($blanc, 0.6);
   }
 
   &__puces {
@@ -139,22 +150,32 @@ function estActif(m: { to: string; exact?: boolean }) {
 }
 
 .puce {
-  padding: 0.35rem 0.75rem;
+  min-block-size: 2.25rem;
+  padding: 0.35rem 0.8rem;
   border-radius: $r-pilule;
   background: rgba($blanc, 0.05);
-  color: rgba($blanc, 0.66);
-  font-size: 1rem;
+  color: rgba($blanc, 0.7);
+  font-size: 0.95rem;
   font-weight: 500;
   @include focus-visible;
 
-  &:hover {
-    background: rgba($blanc, 0.1);
-    color: $blanc;
+  @media (hover: hover) {
+    &:hover {
+      background: rgba($blanc, 0.1);
+      color: $blanc;
+    }
   }
 
   &--actif {
     background: color-mix(in srgb, var(--section-teinte) 20%, transparent);
     color: var(--section-teinte);
+    box-shadow: inset 0 0 0 1.5px currentColor;
+  }
+
+  // « Toute l'unité » n'a pas de section : elle prend le cyan de l'unité,
+  // partout, au lieu d'hériter de ce qui traîne autour.
+  &--actif:not([data-section]) {
+    --section-teinte: #{$cyan};
   }
 }
 </style>

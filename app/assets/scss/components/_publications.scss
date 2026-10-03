@@ -89,6 +89,19 @@
   .petit {
     font-size: 0.75rem;
   }
+
+  .sans-coupure {
+    white-space: nowrap;
+  }
+
+  // Le compteur et le lien « afficher les passés » : deux éléments côte à
+  // côte, sans point de séparation qui se retrouve seul en début de ligne.
+  .entete-liste p {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem $esp-2;
+  }
 }
 
 .formulaire-publication {

@@ -143,7 +143,7 @@ useHead({ title: () => `${dossier.value?.anime.prenom ?? 'Dossier'} — 16e Fleu
               @update:model-value="(v) => basculer(c.cle, v)"
             />
             <p v-if="c.obligatoire" class="autorisation__note">
-              Indispensable à l’inscription : pour la retirer, écrivez au staff d’unité.
+              Indispensable à l’inscription : pour la retirer, écrivez au staff d’unité.
             </p>
             <p v-else-if="enCours.get(c.cle)" class="autorisation__note">
               Réponse donnée le

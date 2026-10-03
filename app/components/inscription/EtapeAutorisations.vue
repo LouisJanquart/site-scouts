@@ -38,7 +38,7 @@ function parGroupe(g: GroupeConsentement) {
     <div class="alerte alerte--info">
       <UiIcone nom="info" :taille="18" />
       <span>
-        Aucune case n’est pré-cochée : c’est vous qui décidez, ligne par ligne. Les cases marquées
+        Aucune case n’est pré-cochée : c’est vous qui décidez, ligne par ligne. Les cases marquées
         d’une étoile sont indispensables — sans elles, nous n’avons pas le droit d’accueillir
         votre enfant.
       </span>

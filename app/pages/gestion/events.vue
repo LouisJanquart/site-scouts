@@ -156,7 +156,7 @@ useHead({ title: 'Événements — 16e Fleurus' })
             type="button"
             @click="voirPasses = !voirPasses"
           >
-            · {{ voirPasses ? 'masquer' : 'afficher' }} les {{ nbPasses }} passés
+            {{ voirPasses ? 'Masquer' : 'Afficher' }} les {{ nbPasses }} passés
           </button>
         </p>
         <button
@@ -199,7 +199,7 @@ useHead({ title: 'Événements — 16e Fleurus' })
               <span class="carte__date doux">
                 {{ formaterDate(e.date, true) }}
                 <template v-if="e.dateFin"> → {{ formaterDate(e.dateFin, true) }}</template>
-                <template v-if="e.heure"> · {{ e.heure }}</template>
+                <template v-if="e.heure"> · <span class="sans-coupure">{{ e.heure }}</span></template>
               </span>
               <span class="carte__nom">{{ e.titre }}</span>
             </div>
@@ -211,8 +211,8 @@ useHead({ title: 'Événements — 16e Fleurus' })
           <div class="carte__meta">
             <span v-if="!e.section" class="etiquette etiquette--sourde">Toute l’unité</span>
             <span v-else class="etiquette" :data-section="e.section">{{ nomDeSection(e.section) }}</span>
-            <span class="doux">· {{ nomPublic(e.public) }}</span>
-            <span v-if="e.lieu" class="doux">· {{ e.lieu }}</span>
+            <span class="doux">{{ nomPublic(e.public) }}</span>
+            <span v-if="e.lieu" class="doux">{{ e.lieu }}</span>
           </div>
 
           <p v-if="e.resume" class="carte__chapo">{{ e.resume }}</p>

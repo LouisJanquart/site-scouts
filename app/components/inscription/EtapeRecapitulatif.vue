@@ -119,7 +119,7 @@ defineExpose({ discordant })
         </li>
       </ul>
       <p class="note">
-        Un frère ou une sœur inscrit chez les Scouts compte aussi : dites-le dans la remarque, le
+        Un frère ou une sœur inscrit chez les Scouts compte aussi : dites-le dans la remarque, le
         staff l’ajoutera. Et si le montant pose un problème, écrivez au staff d’unité — un tarif
         social existe, il s’accorde discrètement et il ne se demande pas sur un formulaire.
       </p>

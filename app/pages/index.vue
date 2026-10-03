@@ -335,14 +335,20 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
     font-variation-settings: 'wdth' 112;
   }
 
+  // Posée sur une pilule sombre : en texte nu, elle disparaissait dans la
+  // brume claire de la photo.
   &__baseline {
+    display: inline-block;
     margin-block-start: 1rem;
-    padding-inline-start: 0.25rem;
+    padding: 0.35rem 0.8rem;
+    background: rgba($noir, 0.62);
+    backdrop-filter: blur(10px);
+    border-radius: $r-pilule;
     font-family: $police-mono;
     font-size: 0.75rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: rgba($blanc, 0.62);
+    color: rgba($blanc, 0.85);
   }
 
   // ------------------------------------------------------------------------

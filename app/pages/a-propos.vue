@@ -18,14 +18,16 @@ useHead({ title: 'À propos — 16e Fleurus' })
     :titre="`Une unité de ${new Date().getFullYear() - unite.fondation} ans`"
     surtitre="À propos"
     :chapo="`${unite.nomComplet}. Six sections animées, une route, un staff d’unité, et des réunions tous les samedis de septembre à mai.`"
+    bento
   >
-    <template #entete>
+    <div class="bento bento--etire">
+    <UiBloc class="bento__4 blason-bloc" etiquette="Le blason" ton="rouge">
       <div class="blason">
         <img src="/logo/blason.svg" alt="Blason de la 16e Fleurus, Scouts et Guides" />
       </div>
-    </template>
+    </UiBloc>
 
-    <section class="bloc">
+    <UiBloc class="bento__8" etiquette="En chiffres">
       <ul class="chiffres">
         <li>
           <span class="chiffres__n mono">{{ sections.filter((s) => s.animee).length }}</span>
@@ -44,10 +46,9 @@ useHead({ title: 'À propos — 16e Fleurus' })
           <span class="chiffres__quoi">rendez-vous d’unité</span>
         </li>
       </ul>
-    </section>
+    </UiBloc>
 
-    <section class="bloc">
-      <h2 class="surtitre">L’unité</h2>
+    <UiBloc class="bento__7" etiquette="L’unité">
       <div class="prose">
         <p>
           La {{ unite.numero }} {{ unite.ville }} est une unité scoute et guide de la paroisse
@@ -61,19 +62,18 @@ useHead({ title: 'À propos — 16e Fleurus' })
           juillet.
         </p>
         <p>
-          L’unité vit aussi de ses événements : le souper dias en octobre, la veillée de Noël, la
+          L’unité vit aussi de ses événements : le souper dias en octobre, la veillée de Noël, la
           marche Adeps en mars, la cavalcade de Fleurus. Ce sont eux qui financent le matériel, les
           tentes et une partie des camps.
         </p>
       </div>
-    </section>
+    </UiBloc>
 
-    <section class="bloc">
-      <h2 class="surtitre">À propos de ce site</h2>
+    <UiBloc class="bento__5" etiquette="À propos de ce site">
       <div class="prose">
         <p>
           Ce site est un chantier, pas un site publié. Il a été construit à partir de ce que
-          l’unité possède déjà : le classeur de planning tenu par le staff d’unité, le tableau des
+          l’unité possède déjà : le classeur de planning tenu par le staff d’unité, le tableau des
           contacts, le blason vectoriel des archives, et des photos de camp.
         </p>
         <p>
@@ -82,67 +82,104 @@ useHead({ title: 'À propos — 16e Fleurus' })
           en ligne réelle.
         </p>
         <p>
-          Plusieurs informations manquent encore : le montant exact de la cotisation, le détail de
+          Plusieurs informations manquent encore : le montant exact de la cotisation, le détail de
           l’uniforme, les adresses des réseaux sociaux. Elles sont signalées comme
           telles plutôt qu’inventées.
         </p>
       </div>
-    </section>
+    </UiBloc>
 
-    <section class="bloc">
-      <h2 class="surtitre">Contact</h2>
-      <p class="prose">
-        <a :href="`mailto:${unite.emailUnite}`">{{ unite.emailUnite }}</a>
-      </p>
-      <AppReseaux />
-    </section>
+    <UiBloc etiquette="Contact" ton="section">
+      <div class="contact">
+        <a class="courriel mono" :href="`mailto:${unite.emailUnite}`">
+          <UiIcone nom="mail" :taille="16" />
+          {{ unite.emailUnite }}
+        </a>
+        <AppReseaux />
+      </div>
+    </UiBloc>
+    </div>
   </AppPage>
 </template>
 
 <style lang="scss" scoped>
+.blason-bloc :deep(.bloc__corps) {
+  align-items: center;
+  justify-content: center;
+}
+
 .blason {
-  inline-size: 9rem;
-  margin-block: 1.5rem 0.5rem;
+  inline-size: min(11rem, 60%);
 
   img {
+    display: block;
     inline-size: 100%;
   }
 }
 
-.bloc {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
 .chiffres {
+  flex: 1;
+  grid-auto-rows: 1fr;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $esp-1;
   margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include depuis($bp-poche) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 
   li {
     display: flex;
     flex-direction: column;
-    padding: 1rem 1.15rem;
-    background: rgba($blanc, 0.035);
-    border-radius: $r-champ;
+    justify-content: space-between;
+    gap: $esp-2;
+    min-block-size: 7rem;
+    padding: $esp-3;
+    background: $ardoise;
+    border-radius: $r-tuile;
   }
 
   &__n {
     font-family: $police-titre;
-    font-weight: 700;
-    font-size: 2rem;
-    line-height: 1.1;
-    color: $rouge;
+    font-variation-settings: 'wdth' 125;
+    font-weight: 800;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: $rouge-texte;
     font-variant-numeric: tabular-nums;
   }
 
   &__quoi {
-    margin-block-start: 0.2rem;
-    font-size: 1rem;
-    color: rgba($blanc, 0.62);
+    margin-block-start: 0.35rem;
+    font-size: 0.92rem;
+    color: rgba($blanc, 0.7);
     line-height: 1.4;
   }
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $esp-3;
+}
+
+.courriel {
+  display: inline-flex;
+  align-items: center;
+  gap: $esp-1;
+  max-inline-size: 100%;
+  padding: $esp-2 $esp-3;
+  background: $ardoise;
+  border-radius: $r-pilule;
+  color: var(--section-teinte);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+
+  @include focus-visible;
 }
 </style>

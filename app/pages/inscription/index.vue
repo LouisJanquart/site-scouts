@@ -237,7 +237,7 @@ useHead({ title: 'Inscrire un enfant — 16e Fleurus' })
         un peu plus tard, ou écrivez au staff d’unité.
       </span>
       <span v-else>
-        Les inscriptions en ligne sont closes. Écrivez au staff d’unité : il reste peut-être de la
+        Les inscriptions en ligne sont closes. Écrivez au staff d’unité : il reste peut-être de la
         place.
       </span>
     </div>
@@ -250,7 +250,7 @@ useHead({ title: 'Inscrire un enfant — 16e Fleurus' })
         <p v-if="brouillonRetrouve && etape === 0" class="alerte alerte--info">
           <UiIcone nom="info" :taille="18" />
           <span>
-            Nous avons retrouvé un dossier en cours. La fiche santé est à ressaisir : elle n’est
+            Nous avons retrouvé un dossier en cours. La fiche santé est à ressaisir : elle n’est
             jamais conservée dans le navigateur.
             <button type="button" class="lien-bouton" @click="oublier()">Repartir de zéro</button>
           </span>

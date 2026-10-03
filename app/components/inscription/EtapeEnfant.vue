@@ -126,12 +126,12 @@ watch(propositions, (liste) => {
     <section class="groupe">
       <h2 class="groupe__titre">Sa section</h2>
       <p v-if="!propositions.length" class="groupe__chapo">
-        Indiquez d’abord la date de naissance : les sections possibles s’afficheront ici.
+        Indiquez d’abord la date de naissance : les sections possibles s’afficheront ici.
       </p>
       <p v-else class="groupe__chapo">
         Voici ce qui correspond à son âge. Si vous pensez qu’une autre section conviendrait mieux
         — une fratrie, un enfant en avance ou en retard —, choisissez ce qui vous semble juste et
-        dites-le dans la remarque : le staff en discutera avec vous.
+        dites-le dans la remarque : le staff en discutera avec vous.
       </p>
 
       <div v-if="propositions.length" class="sections">

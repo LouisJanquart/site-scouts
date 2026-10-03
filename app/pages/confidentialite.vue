@@ -34,56 +34,56 @@ const maj = '3 septembre 2026'
 
       <h2>Ce que nous conservons, et pourquoi</h2>
       <p>
-        Nous ne demandons rien « au cas où ». Chaque information a une raison d’être, et si cette
+        Nous ne demandons rien « au cas où ». Chaque information a une raison d’être, et si cette
         raison disparaît, l’information disparaît avec.
       </p>
 
-      <table class="table">
+      <div class="table-cadre"><table class="table">
         <thead>
           <tr><th>Information</th><th>Pourquoi</th><th>Sur quelle base</th></tr>
         </thead>
         <tbody>
           <tr>
-            <td>Nom, prénom, date de naissance, adresse de l’enfant</td>
-            <td>L’inscrire, l’affilier à la fédération, l’assurer</td>
-            <td>Exécution de l’inscription</td>
+            <td data-label="Information">Nom, prénom, date de naissance, adresse de l’enfant</td>
+            <td data-label="Pourquoi">L’inscrire, l’affilier à la fédération, l’assurer</td>
+            <td data-label="Sur quelle base">Exécution de l’inscription</td>
           </tr>
           <tr>
-            <td>Coordonnées des responsables</td>
-            <td>Vous joindre, vous prévenir, vous appeler s’il arrive quelque chose</td>
-            <td>Exécution de l’inscription et intérêt vital</td>
+            <td data-label="Information">Coordonnées des responsables</td>
+            <td data-label="Pourquoi">Vous joindre, vous prévenir, vous appeler s’il arrive quelque chose</td>
+            <td data-label="Sur quelle base">Exécution de l’inscription et intérêt vital</td>
           </tr>
           <tr>
-            <td>Fiche santé (allergies, traitements, antécédents)</td>
-            <td>Protéger l’enfant en réunion et en camp</td>
-            <td>Votre consentement explicite, et l’intérêt vital</td>
+            <td data-label="Information">Fiche santé (allergies, traitements, antécédents)</td>
+            <td data-label="Pourquoi">Protéger l’enfant en réunion et en camp</td>
+            <td data-label="Sur quelle base">Votre consentement explicite, et l’intérêt vital</td>
           </tr>
           <tr>
-            <td>Autorisations parentales</td>
-            <td>Savoir ce que nous avons le droit de faire</td>
-            <td>Votre consentement</td>
+            <td data-label="Information">Autorisations parentales</td>
+            <td data-label="Pourquoi">Savoir ce que nous avons le droit de faire</td>
+            <td data-label="Sur quelle base">Votre consentement</td>
           </tr>
           <tr>
-            <td>Droit à l’image</td>
-            <td>Publier — ou ne pas publier — des photos</td>
-            <td>Votre consentement, retirable à tout moment</td>
+            <td data-label="Information">Droit à l’image</td>
+            <td data-label="Pourquoi">Publier — ou ne pas publier — des photos</td>
+            <td data-label="Sur quelle base">Votre consentement, retirable à tout moment</td>
           </tr>
           <tr>
-            <td>Paiements de cotisation</td>
-            <td>Tenir la comptabilité de l’unité</td>
-            <td>Obligation légale (comptabilité)</td>
+            <td data-label="Information">Paiements de cotisation</td>
+            <td data-label="Pourquoi">Tenir la comptabilité de l’unité</td>
+            <td data-label="Sur quelle base">Obligation légale (comptabilité)</td>
           </tr>
           <tr>
-            <td>Journal des consultations</td>
-            <td>Pouvoir vous dire qui a ouvert le dossier de votre enfant</td>
-            <td>Obligation de sécurité</td>
+            <td data-label="Information">Journal des consultations</td>
+            <td data-label="Pourquoi">Pouvoir vous dire qui a ouvert le dossier de votre enfant</td>
+            <td data-label="Sur quelle base">Obligation de sécurité</td>
           </tr>
         </tbody>
-      </table>
+      </table></div>
 
       <h2>Ce que nous ne demandons pas</h2>
       <p>
-        Pas de numéro de registre national. Pas de données bancaires : le paiement en ligne passe
+        Pas de numéro de registre national. Pas de données bancaires : le paiement en ligne passe
         par un prestataire agréé (Mollie), et aucun numéro de carte ne touche notre serveur. Pas
         de suivi publicitaire, pas de mouchard, pas de statistiques revendues. Le site ne dépose
         qu’un seul cookie, celui qui vous garde connecté.
@@ -102,7 +102,7 @@ const maj = '3 septembre 2026'
         <li><strong>Le trésorier</strong> : les cotisations, montants compris, pas les fiches santé.</li>
       </ul>
       <p>
-        Ces règles ne sont pas de simples réglages d’affichage : elles sont appliquées par le
+        Ces règles ne sont pas de simples réglages d’affichage : elles sont appliquées par le
         serveur, à chaque demande. Modifier une adresse dans son navigateur ne donne accès à rien.
       </p>
 
@@ -123,21 +123,21 @@ const maj = '3 septembre 2026'
         <li><strong>Personnes sans lien avec l’unité</strong> : anonymisées après trois ans.</li>
         <li><strong>Sessions de connexion</strong> : trente jours sans activité.</li>
       </ul>
-      <p>Ces effacements sont automatiques : ils ne dépendent pas de la bonne mémoire de quelqu’un.</p>
+      <p>Ces effacements sont automatiques : ils ne dépendent pas de la bonne mémoire de quelqu’un.</p>
 
       <h2>À qui nous transmettons</h2>
       <ul>
         <li>
-          <strong>La fédération scoute</strong> à laquelle l’unité est affiliée : nom, prénom,
+          <strong>La fédération scoute</strong> à laquelle l’unité est affiliée : nom, prénom,
           date de naissance et adresse, pour l’affiliation et l’assurance. C’est une condition de
           l’inscription.
         </li>
         <li>
-          <strong>Mollie</strong>, prestataire de paiement agréé, si vous payez en ligne : le
+          <strong>Mollie</strong>, prestataire de paiement agréé, si vous payez en ligne : le
           montant et une référence, rien d’autre.
         </li>
         <li>
-          <strong>Un service de secours ou un médecin</strong>, s’il arrive quelque chose : c’est
+          <strong>Un service de secours ou un médecin</strong>, s’il arrive quelque chose : c’est
           précisément à cela que sert la fiche santé.
         </li>
       </ul>
@@ -146,7 +146,7 @@ const maj = '3 septembre 2026'
       <h2>Les autorisations que nous demandons</h2>
       <p>
         Une case par usage, jamais une seule case pour tout. Voici la liste complète, telle
-        qu’elle apparaît dans le formulaire :
+        qu’elle apparaît dans le formulaire :
       </p>
       <ul class="consentements">
         <li v-for="c in consentementsCatalogue" :key="c.cle">
@@ -169,7 +169,7 @@ const maj = '3 septembre 2026'
         Bruxelles — autoriteprotectiondonnees.be).
       </p>
       <p class="avertissement">
-        Une réserve honnête : demander l’effacement complet des données d’un enfant encore inscrit
+        Une réserve honnête : demander l’effacement complet des données d’un enfant encore inscrit
         revient à demander sa désinscription. Sans fiche santé ni autorisation parentale, nous
         n’avons pas le droit de l’emmener en camp. Nous en parlerons avec vous avant d’agir.
       </p>
@@ -188,6 +188,7 @@ const maj = '3 septembre 2026'
 <style lang="scss" scoped>
 .texte {
   max-inline-size: 46rem;
+  overflow-wrap: break-word;
   font-size: 1rem;
   line-height: 1.75;
   color: rgba($blanc, 0.8);
@@ -206,9 +207,12 @@ const maj = '3 septembre 2026'
     margin-block-end: 0.85rem;
   }
 
-  ul {
+  // Le reset retire les puces : on les remet, sinon la liste n'est qu'un
+  // bloc de texte en retrait.
+  ul:not(.consentements) {
     margin: 0 0 1rem;
     padding-inline-start: 1.15rem;
+    list-style: disc;
 
     li {
       margin-block-end: 0.35rem;
@@ -231,6 +235,14 @@ const maj = '3 septembre 2026'
   color: rgba($blanc, 0.5);
 }
 
+// Sur téléphone, trois colonnes ne tiennent pas : la troisième était coupée
+// (« Exécutio »). Chaque ligne devient une petite fiche, et chaque cellule
+// reprend l'intitulé de sa colonne.
+.table-cadre {
+  position: relative;
+  margin-block-end: 1rem;
+}
+
 .table {
   inline-size: 100%;
   border-collapse: collapse;
@@ -245,11 +257,51 @@ const maj = '3 septembre 2026'
     border-block-end: 1px solid rgba($blanc, 0.08);
   }
 
+  // La première colonne s'aligne sur le bord du texte courant.
+  th:first-child,
+  td:first-child {
+    padding-inline-start: 0;
+  }
+
   thead th {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: $cyan;
+  }
+
+  @include jusqua($bp-poche) {
+    thead {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    tr {
+      display: block;
+      margin-block-end: $esp-1;
+      padding: $esp-2 $esp-3;
+      background: rgba($blanc, 0.03);
+      border-radius: $r-champ;
+    }
+
+    td {
+      display: block;
+      padding: 0.2rem 0;
+      border: 0;
+
+      &::before {
+        content: attr(data-label);
+        display: block;
+        font-family: $police-mono;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: $cyan;
+      }
+    }
   }
 }
 

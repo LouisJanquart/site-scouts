@@ -46,8 +46,8 @@ useHead({ title: 'Simulateur de paiement — 16e Fleurus' })
           <p class="bandeau__titre">Aucun argent ne circule ici</p>
           <p class="bandeau__texte">
             Cet écran remplace la page de la banque tant que le compte de paiement n’est pas
-            ouvert. Il déclenche exactement ce que déclencherait un vrai paiement : le statut
-            change, le dossier passe « à relire », l’écriture est enregistrée.
+            ouvert. Il déclenche exactement ce que déclencherait un vrai paiement : le statut
+            change, le dossier passe « à relire », l’écriture est enregistrée.
           </p>
         </div>
       </div>
@@ -73,7 +73,7 @@ useHead({ title: 'Simulateur de paiement — 16e Fleurus' })
             <UiIcone nom="check" :taille="18" />
             <span>
               <b>Le paiement aboutit</b>
-              <small>La cotisation passe à « réglée » et le dossier attend la relecture d’un chef.</small>
+              <small>La cotisation passe à « réglée » et le dossier attend la relecture d’un chef.</small>
             </span>
           </button>
 

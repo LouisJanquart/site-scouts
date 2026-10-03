@@ -47,174 +47,131 @@ const lienIcs = computed(() => {
   return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(lignes.join('\r\n'))
 })
 
+const pourQui = computed(() => {
+  const p = evenement.value?.public
+  return p === 'tous' ? 'Tout le monde' : p === 'parents' ? 'Les familles' : p === 'animes' ? 'Les animés' : 'Les chefs'
+})
+
+const quand = computed(() => {
+  const e = evenement.value
+  if (!e) return ''
+  const debut = majuscule(formaterDate(e.date, true))
+  return e.dateFin ? `${debut} → ${formaterDate(e.dateFin, true)}` : debut
+})
+
 useHead(() => ({ title: `${evenement.value?.titre} — 16e Fleurus` }))
 </script>
 
 <template>
-  <AppPage
-    v-if="evenement"
-    :titre="evenement.titre"
-    :surtitre="formaterDate(evenement.date, true)"
-    :chapo="autorise ? evenement.resume : undefined"
-    :retour="{ to: '/events', texte: 'Tous les events' }"
-  >
-    <template #entete>
-      <div v-if="evenement.photo && autorise" class="bandeau">
-        <img :src="evenement.photo" alt="" />
-      </div>
-    </template>
-
-    <div v-if="!autorise" class="verrou">
-      <UiIcone nom="cadenas" :taille="22" />
-      <div>
-        <p class="verrou__titre">Réservé aux familles de l’unité</p>
-        <p class="verrou__texte">
-          Ce rendez-vous ne concerne que les membres de la 16e. Les événements ouverts à tout le
-          monde sont sur la <NuxtLink to="/events">page des événements</NuxtLink>.
+  <AppPage v-if="evenement" :titre="evenement.titre" bento>
+    <template #hero>
+      <UiTete
+        :titre="evenement.titre"
+        :etiquette="quand"
+        :photo="autorise ? evenement.photo : null"
+        :icone="evenement.section ? parSlug[evenement.section]?.icone : 'calendrier'"
+        :retour="{ to: '/events', texte: 'Tous les events' }"
+        :data-section="evenement.section ?? undefined"
+      >
+        <p v-if="passe" class="passe">
+          <UiIcone nom="horloge" :taille="16" />
+          Cet événement a déjà eu lieu.
         </p>
-      </div>
-    </div>
-
-    <template v-else>
-    <section class="bloc">
-      <dl class="fiche">
-        <div class="fiche__ligne">
-          <dt>Quand</dt>
-          <dd>
-            {{ formaterDate(evenement.date, true) }}
-            <template v-if="evenement.heure"><br />{{ evenement.heure }}</template>
-          </dd>
-        </div>
-        <div class="fiche__ligne">
-          <dt>Où</dt>
-          <dd>{{ evenement.lieu }}</dd>
-        </div>
-        <div class="fiche__ligne">
-          <dt>Pour qui</dt>
-          <dd>
-            {{
-              evenement.public === 'tous'
-                ? 'Tout le monde'
-                : evenement.public === 'parents'
-                  ? 'Les parents'
-                  : evenement.public === 'animes'
-                    ? 'Les animés'
-                    : 'Les chefs'
-            }}
-          </dd>
-        </div>
-        <div v-if="evenement.section" class="fiche__ligne" :data-section="evenement.section">
-          <dt>Porté par</dt>
-          <dd>{{ parSlug[evenement.section]?.nom }}</dd>
-        </div>
-      </dl>
-    </section>
-
-    <section class="bloc">
-      <div class="prose">
-        <p>{{ evenement.description }}</p>
-      </div>
-    </section>
-
-    <section v-if="!passe" class="bloc actions">
-      <a class="bouton bouton--principal" :href="lienIcs" :download="`${evenement.slug}.ics`">
-        <UiIcone nom="calendrier" :taille="18" />
-        Ajouter à mon agenda
-      </a>
-      <p v-if="evenement.inscription" class="doux actions__note">
-        Les inscriptions ne passent pas encore par le site. En attendant, écrivez à
-        <a href="mailto:scout.fleu@gmail.com">scout.fleu@gmail.com</a>.
-      </p>
-    </section>
-    <p v-else class="doux">Cet événement a déjà eu lieu.</p>
+        <p v-if="autorise" class="resume">{{ evenement.resume }}</p>
+      </UiTete>
     </template>
+
+    <UiBloc v-if="!autorise" etiquette="Réservé aux familles">
+      <div class="reserve">
+        <UiIcone nom="cadenas" :taille="20" />
+        <div>
+          <p class="reserve__titre">Ce rendez-vous ne concerne que la 16e</p>
+          <p class="reserve__texte">
+            Les événements ouverts à tout le monde sont sur la page des événements.
+          </p>
+          <NuxtLink class="lien-fleche reserve__lien" to="/events">
+            Les rendez-vous ouverts à tous
+            <UiIcone nom="chevrons-droite" :taille="14" />
+          </NuxtLink>
+        </div>
+      </div>
+    </UiBloc>
+
+    <div v-else class="bento bento--etire">
+      <UiBloc class="bento__5" etiquette="En bref" ton="section">
+        <ul class="inventaire bref">
+          <li><UiTuile libelle="Quand" :sous="evenement.heure ?? 'Toute la journée'" icone="horloge" /></li>
+          <li><UiTuile libelle="Où" :sous="evenement.lieu" icone="lieu" /></li>
+          <li><UiTuile libelle="Pour qui" :sous="pourQui" icone="groupe" /></li>
+          <li v-if="evenement.section">
+            <UiTuile
+              libelle="Porté par"
+              :sous="parSlug[evenement.section]?.nom"
+              :icone="parSlug[evenement.section]?.icone"
+              :to="`/sections/${evenement.section}`"
+            />
+          </li>
+        </ul>
+        <template v-if="!passe" #pied>
+          <a class="bouton bouton--principal" :href="lienIcs" :download="`${evenement.slug}.ics`">
+            <UiIcone nom="calendrier" :taille="18" />
+            Ajouter à mon agenda
+          </a>
+        </template>
+      </UiBloc>
+
+      <UiBloc class="bento__7" etiquette="Le programme">
+        <div class="prose">
+          <p>{{ evenement.description }}</p>
+        </div>
+        <p v-if="evenement.inscription && !passe" class="inscription">
+          Les inscriptions ne passent pas encore par le site. En attendant, écrivez à
+          <a href="mailto:scout.fleu@gmail.com">scout.fleu@gmail.com</a>.
+        </p>
+      </UiBloc>
+    </div>
   </AppPage>
 </template>
 
 <style lang="scss" scoped>
-.verrou {
-  display: flex;
-  gap: 0.85rem;
-  padding: 1.1rem 1.25rem;
-  background: rgba($blanc, 0.04);
-  border: 1px solid rgba($blanc, 0.09);
-  border-radius: $r-carte;
-  color: rgba($blanc, 0.66);
-  max-inline-size: 44rem;
-
-  &__titre {
-    font-weight: 600;
-    font-size: 1rem;
-    color: $blanc;
-  }
-
-  &__texte {
-    margin-block-start: 0.35rem;
-    font-size: 1rem;
-    line-height: 1.6;
-
-    a {
-      color: $cyan;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-  }
-}
-
-.bandeau {
-  block-size: 12rem;
-  margin-block: 1.25rem 0.5rem;
-  border-radius: $r-carte;
-  overflow: hidden;
-
-  img {
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    filter: contrast(1.15) saturate(0.8) brightness(0.6);
-  }
-}
-
-.bloc {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.fiche {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-  gap: 0.75rem;
+.resume {
+  flex: 1 1 100%;
+  max-inline-size: 40rem;
   margin: 0;
-
-  &__ligne {
-    padding: 0.85rem 0.9rem;
-    background: rgba($blanc, 0.03);
-    border-radius: $r-champ;
-
-    dt {
-      @include surtitre;
-      font-size: 0.75rem;
-    }
-    dd {
-      margin: 0.3rem 0 0;
-      font-size: 1rem;
-      line-height: 1.45;
-    }
-  }
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba($blanc, 0.76);
 }
 
-.actions {
-  align-items: flex-start;
+.passe {
+  display: inline-flex;
+  align-items: center;
+  gap: $esp-1;
+  margin: 0;
+  padding: 0.4rem 0.9rem;
+  background: $ardoise-sourd;
+  border-radius: $r-pilule;
+  font-size: 0.9rem;
+  color: rgba($blanc, 0.8);
+}
 
-  &__note {
-    font-size: 1rem;
+.bref {
+  flex: 1;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  grid-auto-rows: minmax(7rem, 1fr);
+}
 
-    a {
-      color: $cyan;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
+.inscription {
+  padding: $esp-2 $esp-3;
+  background: $ardoise-sourd;
+  border-radius: $r-champ;
+  line-height: 1.55;
+  color: rgba($blanc, 0.75);
+
+  a {
+    color: $cyan;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 }
 </style>

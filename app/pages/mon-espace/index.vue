@@ -101,8 +101,20 @@ useHead({ title: 'Mon espace — 16e Fleurus' })
 .liens {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-block-start: 1.25rem;
+  gap: $esp-1;
+  margin-block-start: $esp-3;
+
+  // Sur téléphone, deux colonnes égales : les pilules empilées à leur largeur
+  // naturelle dessinaient un bord droit en dents de scie.
+  @include jusqua($bp-poche) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    > * {
+      justify-content: center;
+      text-align: center;
+    }
+  }
 }
 
 .enfants {

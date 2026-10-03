@@ -58,8 +58,8 @@ useHead({ title: 'Comptes et rôles — 16e Fleurus' })
       <div class="alerte alerte--info">
         <UiIcone nom="info" :taille="18" />
         <span>
-          Un chef ne voit que sa section : c’est son rôle qui le décide, pas sa bonne volonté.
-          Donner « Staff d’unité » à quelqu’un lui ouvre toutes les fiches santé de l’unité —
+          Un chef ne voit que sa section : c’est son rôle qui le décide, pas sa bonne volonté.
+          Donner « Staff d’unité » à quelqu’un lui ouvre toutes les fiches santé de l’unité —
           à réserver aux personnes qui en ont réellement besoin.
         </span>
       </div>
@@ -187,11 +187,15 @@ useHead({ title: 'Comptes et rôles — 16e Fleurus' })
     gap: 0.25rem;
   }
 
+  // 32 px de cible au lieu de 19 : c'est un bouton qui retire un rôle, on
+  // doit pouvoir le viser au doigt sans toucher le voisin.
   &__retirer {
     display: grid;
     place-items: center;
-    inline-size: 1.2rem;
-    block-size: 1.2rem;
+    inline-size: 2rem;
+    block-size: 2rem;
+    margin-block: -0.4rem;
+    margin-inline-end: -0.4rem;
     border-radius: 50%;
     color: rgba($blanc, 0.62);
     @include focus-visible;

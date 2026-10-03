@@ -203,6 +203,19 @@ select.saisie {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
+
+  // Deux groupes qui se suivent respirent : 12 px entre deux cartes, ça se
+  // lisait comme un seul bloc.
+  & + & {
+    margin-block-start: $esp-2;
+  }
+
+  // Un champ seul dans un groupe garde une largeur de saisie raisonnable,
+  // au lieu de courir sur 1050 px pour un mot de passe.
+  > .champ,
+  > form > .champ {
+    max-inline-size: 30rem;
+  }
   padding: 1.15rem;
   background: rgba($blanc, 0.025);
   border: 1px solid rgba($blanc, 0.07);

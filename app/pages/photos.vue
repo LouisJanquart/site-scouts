@@ -41,7 +41,7 @@ useHead({ title: 'Photos — 16e Fleurus' })
           <ol class="chantier__liste">
             <li>Le staff d’unité doit trancher la question du droit à l’image des animés.</li>
             <li>
-              Il faut un stockage protégé : un site généré en statique sert les fichiers à qui
+              Il faut un stockage protégé : un site généré en statique sert les fichiers à qui
               connaît l’adresse, même sans lien vers eux.
             </li>
             <li>Il faut désigner qui dépose et qui retire une photo à la demande d’un parent.</li>

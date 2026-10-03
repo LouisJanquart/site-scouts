@@ -43,7 +43,7 @@ function ajouterContact() {
     <section class="groupe">
       <h2 class="groupe__titre">Les responsables</h2>
       <p class="groupe__chapo">
-        Le premier responsable est celui qui ouvre l’espace famille : c’est son adresse qui sert
+        Le premier responsable est celui qui ouvre l’espace famille : c’est son adresse qui sert
         d’identifiant. Les autres reçoivent les mêmes informations, et pourront demander un accès
         s’ils le souhaitent.
       </p>
@@ -166,7 +166,7 @@ function ajouterContact() {
     <section class="groupe">
       <h2 class="groupe__titre">En cas d’urgence</h2>
       <p class="groupe__chapo">
-        D’autres personnes à appeler si aucun responsable n’est joignable : un grand-parent, un
+        D’autres personnes à appeler si aucun responsable n’est joignable : un grand-parent, un
         voisin. Facultatif, mais très utile en camp.
       </p>
 

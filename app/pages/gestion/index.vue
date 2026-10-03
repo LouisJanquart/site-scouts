@@ -138,6 +138,17 @@ useHead({ title: 'Back office — 16e Fleurus' })
   display: grid;
   gap: 0.5rem;
   grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  margin-block-end: $esp-2;
+
+  // Sur deux colonnes, la cinquième tuile ne reste pas seule dans son coin :
+  // elle prend toute la largeur.
+  @include jusqua($bp-poche) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    > :last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
 }
 
 .chiffre {
@@ -172,7 +183,6 @@ useHead({ title: 'Back office — 16e Fleurus' })
 .tableau-cadre {
   overflow-x: auto;
   border-radius: $r-carte;
-  background: rgba($blanc, 0.02);
   @include defilement-discret;
 }
 

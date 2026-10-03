@@ -115,7 +115,7 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
         </summary>
         <div class="bareme__corps">
           <p class="doux petit">
-            Il vient de la fédération, pas de l’unité. Le point à retenir : le tarif famille
+            Il vient de la fédération, pas de l’unité. Le point à retenir : le tarif famille
             s’applique à <strong>tous</strong> les membres du ménage inscrits, pas seulement au
             deuxième — deux enfants, c’est 46 € + 46 €, pas 57,50 € + 46 €.
           </p>
@@ -243,7 +243,6 @@ useHead({ title: 'Cotisations — 16e Fleurus' })
 .tableau-cadre {
   overflow-x: auto;
   border-radius: $r-carte;
-  background: rgba($blanc, 0.02);
   @include defilement-discret;
 }
 

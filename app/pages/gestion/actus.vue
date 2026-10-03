@@ -202,7 +202,7 @@ useHead({ title: 'Actus — 16e Fleurus' })
               class="etiquette"
               :data-section="s"
             >{{ nomDeSection(s) }}</span>
-            <span class="doux">· {{ nomPublic(a.public) }}</span>
+            <span class="doux">{{ nomPublic(a.public) }}</span>
           </div>
 
           <p v-if="a.chapo" class="carte__chapo">{{ a.chapo }}</p>

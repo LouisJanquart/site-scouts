@@ -31,7 +31,7 @@ function ajouterTraitement() {
       <span>
         Cette fiche est chiffrée dès qu’elle est enregistrée. Seuls les chefs de la section de
         votre enfant et le staff d’unité peuvent l’ouvrir, et chaque consultation est
-        enregistrée : vous pouvez demander à tout moment qui l’a lue.
+        enregistrée : vous pouvez demander à tout moment qui l’a lue.
         <strong>Elle n’est pas conservée dans le brouillon</strong> — si vous quittez la page, ce
         bloc sera à ressaisir.
       </span>
@@ -55,7 +55,7 @@ function ajouterTraitement() {
     <section class="groupe">
       <h2 class="groupe__titre">Points d’attention</h2>
       <p class="groupe__chapo">
-        Tout ce qui doit être su avant un camp : ce qui peut mettre votre enfant en danger, ce
+        Tout ce qui doit être su avant un camp : ce qui peut mettre votre enfant en danger, ce
         qu’il ne peut pas manger, ce qu’il doit prendre. En cas de doute, écrivez-le.
       </p>
 

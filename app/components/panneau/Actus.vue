@@ -63,6 +63,14 @@ const liste = computed(() => actus.value.slice(0, 4))
 
   &__liste {
     gap: 0;
+
+    // Sur grand écran le panneau a une hauteur fixe : la dernière actu qui ne
+    // tient pas s'efface en fondu au lieu d'être coupée net au milieu d'une
+    // ligne.
+    @include console {
+      mask-image: linear-gradient(180deg, #000 calc(100% - 3rem), transparent);
+      padding-block-end: 2rem;
+    }
   }
 
   &__item + &__item {
@@ -90,6 +98,10 @@ const liste = computed(() => actus.value.slice(0, 4))
   }
 
   &__titre {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.35;

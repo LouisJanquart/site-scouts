@@ -80,7 +80,7 @@ const bloque = computed(() => props.enCours || (sansSection.value && !props.pour
         </button>
       </div>
       <span v-if="pourLUnite" class="champ__aide">
-        Aucune section cochée : l’actu parle au nom de toute l’unité.
+        Aucune section cochée : l’actu parle au nom de toute l’unité.
       </span>
       <span v-else-if="sansSection" class="champ__erreur">Coche ta section.</span>
     </fieldset>

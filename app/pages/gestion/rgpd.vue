@@ -87,7 +87,7 @@ useHead({ title: 'RGPD — 16e Fleurus' })
           <li>Le journal d’accès est effacé au bout de trois ans.</li>
           <li>Les personnes sans lien depuis trois ans sont anonymisées.</li>
           <li>
-            Les paiements et les consentements ne sont pas effacés automatiquement : comptabilité
+            Les paiements et les consentements ne sont pas effacés automatiquement : comptabilité
             et preuve. Voir la politique de confidentialité.
           </li>
         </ul>
@@ -142,6 +142,10 @@ useHead({ title: 'RGPD — 16e Fleurus' })
 .cadre-journal {
   max-block-size: 26rem;
   border-radius: $r-champ;
+  // Un fondu en bas dit que la liste continue, au lieu de couper une ligne
+  // à mi-hauteur.
+  mask-image: linear-gradient(180deg, #000 calc(100% - 2.5rem), transparent);
+  padding-block-end: 2rem;
   @include defilement-discret;
   @include focus-visible;
 }
@@ -175,11 +179,21 @@ useHead({ title: 'RGPD — 16e Fleurus' })
 }
 
 .regles {
+  display: flex;
+  flex-direction: column;
+  gap: $esp-1;
   margin: 0;
   padding-inline-start: 1.1rem;
+  // Le reset retire les puces : sans elles, ce n'était qu'un bloc de texte
+  // en retrait.
+  list-style: disc;
   font-size: 1rem;
-  line-height: 1.7;
+  line-height: 1.6;
   color: rgba($blanc, 0.72);
+
+  li::marker {
+    color: $cyan;
+  }
 }
 
 .petit {

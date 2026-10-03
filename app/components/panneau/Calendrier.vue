@@ -167,7 +167,7 @@ const prochainEvenement = computed(
     <!-- Vue visiteur : pas de calendrier, une invitation à la place. -->
     <div v-else class="invitation">
       <UiIcone nom="tente" :taille="26" class="invitation__icone" />
-      <p class="invitation__titre">Envie de nous rejoindre ?</p>
+      <p class="invitation__titre">Envie de nous rejoindre ?</p>
       <p class="invitation__texte">
         Réunions le samedi après-midi, de septembre à mai.
       </p>

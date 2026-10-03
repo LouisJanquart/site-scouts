@@ -93,7 +93,7 @@ useHead({ title: 'Se connecter — 16e Fleurus' })
     </form>
 
     <p class="apres">
-      Pas encore de compte ? Il se crée en même temps que la première inscription :
+      Pas encore de compte ? Il se crée en même temps que la première inscription :
       <NuxtLink to="/inscription">inscrire un enfant</NuxtLink>.
     </p>
 
@@ -121,7 +121,7 @@ useHead({ title: 'Se connecter — 16e Fleurus' })
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-inline-size: 26rem;
+  max-inline-size: 30rem;
 
   &__pied {
     display: flex;
@@ -141,11 +141,11 @@ useHead({ title: 'Se connecter — 16e Fleurus' })
 }
 
 .demo {
-  margin-block-start: 2.5rem;
+  margin-block-start: 0;
   padding: 1.1rem 1.2rem 1.2rem;
   border: 1px dashed rgba(#f0a32e, 0.38);
   border-radius: $r-carte;
-  max-inline-size: 34rem;
+  max-inline-size: 30rem;
 
   &__titre {
     margin: 0 0 0.4rem;
@@ -217,11 +217,11 @@ useHead({ title: 'Se connecter — 16e Fleurus' })
 }
 
 .apres {
-  margin-block-start: 2rem;
+  margin-block-start: 0;
   font-size: 1rem;
   line-height: 1.6;
   color: rgba($blanc, 0.62);
-  max-inline-size: 32rem;
+  max-inline-size: 30rem;
 
   a {
     color: $cyan;

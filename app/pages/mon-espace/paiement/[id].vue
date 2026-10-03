@@ -68,7 +68,7 @@ useHead({ title: 'Cotisation — 16e Fleurus' })
             </button>
             <p v-if="data.modeDemo" class="demo">
               <UiIcone nom="alerte" :taille="14" />
-              Environnement de test : aucun argent ne circule. Le bouton ouvre un simulateur qui
+              Environnement de test : aucun argent ne circule. Le bouton ouvre un simulateur qui
               déclenche exactement la même chaîne qu’un vrai paiement.
             </p>
             <p v-else class="doux petit">
