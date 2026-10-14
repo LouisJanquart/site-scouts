@@ -1,0 +1,117 @@
+@use '../abstracts' as *;
+
+// ---------------------------------------------------------------------------
+// Les rubriques d'une page de section (refonte du 14/10/2026, Figma
+// « Refonte 13/10 · prototype », proposition B).
+//
+// Une rubrique occupe toute la hauteur de l'écran. Ce qui suit sert à toutes :
+// surtitre, grand titre, texte doux, chiffres, pastilles.
+// ---------------------------------------------------------------------------
+
+.rub-surtitre {
+  @include surtitre;
+  margin: 0;
+}
+
+.rub-titre {
+  margin: 0.4rem 0 0;
+  font-family: $police-titre;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 118;
+  font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.rub-texte {
+  margin: 0;
+  max-inline-size: 38ch;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba($blanc, 0.68);
+}
+
+.rub-chiffres {
+  display: flex;
+  gap: $esp-5;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  b {
+    display: block;
+    font-family: $police-titre;
+    font-weight: 800;
+    font-variation-settings: 'wdth' 118;
+    font-size: 2.4rem;
+    line-height: 1;
+    color: var(--section-teinte);
+  }
+
+  span {
+    font-size: 0.8rem;
+    color: rgba($blanc, 0.64);
+  }
+}
+
+// Le petit ticket de date : jour, numéro, mois.
+.rub-ticket {
+  flex: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  inline-size: 4.25rem;
+  block-size: 5.25rem;
+  border-radius: 1rem;
+  background: var(--section-teinte);
+  color: $noir-profond;
+  font-family: $police-mono;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  strong {
+    font-family: $police-titre;
+    font-weight: 800;
+    font-size: 2rem;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  &--eteint {
+    opacity: 0.35;
+  }
+}
+
+.rub-bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  padding: 0 1.25rem;
+  border-radius: $r-pilule;
+  background: $ardoise;
+  color: $blanc;
+  font-size: 0.9rem;
+  font-weight: 600;
+  inline-size: fit-content;
+  transition: background $vite $courbe;
+
+  @include focus-visible;
+
+  &:hover {
+    background: $ardoise-clair;
+  }
+
+  &--plein {
+    background: $rouge-plein;
+
+    &:hover {
+      background: $rouge;
+    }
+  }
+}
