@@ -36,43 +36,71 @@ function aller(id: string) {
 // La molette : un cran fait passer à la rubrique suivante ou précédente.
 // Le calage CSS seul (scroll-snap) ramenait la page en arrière sur un petit
 // cran de molette, et laissait un pavé tactile s'arrêter entre deux.
-let verrou = false
+//
+// Deux appareils, deux comportements :
+//   - une souris envoie un événement par cran. Chaque cran compte, dès que
+//     l'animation précédente est finie : on peut enchaîner les rubriques.
+//   - un pavé tactile envoie une rafale d'événements, puis une traîne qui
+//     décroît (la lancée). Un geste = une rubrique ; la traîne est ignorée,
+//     mais un nouveau geste (pause, ou poussée qui repart à la hausse) compte
+//     tout de suite, même pendant la traîne du précédent.
+const DUREE_ANIMATION = 550
+let finAnimation = 0
+let derniereNavigation = 0
+let visee = -1
+let dernierEvenement = 0
+let derniereForce = 0
 let cumul = 0
-let remise: ReturnType<typeof setTimeout> | null = null
-let relache: ReturnType<typeof setTimeout> | null = null
+let gesteUtilise = false
+
 function molette(e: WheelEvent) {
   const el = defilement.value
   if (!el || el.scrollHeight <= el.clientHeight + 4) return // pile sur téléphone
   if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.ctrlKey) return // piste horizontale, zoom
-  // Une rubrique plus haute que l'écran se lit d'abord jusqu'au bout.
+
   const rubs = [...el.querySelectorAll<HTMLElement>('.rubrique')]
   const haut = el.scrollTop
-  const idx = rubs.findIndex((r) => r.offsetTop - el.offsetTop + r.offsetHeight > haut + 2)
+  const idx = Math.max(0, rubs.findIndex((r) => r.offsetTop - el.offsetTop + r.offsetHeight > haut + 2))
   const courante = rubs[idx]
+  // Une rubrique plus haute que l'écran se lit d'abord jusqu'au bout.
   if (courante) {
     const debut = courante.offsetTop - el.offsetTop
     const fin = debut + courante.offsetHeight - el.clientHeight
     if (fin > debut + 4 && ((e.deltaY > 0 && haut < fin - 2) || (e.deltaY < 0 && haut > debut + 2))) return
   }
   e.preventDefault()
-  // Un pavé tactile continue d'envoyer des événements sur sa lancée : on ne
-  // relâche qu'une fois la molette au repos, pour ne pas sauter une rubrique.
-  if (verrou) {
-    if (relache) clearTimeout(relache)
-    relache = setTimeout(() => (verrou = false), 250)
-    return
+
+  const maintenant = performance.now()
+  const force = Math.abs(e.deltaY) * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? 800 : 1)
+  const souris = e.deltaMode !== 0 || (force >= 50 && Number.isInteger(e.deltaY))
+  const nouveauGeste =
+    souris || maintenant - dernierEvenement > 160 || force > derniereForce * 1.5 + 4
+  dernierEvenement = maintenant
+  derniereForce = force
+
+  if (nouveauGeste) {
+    cumul = 0
+    gesteUtilise = false
   }
+  if (gesteUtilise) return
+  // Une molette « libre » envoie des crans en rafale : au plus une rubrique
+  // tous les 180 ms, sinon elle traverserait toute la page.
+  if (souris && maintenant - derniereNavigation < 180) return
+
   cumul += e.deltaY
-  if (remise) clearTimeout(remise)
-  remise = setTimeout(() => (cumul = 0), 200)
-  if (Math.abs(cumul) < 30) return
-  const cible = rubs[Math.min(rubs.length - 1, Math.max(0, idx + (cumul > 0 ? 1 : -1)))]
+  if (Math.abs(cumul) < (souris ? 1 : 24)) return
+
+  // Pendant une animation, on part de la rubrique visée et pas de celle où
+  // la page se trouve à mi-chemin : deux crans rapides = deux rubriques.
+  const depart = maintenant < finAnimation && visee >= 0 ? visee : idx
+  const n = Math.min(rubs.length - 1, Math.max(0, depart + (cumul > 0 ? 1 : -1)))
   cumul = 0
-  if (!cible || cible === courante) return
-  verrou = true
-  aller(cible.id)
-  if (relache) clearTimeout(relache)
-  relache = setTimeout(() => (verrou = false), 700)
+  gesteUtilise = true
+  if (n === depart) return
+  visee = n
+  derniereNavigation = maintenant
+  finAnimation = maintenant + DUREE_ANIMATION
+  aller(rubs[n]!.id)
 }
 
 let io: IntersectionObserver | null = null
