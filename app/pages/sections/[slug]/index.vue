@@ -33,8 +33,51 @@ function aller(id: string) {
   history.replaceState(null, '', `#${id}`)
 }
 
+// La molette : un cran fait passer à la rubrique suivante ou précédente.
+// Le calage CSS seul (scroll-snap) ramenait la page en arrière sur un petit
+// cran de molette, et laissait un pavé tactile s'arrêter entre deux.
+let verrou = false
+let cumul = 0
+let remise: ReturnType<typeof setTimeout> | null = null
+let relache: ReturnType<typeof setTimeout> | null = null
+function molette(e: WheelEvent) {
+  const el = defilement.value
+  if (!el || el.scrollHeight <= el.clientHeight + 4) return // pile sur téléphone
+  if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.ctrlKey) return // piste horizontale, zoom
+  // Une rubrique plus haute que l'écran se lit d'abord jusqu'au bout.
+  const rubs = [...el.querySelectorAll<HTMLElement>('.rubrique')]
+  const haut = el.scrollTop
+  const idx = rubs.findIndex((r) => r.offsetTop - el.offsetTop + r.offsetHeight > haut + 2)
+  const courante = rubs[idx]
+  if (courante) {
+    const debut = courante.offsetTop - el.offsetTop
+    const fin = debut + courante.offsetHeight - el.clientHeight
+    if (fin > debut + 4 && ((e.deltaY > 0 && haut < fin - 2) || (e.deltaY < 0 && haut > debut + 2))) return
+  }
+  e.preventDefault()
+  // Un pavé tactile continue d'envoyer des événements sur sa lancée : on ne
+  // relâche qu'une fois la molette au repos, pour ne pas sauter une rubrique.
+  if (verrou) {
+    if (relache) clearTimeout(relache)
+    relache = setTimeout(() => (verrou = false), 250)
+    return
+  }
+  cumul += e.deltaY
+  if (remise) clearTimeout(remise)
+  remise = setTimeout(() => (cumul = 0), 200)
+  if (Math.abs(cumul) < 30) return
+  const cible = rubs[Math.min(rubs.length - 1, Math.max(0, idx + (cumul > 0 ? 1 : -1)))]
+  cumul = 0
+  if (!cible || cible === courante) return
+  verrou = true
+  aller(cible.id)
+  if (relache) clearTimeout(relache)
+  relache = setTimeout(() => (verrou = false), 700)
+}
+
 let io: IntersectionObserver | null = null
 onMounted(() => {
+  defilement.value?.addEventListener('wheel', molette, { passive: false })
   // Le défilement se fait dans la page sur grand écran, dans la fenêtre sur
   // téléphone : on observe les deux en prenant la racine qui défile vraiment.
   const racine =
@@ -58,7 +101,10 @@ onMounted(() => {
     requestAnimationFrame(() => document.getElementById(ancre)?.scrollIntoView({ block: 'start' }))
   }
 })
-onBeforeUnmount(() => io?.disconnect())
+onBeforeUnmount(() => {
+  io?.disconnect()
+  defilement.value?.removeEventListener('wheel', molette)
+})
 </script>
 
 <template>
@@ -96,7 +142,10 @@ onBeforeUnmount(() => io?.disconnect())
     display: block;
     block-size: 100%;
     overflow-y: auto;
-    scroll-snap-type: y proximity;
+    // « mandatory » : la page se cale toujours sur une rubrique. Avec
+    // « proximity », elle restait parfois à cheval entre deux.
+    scroll-snap-type: y mandatory;
+    overscroll-behavior-y: contain;
     scrollbar-width: none;
 
     &::-webkit-scrollbar {
@@ -111,7 +160,10 @@ onBeforeUnmount(() => io?.disconnect())
   @include console {
     block-size: 100%;
     min-block-size: 38rem;
+    scroll-margin-block-start: 0;
     scroll-snap-align: start;
+    // Un coup de molette = une rubrique, même lancé fort.
+    scroll-snap-stop: always;
 
     & + & {
       margin-block-start: $gouttiere-console;
