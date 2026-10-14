@@ -42,6 +42,7 @@ function aller(id: string) {
 //     l'animation précédente est finie : on peut enchaîner les rubriques.
 //   - un pavé tactile envoie une rafale d'événements, puis une traîne qui
 //     décroît (la lancée). Un geste = une rubrique ; la traîne est ignorée,
+//     même quand la page, occupée par l’animation, reçoit ses événements par à-coups,
 //     mais un nouveau geste (pause, ou poussée qui repart à la hausse) compte
 //     tout de suite, même pendant la traîne du précédent.
 const DUREE_ANIMATION = 550
@@ -74,7 +75,7 @@ function molette(e: WheelEvent) {
   const force = Math.abs(e.deltaY) * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? 800 : 1)
   const souris = e.deltaMode !== 0 || (force >= 50 && Number.isInteger(e.deltaY))
   const nouveauGeste =
-    souris || maintenant - dernierEvenement > 160 || force > derniereForce * 1.5 + 4
+    souris || maintenant - dernierEvenement > 400 || force > derniereForce * 1.5 + 4
   dernierEvenement = maintenant
   derniereForce = force
 
