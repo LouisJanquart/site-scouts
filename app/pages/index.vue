@@ -160,7 +160,7 @@ useHead({ title: `${unite.numero} ${unite.ville} — unité scoute et guide` })
           <NuxtLink class="accueil__section" :to="`/sections/${d.s.slug}`">
             <UiIcone :nom="d.s.icone" :taille="16" />
             <span class="accueil__section-nom">{{ d.s.nom }}</span>
-            <span class="accueil__section-quoi">{{ d.entree.libelle }}</span>
+            <span class="accueil__section-quoi">{{ sansCode(d.entree.libelle) }}</span>
           </NuxtLink>
         </li>
       </ul>

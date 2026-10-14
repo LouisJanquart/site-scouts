@@ -44,7 +44,25 @@ export function majuscule(texte: string): string {
 /** « RU : Souper Dia » → « Souper Dia » : le code du classeur est déjà
  *  porté par la couleur et la forme de la case, inutile de le lire deux fois. */
 export function sansCode(libelle: string): string {
-  return libelle.replace(/^[A-Z]{1,3}\s*:\s*/, '')
+  return lisible(libelle.replace(/^[A-Z]{1,3}\s*:\s*/, ''))
+}
+
+/** Les horaires du classeur, « 14:00 -> 17:30 » ou « 14h->17h30 », écrits
+ *  comme on les dit : « 14h – 17h30 ». Et « Nutons (14:00 -> 17:30) » dans la
+ *  colonne des Nutons devient simplement l’horaire. */
+function heure(h: string, m?: string): string {
+  return `${Number(h)}h${m && m !== '00' ? m : ''}`
+}
+export function lisible(libelle: string): string {
+  const t = libelle.replace(
+    /(\d{1,2})\s*[:h]\s*(\d{2})?\s*-+>\s*(\d{1,2})\s*[:h]?\s*(\d{2})?/g,
+    (_, h1, m1, h2, m2) => `${heure(h1, m1)} – ${heure(h2, m2)}`,
+  )
+  // « Nutons (14h – 17h30) » : le nom de section seul devant un horaire.
+  const seul = t.match(
+    /^\s*(?:Nutons|Lutins|Louveteaux|Louvettes|Guides|Scouts|Horizons|Pionniers|Pios|Route)\s*\(([^)]*\d+h[^)]*)\)\s*$/i,
+  )
+  return (seul ? seul[1] : t).trim()
 }
 
 export function formaterDateCourte(iso: string): string {
@@ -58,8 +76,17 @@ export function nomJour(iso: string): string {
 
 // La date de référence. En développement on peut la forcer pour voir le site
 // tel qu'il sera un autre jour de la saison.
+//
+// Attention : les pages publiques sont prérendues. La valeur calculée au
+// prérendu part dans la page publiée et y restait figée (le site vivait au
+// 3 octobre). Le plugin app/plugins/aujourdhui.client.ts la remplace par la
+// date du navigateur dès que la page est montée.
+export function dateLocale(d: Date = new Date()): string {
+  const z = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`
+}
 export function useAujourdhui() {
-  return useState<string>('aujourdhui', () => new Date().toISOString().slice(0, 10))
+  return useState<string>('aujourdhui', () => dateLocale())
 }
 
 // Le jour choisi dans le calendrier du panneau de gauche. Il est partagé parce

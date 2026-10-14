@@ -48,6 +48,7 @@ export function contenuVide(): ContenuReserve {
 
 export function useContenu() {
   const contenu = useState<ContenuReserve>('contenu-reserve', contenuVide)
+  const aujourdhui = useAujourdhui()
 
   /** À appeler après une connexion ou une déconnexion. */
   async function rafraichir() {
@@ -69,7 +70,11 @@ export function useContenu() {
     chargement: computed(() => contenu.value.planning.length === 0),
     planning: computed(() => contenu.value.planning),
     evenements: computed(() => contenu.value.evenements),
-    actus: computed(() => contenu.value.actus),
+    // Une actu datée dans le futur n'est pas encore publiée : avant, celles
+    // de 2027 passaient en tête de liste dès la rentrée.
+    actus: computed(() => {
+      return contenu.value.actus.filter((a: any) => !a.date || a.date <= aujourdhui.value)
+    }),
     documents: computed(() => contenu.value.documents),
     staff: computed(() => contenu.value.staff),
     saison: computed(() => contenu.value.saison),

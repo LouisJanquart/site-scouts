@@ -177,11 +177,8 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
                         ? typesReunion[j.sections[s.cleplanning]!.type!].teinte
                         : undefined,
                     }"
-                    >{{
-                      j.sections[s.cleplanning]!.type
-                        ? typesReunion[j.sections[s.cleplanning]!.type!].code
-                        : '—'
-                    }}</span
+                    aria-hidden="true"
+                    >●</span
                   >
                   <span class="tableau__libelle">{{ sansCode(j.sections[s.cleplanning]!.libelle) }}</span>
                 </template>
@@ -194,7 +191,7 @@ useHead({ title: 'Le calendrier — 16e Fleurus' })
 
       <ul class="legende">
         <li v-for="l in legende" :key="l.cle">
-          <span class="legende__code mono" :style="{ color: l.teinte }">{{ l.code }}</span>
+          <span class="legende__code" :style="{ color: l.teinte }" aria-hidden="true">●</span>
           {{ l.nom }}
         </li>
       </ul>

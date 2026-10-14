@@ -19,7 +19,7 @@ import { contenuVide, type ContenuReserve } from '~/composables/useContenu'
 // endormie, mieux vaut une page qui se complète qu'une page qui ne s'affiche
 // pas.
 // ---------------------------------------------------------------------------
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin((nuxtApp) => {
   const etat = useState<ContenuReserve>('contenu-reserve', contenuVide)
 
   const remplir = async () => {
@@ -43,6 +43,17 @@ export default defineNuxtPlugin(() => {
   const { charger: chargerLesSections } = useSections()
 
   if (import.meta.server) return Promise.all([remplir(), chargerLesSections()])
-  remplir()
-  chargerLesSections()
+  // Dans le navigateur, on attend que la page prérendue soit hydratée : si la
+  // réponse du compte arrivait avant, Vue comparerait la page publiée (vue
+  // visiteur) à une vue connectée, et en production il ne corrige pas l'écart.
+  // On se retrouvait avec des morceaux de l'une dans l'autre.
+  // (« suspense:resolve » et pas « mounted » : les pages se chargent à part
+  // et finissent de s'hydrater après le montage de l'application.)
+  let fait = false
+  nuxtApp.hook('app:suspense:resolve', () => {
+    if (fait) return
+    fait = true
+    remplir()
+    chargerLesSections()
+  })
 })

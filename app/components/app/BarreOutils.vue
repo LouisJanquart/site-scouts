@@ -38,7 +38,7 @@ const entrees = computed(() => {
     { to: '/inscription', nom: 'Inscrire un enfant', icone: 'plus' },
     connecte.value
       ? { to: '/mon-espace', nom: 'Mon espace', icone: 'profil' }
-      : { to: '/connexion', nom: 'Se connecter', icone: 'cadenas' },
+      : { to: '/connexion', nom: 'Se connecter', icone: 'profil' },
     ...(estStaff.value ? [{ to: '/gestion', nom: 'Back office', icone: 'bouclier' }] : []),
   ]
 })
@@ -112,7 +112,7 @@ function nEnOuvrirQuUn(lequel: 'menu' | 'recherche' | 'compte') {
       aria-label="Se connecter"
       title="Se connecter"
     >
-      <UiIcone nom="cadenas" :taille="18" />
+      <UiIcone nom="profil" :taille="18" />
     </NuxtLink>
 
     <button
